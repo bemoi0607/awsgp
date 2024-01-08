@@ -1,21 +1,20 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet,Text } from 'react-native';
-import LogIn from './screens/LogInScreen';
+import {NativeBaseProvider} from 'native-base'
+import { Amplify } from 'aws-amplify';
+import amplifyconfig from './src/amplifyconfiguration.json';
+import Navigator from './stacks/Navigator';
+import 'react-native-gesture-handler';
+
+Amplify.configure(amplifyconfig);
 
 const App: React.FC = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <LogIn/>
-    </SafeAreaView>
+    <NativeBaseProvider>
+      <Navigator />
+    </NativeBaseProvider>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+
 
 export default App;
