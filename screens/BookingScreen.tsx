@@ -9,12 +9,14 @@ import { usingTimeSlots } from '../slots/usingTimeSlots';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import 'moment/locale/ko';
+import config from '../config'
 
 
 moment.locale('ko');
 ////////////////////////////////////////////////////////////////////////타입정의
 
-const BASE_URL = "http://172.30.1.15:8080"
+
+const BASE_URL = config.SERVER_URL;
 
 
 interface BookingScreenProps {

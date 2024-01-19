@@ -2,13 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity,Image, FlatList,Button, Platform, ScrollView,RefreshControl} from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainScreens,MainStackParamList, MembershipScreens } from '../stacks/Navigator';
+import { signIn, signOut, autoSignIn, getCurrentUser, fetchAuthSession, } from 'aws-amplify/auth';
 import { RouteProp } from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Linking} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import config from '../config'
 
-
-
-// const BASE_URL = Constants.manifest.extra.BASE_URL;
+const BASE_URL = config.SERVER_URL;
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -52,39 +54,57 @@ const HomeScreen: React.FunctionComponent<HomeScreenProps> = ({navigation,route}
         {id:'4', name:'event4', source: require('../images/rooms3.jpeg')},
     ]);
 
-        const [selectedImage, setSelectedImage] = useState(null);
+    
+
+
+
         const [pState, setPState] = useState(0);
         const [refreshing, setRefreshing] = useState(false);
+        const [userData, setUserData] = useState(null);
+        const [logId, setLogId] = useState(null);
 
         const onRefresh = () => {
             setRefreshing(true)
+
+            // fetchPState();
+
             setRefreshing(false)
         }
         
 //정기권 구매여부 확인
-    // const fetchPState = async () => {
-    //     try {
-    //     // Assuming you have the logid stored in AsyncStorage
-    //     const logId = await AsyncStorage.getItem('logId');
-    //     // Fetch the uid using logid
-    //     const uidResponse = await fetch(`${BASE_URL}/user?logid=${logId}`);
-    //     const uidData = await uidResponse.json();
-    //     const uid = uidData.uid;
-        
 
-    //     // Fetch the pstate using uid
-    //     const pstateResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
-    //     const pstateData = await pstateResponse.json();
-    //     setPState(pstateData.p_state);
-    //     console.log(pstateData)
-    //     } catch (error) {
-    //     console.error('Error fetching p_state:', error);
-    //     }
-    // };
+useEffect(() => {
+    const fetchData = async () => {
+        try {
+            // AsyncStorage에서 logId 가져오기
+            let logId = await AsyncStorage.getItem('logId');
+            if (logId) {
+                // Remove quotes from logId, if present
+                logId = logId.replace(/^['"](.*)['"]$/, '$1');
+                console.log(logId);
 
-    // useEffect(() => {
-    //     fetchPState();
-    // }, []);
+                // logId를 사용하여 사용자 UID 가져오기
+                const uidResponse = await fetch(`${BASE_URL}/user/${logId}`);
+                const uidData = await uidResponse.json();
+                const uid = uidData.uid;
+                console.log(uid);
+
+                // uid 로 pstate 가져오기
+                const pstateResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
+                const pstateData = await pstateResponse.json();
+                setPState(pstateData.p_state);
+                console.log(pstateData)
+                        
+            }
+        } catch (error) {
+            console.log('Error:', error);
+        }
+    };
+
+    fetchData();
+}, []);
+
+
 
     // const handleMembershipPress = () => {
     //     if (pState === 1) {

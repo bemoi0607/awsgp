@@ -1,12 +1,17 @@
 import React, { useState,useEffect } from 'react';
-import { View, TextInput, Button, Text, BackHandler } from 'react-native';
-import { signIn, signOut, autoSignIn, getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
+import { View, TextInput, Button, Text, BackHandler, Dimensions,TouchableOpacity,Image,StyleSheet } from 'react-native';
+import { signIn, signOut, autoSignIn, getCurrentUser, fetchAuthSession, } from 'aws-amplify/auth';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainScreens,MainStackParamList } from '../stacks/Navigator';
 import { Amplify, type ResourcesConfig } from 'aws-amplify';
 import { defaultStorage } from 'aws-amplify/utils';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
+import { KeyboardAvoidingView } from 'native-base';
 
+
+
+const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('screen').height;
 
 
 const authConfig: ResourcesConfig['Auth'] = {
@@ -71,36 +76,6 @@ const LogIn: React.FunctionComponent<LogInScreenProps> = ({navigation}) => {
     // }, [navigation]);
     
     //사용자 정보가져올때 쓰기 1
-    // const currentAuthenticatedUser = async() => {
-    // try {
-    //     const { username, userId, signInDetails } = await getCurrentUser();
-    //     console.log(`The username: ${username}`);
-    //     console.log(`The userId: ${userId}`);
-    //     console.log(`The signInDetails: ${signInDetails}`);
-    // } catch (err) {
-    //     console.log(err);
-    // }
-    // }
-
-    
-    //사용자 정보가져올때 쓰기 2
-    // useEffect (()=>{
-    //     currentAuthenticatedUser();
-    // },[])
-
-
-    // const currentSession = async() => {
-    //     try {
-    //         const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
-    //         console.log(accessToken)
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    //     }
-
-    //     useEffect(()=>{
-    //         currentSession();
-    //     })
 
 
 //     const handleAutoSignIn = async () => {
@@ -136,45 +111,77 @@ const LogIn: React.FunctionComponent<LogInScreenProps> = ({navigation}) => {
         const { isSignedIn } = await signIn({ username, password });
 
         if (isSignedIn) {
-            navigation.navigate(MainScreens.Main);
+            console.log("log in succesful")
+            navigation.navigate(MainScreens.LogInLoading);
         }
     } catch (error) {
         console.log('Error signing in', error);
     }
 };
 
-    const handleSignOut = async () => {
-    try {
-            await signOut({ global: true });
-            console.log('logout completed')
-        } catch (error) {
-            console.log('error signing out: ', error);
-        }
-    };
-
     const renderAuthForm = () => {
         switch (authState) {
         case 'initial':
             return (
-            <View style={{justifyContent: 'center',alignItems:'center'}}>
-                <Text>로그인:</Text>
-                <View>
-                <TextInput
-                    placeholder="Username"
+            <KeyboardAvoidingView style={{height:screenHeight*1.4}} behavior='padding'>
+            <View style={{justifyContent: 'center',alignItems:'center',backgroundColor:'white',height:'auto'}}>
+                <View style={{height: screenHeight*0.37,backgroundColor:'white',justifyContent:'center',alignItems:'baseline'}}>
+                    <Image source={require('../images/gymprivate.jpeg')} style={{width: 200,height: 200}} />
+                </View>
+                <View style={{width:screenWidth,height:screenHeight*0.2,justifyContent:'center',alignItems:'center'}}>
+                    <TextInput
+                    style={{borderBottomWidth:0.5,width:screenWidth*0.8,height:screenHeight*0.05}}
+                    placeholderTextColor={'gray'}
+                    placeholder="이메일을 입력해주세요"
                     onChangeText={(text) => setUsername(text)}
                 />
                 <TextInput
-                    placeholder="Password"
+                    style={{borderBottomWidth:0.5,width:screenWidth*0.8,height:screenHeight*0.05,marginTop:'5%'}}
+                    placeholderTextColor={'gray'}
+                    placeholder="패스워드를 입력해주세요"
                     secureTextEntry
                     onChangeText={(text) => setPassword(text)}
                 />
             </View>
-            <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
-                <Button title="로그인" onPress={handleSignIn} />
-                <Button title="회원가입" onPress={handleSignUp} />
-                <Button title="로그아웃" onPress={handleSignOut} />
+            
+                <View style={{height:screenHeight*0.1,width:screenWidth,backgroundColor:'white',alignItems:'center',justifyContent:'center'}}>
+                    <TouchableOpacity
+                    style={{borderRadius:15,backgroundColor:'#4A7AFF',height:screenHeight*0.05,width:screenWidth*0.75,justifyContent:'center',alignItems:'center',marginBottom:'10%'}}
+                    onPress={handleSignIn}
+                    >
+                        <Text style={{color:'white',fontWeight:'bold'}}>로그인</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={{flexDirection:'row',justifyContent:'space-between',height:screenHeight*0.25,width:screenWidth,alignItems:'center',paddingHorizontal: '12.5%'}}>
+
+                <View>
+                    <TouchableOpacity>
+                        <Text 
+                        onPress={()=>{navigation.navigate(MainScreens.ForgotPassword)}}
+                        style={{fontWeight:'200',fontSize:15,color:'gray'}}>비밀번호를 잊으셨나요?</Text>
+                    </TouchableOpacity> 
+                </View>
+
+                <View style={{marginRight:'5%'}}>
+                    <TouchableOpacity
+                        onPress={handleSignUp}>
+                        <Text style={{fontWeight:'200',fontSize:15,color:'gray'}}>회원가입</Text>
+                    </TouchableOpacity> 
+
+                </View>
+
+                </View>
+                
+                
+                
             </View>
-            </View>
+            </KeyboardAvoidingView>
+            
+            
+
+            
+    
             );
         default:
             return null;
@@ -201,10 +208,17 @@ const LogIn: React.FunctionComponent<LogInScreenProps> = ({navigation}) => {
         } , [authState]);
 
     return (
-        <View style={{ padding: 20, marginTop: 50 }}>
-            {renderAuthForm()}
-        </View>
+        
+        
+            <View style={{height: screenHeight,backgroundColor:'white'}}>  
+                {renderAuthForm()}
+            </View>
+            
+
     );
     };
 
     export default LogIn ;
+
+
+    

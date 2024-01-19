@@ -6,10 +6,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { MainStackParamList,MainScreens } from '../stacks/Navigator';
 import { RouteProp } from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import config from '../config'
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
-const BASE_URL = "http://172.30.1.15:8080"
+
+const BASE_URL = config.SERVER_URL;
 
 
 const shadowStyle = Platform.select({
@@ -44,32 +46,40 @@ const YNMemberScreen: React.FunctionComponent<YNMemberScreenProps> = ({navigatio
 
         const [selectedImage, setSelectedImage] = useState(null);
         const [pState, setPState] = useState(0);
+        const [userData, setUserData] = useState(null);
+        const [logId, setLogId] = useState(null);
 
-        
-//정기권 구매여부 확인
-    const fetchPState = async () => {
-        try {
-        // Assuming you have the logid stored in AsyncStorage
-        const logId = await AsyncStorage.getItem('logId');
-        // Fetch the uid using logid
-        const uidResponse = await fetch(`${BASE_URL}/user?logid=${logId}`);
-        const uidData = await uidResponse.json();
-        const uid = uidData.uid;
-        
+        useEffect(() => {
+            const fetchData = async () => {
+                try {
+                    // AsyncStorage에서 logId 가져오기
+                    let logId = await AsyncStorage.getItem('logId');
+                    if (logId) {
+                        // Remove quotes from logId, if present
+                        logId = logId.replace(/^['"](.*)['"]$/, '$1');
+                        console.log(logId);
 
-        // Fetch the pstate using uid
-        const pstateResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
-        const pstateData = await pstateResponse.json();
-        setPState(pstateData.p_state);
-        console.log(pstateData)
-        } catch (error) {
-        console.error('Error fetching p_state:', error);
-        }
-    };
+                        // logId를 사용하여 사용자 UID 가져오기
+                        const uidResponse = await fetch(`${BASE_URL}/user/${logId}`);
+                        const uidData = await uidResponse.json();
+                        const uid = uidData.uid;
+                        console.log(uid);
 
-    useEffect(() => {
-        fetchPState();
-    }, []);
+                        // uid 로 pstate 가져오기
+                        const pstateResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
+                        const pstateData = await pstateResponse.json();
+                        setPState(pstateData.p_state);
+                        console.log(pstateData)
+                                
+                    }
+                } catch (error) {
+                    console.log('Error:', error);
+                }
+            };
+
+            fetchData();
+        }, []);
+
 
 
     const handleMembershipPress = () => {
@@ -107,7 +117,7 @@ const YNMemberScreen: React.FunctionComponent<YNMemberScreenProps> = ({navigatio
             <View style={{backgroundColor:'white',width:screenWidth*0.9,height:screenHeight*0.3,justifyContent:'center',alignItems:'center'}}>
                 <TouchableOpacity 
                         style={styles.ReservationContainer}
-                        onPress={()=>{navigation.navigate(MainScreens.Membership)}}>
+                        onPress={handleMembershipPress}>
                             
                                     <Image
                                         source={require('../images/id-card.png')}

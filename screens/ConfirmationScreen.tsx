@@ -1,11 +1,14 @@
 import React, { useState,useEffect } from 'react';
-import { View, TextInput, Button, Text } from 'react-native';
+import { View, TextInput, Button, Text, Dimensions,TouchableOpacity, Platform } from 'react-native';
 import { signUp, confirmSignUp } from 'aws-amplify/auth';
 import { Amplify } from 'aws-amplify';
 import awsconfig from '../src/aws-exports';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainScreens,MainStackParamList } from '../stacks/Navigator';
+import { KeyboardAvoidingView } from 'native-base';
+
+
 
 type ConfirmationScreenNavigationProps = StackNavigationProp<
     MainStackParamList, 
@@ -16,6 +19,21 @@ interface ConfirmationScreenProps {
     navigation: ConfirmationScreenNavigationProps;
 };
 
+
+const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('screen').height;
+
+const shadowStyle = Platform.select({
+    ios: {
+        shadowColor: 'rgba(0, 0, 0, 0.2)',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 1,
+        shadowRadius: 4,
+    },
+    android: {
+        elevation: 10,
+    },
+})
 
 Amplify.configure(awsconfig);
 
@@ -106,12 +124,17 @@ const handleSignUpConfirmation = async () => {
         });
 
         if (isSignUpComplete) {
-            navigation.navigate(MainScreens.Home);
+            navigation.navigate(MainScreens.Main);
         }
         } catch (error) {
         console.log('Error confirming sign up', error);
         }
     };
+
+    const isConfirmationCodeEmpty = () => {
+        return confirmationCode.trim().length === 0;
+    };
+
 
     // const handleSignIn = async () => {
     //     try {
@@ -146,28 +169,85 @@ const handleSignUpConfirmation = async () => {
             );
 case 'signUp':
     return (
-        <View>
-            <Text>이 정보가 맞나요?</Text>
-                    <Text>Username: {username}</Text>
-                    <Text>Password: {password}</Text>
-                    <Text>Name: {name}</Text>
-                    <Text>Gender: {gender}</Text>
-                    <Text>Birthdate: {birthdate}</Text>
-                    <Text>Phone Number: {phoneNumber}</Text>
-            <Button title="Sign Up" onPress={handleSignUp} />
+        <KeyboardAvoidingView style={{}}>
+        <View style={{justifyContent:'center',alignItems:'center',height:'100%',backgroundColor:'white',width:screenWidth}}>
+            <View style={{height:screenHeight*0.06,width:screenWidth,alignItems:'flex-start',marginLeft:'10%'}}>  
+                <Text style={{color:'black',fontSize:23, fontWeight:'bold'}}>이 정보가 맞나요?</Text>
+            </View>
+                <View style={{alignItems:'center',backgroundColor:'#fffdfd',width:screenWidth*0.9,height:screenHeight*0.5,justifyContent:'space-between',paddingVertical:'9%',borderRadius:15,...shadowStyle}}>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',width:screenWidth*0.65,alignItems:'center'}}>
+                        <Text style={{color:'gray'}}>이름 : </Text>
+                        <Text style={{color:'gray'}}>{name}</Text>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',width:screenWidth*0.65,alignItems:'center'}}>
+                        <Text style={{color:'gray'}}>패스워드 : </Text>
+                        <Text style={{color:'gray'}}>{password}</Text>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',width:screenWidth*0.65,alignItems:'center'}}>
+                        <Text style={{color:'gray'}}>성별 : </Text>
+                        <Text style={{color:'gray'}}>{gender}</Text>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',width:screenWidth*0.65,alignItems:'center'}}>
+                        <Text style={{color:'gray'}}>생일 : </Text>
+                        <Text style={{color:'gray'}}>{birthdate}</Text>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',width:screenWidth*0.65,alignItems:'center'}}>
+                        <Text style={{color:'gray'}}>이메일 : </Text>
+                        <Text style={{color:'gray'}}>{username}</Text>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',width:screenWidth*0.65,alignItems:'center'}}>
+                        <Text style={{color:'gray'}}>전화번호 : </Text>
+                        <Text style={{color:'gray'}}>{phoneNumber}</Text>
+                    </View>
+                </View>
+
+                <View style={{height:screenHeight*0.2,justifyContent:'center',alignItems:'center',width:screenWidth*0.9}}>
+                    <TouchableOpacity 
+                    style={{width:screenWidth*0.9,height:screenHeight*0.06,backgroundColor:'#4A7AFF',justifyContent:'center',alignItems:'center',borderRadius:15}}
+                    onPress={handleSignUp} >
+                        <Text style={{fontSize:18, color:'white'}}>확인</Text>
+                    </TouchableOpacity>
+                </View>
+                    
             
         </View>
+        </KeyboardAvoidingView>
     );
         case 'confirmSignUp':
             return (
-            <View>
-                <Text>Confirm Sign Up</Text>
+            <View style={{height:screenHeight,width:screenWidth,justifyContent:'space-between',alignItems:'center',backgroundColor:'white'}}>
+            <View style={{height:screenHeight*0.3,width:screenWidth,justifyContent:'center',alignItems:'center'}}>
+                <Text style={{fontSize:20,fontWeight:'bold',color:'black'}}>가입하신 이메일을 확인하고</Text>
+                <Text style={{fontSize:20,fontWeight:'bold',color:'black'}}>인증번호를 입력해주세요.</Text>
+            </View>
+            <View style={{height:screenHeight*0.9,bottom:'5%'}}>
                 <TextInput
-                placeholder="Confirmation Code"
+                placeholder="인증번호 6자리"
+                placeholderTextColor={'gray'}
+                style={{ borderBottomWidth: 0.5, borderColor: 'gray', fontSize: 30, fontWeight: 'bold',width:screenWidth*0.9}}
                 onChangeText={(text) => setConfirmationCode(text)}
                 />
-                <Button title="Confirm Sign Up" onPress={handleSignUpConfirmation} />
+
+                <TouchableOpacity 
+                disabled={isConfirmationCodeEmpty()}
+                onPress={handleSignUpConfirmation}
+                style={{
+                    backgroundColor: isConfirmationCodeEmpty() ? 'gray' : '#4A7AFF',
+                    borderRadius:15,
+                    width:screenWidth*0.9,
+                    justifyContent:'center',
+                    alignItems:'center',
+                    marginTop:'10%',
+                    height:screenHeight*0.05}}>
+                    <Text style={{color:'white',fontSize:18,fontWeight:'bold'}}>
+                        인증하기
+                    </Text>
+                </TouchableOpacity>
+
             </View>
+                
+            </View>
+
             );
         default:
             return null;
@@ -176,7 +256,7 @@ case 'signUp':
 
 
     return (
-        <View style={{ padding: 20, marginTop: 50 }}>
+        <View>
             {renderAuthForm()}
         </View>
     );

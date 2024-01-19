@@ -24,8 +24,8 @@ import RoomBDetailScreen from '../screens/RoomBDetailScreen';
 import RoomCDetailScreen from '../screens/RoomCDetailScreen';
 import BookingScreen from '../screens/BookingScreen';
 import BookedInfoScreen from '../screens/BookedInfoScreen';
-import BookingPayment from '../screens/BookingPayment';
-import BookingPaymentResult from '../screens/BookingPaymentResult';
+// import BookingPayment from '../screens/BookingPayment';
+// import BookingPaymentResult from '../screens/BookingPaymentResult';
 import MembershipRoomSelectScreen from '../screens/MembershipRoomSelectScreen';
 import MembershipRoomADetailScreen from '../screens/MembershipRoomADetailScreen';
 import MembershipRoomBDetailScreen from '../screens/MembershipRoomBDetailScreen';
@@ -46,7 +46,9 @@ import MyMembershipScreen from '../screens/MyMembershipScreen';
 import PTReviewScreen from '../screens/PTReviewScreen';
 import LogInformationScreen from '../screens/LogInformationScreen';
 import UsingRuleScreen from '../screens/UsingRuleScreen';
-
+import LogInLoading from '../screens/LogInLoading'
+import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
+import NewPasswordScreen from '../screens/NewPasswordScreen';
 
 export enum MainScreens {
     Landing='Landing',
@@ -58,6 +60,9 @@ export enum MainScreens {
     Email='Email',
     PhoneNumber ='PhoneNumber',
     Confirmation = 'Confirmation',
+    ForgotPassword = 'ForgotPassword',
+    NewPassword='NewPassword',
+    LogInLoading ='LogInLoading',
     Home = 'Home',
     YNMember= 'YNMember',
     PT = 'PT',
@@ -89,6 +94,9 @@ export type MainStackParamList = {
     Email:undefined;
     PhoneNumber : undefined;
     Confirmation : undefined;
+    ForgotPassword : undefined;
+    NewPassword: undefined;
+    LogInLoading : undefined;
     Home: undefined;
     Event: undefined;
     YNMember: undefined;  
@@ -167,7 +175,17 @@ export type MembershipStackParamList = {
     MembershipRoomBDetail: undefined;
     MembershipRoomCDetail: undefined;
     MembershipBooking: undefined; 
-    MembershipBookedInfo: undefined;
+    MembershipBookedInfo: {
+        selectedDateSlot:string,
+        isMorning:boolean,
+        isEvening:boolean,
+        selectedDayTimeSlot:string,
+        selectedNightTimeSlot:string,
+        selectedRoomSlot:string,
+        selectedStartTime:string,
+        selectedEndTime:string,
+        selectedUsingTimeSlot:string,
+    };
 };
 
 //
@@ -316,19 +334,18 @@ const MainStackNavigator: React.FunctionComponent = () => {
             <MainStack.Screen name="Email" component={EmailScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="PhoneNumber" component={PhoneNumberScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="Confirmation" component={ConfirmationScreen} options={{ headerShown: false }}/>
+            <MainStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }}/>
+            <MainStack.Screen name="NewPassword" component={NewPasswordScreen} options={{ headerShown: false }}/>
+            <MainStack.Screen name="LogInLoading" component={LogInLoading} options={{ headerShown: false }}/>
             <MainStack.Screen name ={MainScreens.Main} component={MainTabNavigator}/>
             <MainStack.Screen name="YNMember" component={YNMemberScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="Book" component={BookingStackNavigator} />
-            {/* <MainStack.Screen name="Membership" component={MembershipStackNavigator} />
-            <MainStack.Screen name={MainScreens.BookingHistory} component={BookingHistoryStackNavigator}/>
-            <MainStack.Screen name={MainScreens.MineMembership} component={MMStackNavigator}/>
             <MainStack.Screen name={MainScreens.LogInfo} options={{headerShown:false}} component={LogInformationStackNavigator}/>
-            <MainStack.Screen name={MainScreens.GymService} options={{headerShown:true}} component={GymServiceScreen}/>
-            <MainStack.Screen name={MainScreens.Franchise} options={{headerShown:true}} component={FranchiseScreen}/>
-            <MainStack.Screen name={MainScreens.MembershipPurchase1} component={MembershipPurchaseNavigator}/>
-            <MainStack.Screen name={MainScreens.PT} component={PTStackNavigator} /> */}
-            
-            
+            <MainStack.Screen name="Membership" component={MembershipStackNavigator} />
+            <MainStack.Screen name="MembershipPurchase1" component={MembershipPurchaseNavigator}/>
+            <MainStack.Screen name={MainScreens.BookingHistory} component={BookingHistoryStackNavigator}/>
+            <MainStack.Screen name={MainScreens.PT} component={PTStackNavigator} /> 
+            <MainStack.Screen name={MainScreens.MineMembership} component={MMStackNavigator}/>
         </MainStack.Navigator>
     </NavigationContainer>
     );
@@ -342,75 +359,75 @@ const BookingStackNavigator: React.FunctionComponent = () => {
                 <BookingStack.Screen name="RoomBDetail" component={RoomBDetailScreen}/>
                 <BookingStack.Screen name="RoomCDetail" component={RoomCDetailScreen}/>
                 <BookingStack.Screen name="Booking" component={BookingScreen}/>
-                {/* <BookingStack.Screen name="BookedInfo" component={BookedInfoScreen}/> */}
-                {/* <BookingStack.Screen name={BookingScreens.BookingPayment} component={BookingPayment}/>
-                <BookingStack.Screen name={BookingScreens.BookingPaymentResult} component={BookingPaymentResult}/>  */}
+                <BookingStack.Screen name="BookedInfo" component={BookedInfoScreen}/>
+                {/* <BookingStack.Screen name="BookingPayment" component={BookingPayment}/> */}
+                {/* <BookingStack.Screen name={BookingScreens.BookingPaymentResult} component={BookingPaymentResult}/>  */}
             </BookingStack.Navigator>
     );
 };
 
 
-// const MembershipStackNavigator: React.FunctionComponent = () => {
-//     return (
-//             <MembershipStack.Navigator screenOptions={{ headerShown : true }}>
-//                 <MembershipStack.Screen name={MembershipScreens.MembershipRoomSelect} component={MembershipRoomSelectScreen}/>
-//                 <MembershipStack.Screen name={MembershipScreens.MembershipRoomADetail} component={MembershipRoomADetailScreen}/>
-//                 <MembershipStack.Screen name={MembershipScreens.MembershipRoomBDetail} component={MembershipRoomBDetailScreen}/>
-//                 <MembershipStack.Screen name={MembershipScreens.MembershipRoomCDetail} component={MembershipRoomCDetailScreen}/>
-//                 <MembershipStack.Screen name={MembershipScreens.MembershipBooking} component={MembershipBookScreen}/>
-//                 <MembershipStack.Screen name={MembershipScreens.MembershipBookedInfo} component={MembershipBookedInfoScreen}/>
-//             </MembershipStack.Navigator>
-//     );
-// };
+const MembershipStackNavigator: React.FunctionComponent = () => {
+    return (
+            <MembershipStack.Navigator screenOptions={{ headerShown : true }}>
+                <MembershipStack.Screen name={MembershipScreens.MembershipRoomSelect} component={MembershipRoomSelectScreen}/>
+                <MembershipStack.Screen name={MembershipScreens.MembershipRoomADetail} component={MembershipRoomADetailScreen}/>
+                <MembershipStack.Screen name={MembershipScreens.MembershipRoomBDetail} component={MembershipRoomBDetailScreen}/>
+                <MembershipStack.Screen name={MembershipScreens.MembershipRoomCDetail} component={MembershipRoomCDetailScreen}/>
+                <MembershipStack.Screen name={MembershipScreens.MembershipBooking} component={MembershipBookScreen}/>
+                <MembershipStack.Screen name={MembershipScreens.MembershipBookedInfo} component={MembershipBookedInfoScreen}/>
+            </MembershipStack.Navigator>
+    );
+};
 
-// const MembershipPurchaseNavigator: React.FunctionComponent = () => {
-//     return (
-//             <MembershipPurchase.Navigator screenOptions={{ headerShown : true }}>
-//                 <MembershipPurchase.Screen name={MembershipPurchaseScreens.MembershipPurchase} component={MembershipPurchaseScreen}/>
-//                 <MembershipPurchase.Screen name={MembershipPurchaseScreens.MembershipPayment} component={MembershipPayment}/>
-//                 <MembershipPurchase.Screen name={MembershipPurchaseScreens.MembershipPaymentResult} component={MembershipPaymentResult}/>
-//             </MembershipPurchase.Navigator>
-//     );
-// };
+const MembershipPurchaseNavigator: React.FunctionComponent = () => {
+    return (
+            <MembershipPurchase.Navigator screenOptions={{ headerShown : true }}>
+                <MembershipPurchase.Screen name={MembershipPurchaseScreens.MembershipPurchase} component={MembershipPurchaseScreen}/>
+                {/* <MembershipPurchase.Screen name={MembershipPurchaseScreens.MembershipPayment} component={MembershipPayment}/>
+                <MembershipPurchase.Screen name={MembershipPurchaseScreens.MembershipPaymentResult} component={MembershipPaymentResult}/> */}
+            </MembershipPurchase.Navigator>
+    );
+};
 
-// const PTStackNavigator: React.FunctionComponent = () => {
-//     return (
-//             <PTStack.Navigator screenOptions={{ headerShown : true }}>
-//                 <PTStack.Screen name={PTScreens.PTProfile} component={PTProfileScreen}/>
-//                 <PTStack.Screen name={PTScreens.PayPT} component={PayPTScreen} options={{ headerShown : false }}/>
-//                 <PTStack.Screen name={PTScreens.PaymentTest} component={PaymentTest}/>
-//                 <PTStack.Screen name={PTScreens.Payment} component={Payment}/>
-//                 <PTStack.Screen name={PTScreens.PaymentResult} component={PaymentResult}/>
-//             </PTStack.Navigator>
-//     );
-// };
+const PTStackNavigator: React.FunctionComponent = () => {
+    return (
+            <PTStack.Navigator screenOptions={{ headerShown : true }}>
+                <PTStack.Screen name={PTScreens.PTProfile} component={PTProfileScreen}/>
+                <PTStack.Screen name={PTScreens.PayPT} component={PayPTScreen} options={{ headerShown : false }}/>
+                {/* <PTStack.Screen name={PTScreens.PaymentTest} component={PaymentTest}/>
+                <PTStack.Screen name={PTScreens.Payment} component={Payment}/>
+                <PTStack.Screen name={PTScreens.PaymentResult} component={PaymentResult}/> */}
+            </PTStack.Navigator>
+    );
+};
 
-// const BookingHistoryStackNavigator: React.FunctionComponent = () => {
-//     return (
-//             <HistoryStack.Navigator screenOptions={{ headerShown : true }}>
-//                 <HistoryStack.Screen name={HistoryScreens.History} component={BookingHistory}/>
-//                 <HistoryStack.Screen name={HistoryScreens.Review} component={ReviewScreen}/>
-//             </HistoryStack.Navigator>
-//     );
-// }
+const BookingHistoryStackNavigator: React.FunctionComponent = () => {
+    return (
+            <HistoryStack.Navigator screenOptions={{ headerShown : true }}>
+                <HistoryStack.Screen name={HistoryScreens.History} component={BookingHistory}/>
+                <HistoryStack.Screen name={HistoryScreens.Review} component={ReviewScreen}/>
+            </HistoryStack.Navigator>
+    );
+}
 
-// const MMStackNavigator: React.FunctionComponent = () => {
-//     return (
-//             <MMStack.Navigator screenOptions={{ headerShown : true }}>
-//                 <MMStack.Screen name={MMScreens.MyMembership} component={MyMembershipScreen}/>
-//                 <MMStack.Screen name={MMScreens.PTReview} component={PTReviewScreen}/>
-//             </MMStack.Navigator>
-//     );
-// };
+const MMStackNavigator: React.FunctionComponent = () => {
+    return (
+            <MMStack.Navigator screenOptions={{ headerShown : true }}>
+                <MMStack.Screen name={MMScreens.MyMembership} component={MyMembershipScreen}/>
+                {/* <MMStack.Screen name={MMScreens.PTReview} component={PTReviewScreen}/> */}
+            </MMStack.Navigator>
+    );
+};
 
-// const LogInformationStackNavigator: React.FunctionComponent = () => {
-//     return (
-//             <LogInformationStack.Navigator screenOptions={{ headerShown : true }}>
-//                 <LogInformationStack.Screen name={LogInformationScreens.LogInformation} component={LogInformationScreen}/>
-//                 <LogInformationStack.Screen name={LogInformationScreens.UsingRule} component={UsingRuleScreen}/>
-//             </LogInformationStack.Navigator>
-//     );
-// }
+const LogInformationStackNavigator: React.FunctionComponent = () => {
+    return (
+            <LogInformationStack.Navigator screenOptions={{ headerShown : true }}>
+                <LogInformationStack.Screen name={LogInformationScreens.LogInformation} component={LogInformationScreen}/>
+                <LogInformationStack.Screen name={LogInformationScreens.UsingRule} component={UsingRuleScreen}/>
+            </LogInformationStack.Navigator>
+    );
+}
 
 
 export default MainStackNavigator;

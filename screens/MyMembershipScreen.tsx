@@ -1,14 +1,14 @@
 import React,{useEffect, useState} from 'react'
-import { View,Text,ScrollView,Dimensions,Platform,Image, Button} from 'react-native'
+import { View,Text,ScrollView,Dimensions,Platform,Image, Button,TouchableOpacity} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import { format } from 'date-fns';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainScreens, MainStackParamList, MMScreens, MMStackParamList } from '../stacks/Navigator';
 import axios from 'axios';
+import config from '../config'
 
-const BASE_URL = "http://172.30.1.15:8080"
+const BASE_URL = config.SERVER_URL;
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
@@ -46,10 +46,13 @@ const MyMembershipScreen:React.FunctionComponent<MyMembershipScreenProps> = (pro
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const logId = await AsyncStorage.getItem('logId');
+        let logId = await AsyncStorage.getItem('logId');
+        if (logId) {
+          logId = logId.replace(/^['"](.*)['"]$/, '$1');
         const responseReview = await axios.get(`${BASE_URL}/trainermembershipreview/${logId}`);
         const dataReview = responseReview.data;
-       
+        console.log(logId)
+
         setTrainerReview(dataReview);
 
         const uidResponse = await fetch(`${BASE_URL}/user?logid=${logId}`);
@@ -71,9 +74,11 @@ const MyMembershipScreen:React.FunctionComponent<MyMembershipScreenProps> = (pro
         } else {
           console.log("No trainer membership exists.");
         }
-      } catch (error) {
+      } }
+      catch (error) {
         console.error('Error fetching data:', error);
       }
+    
     };
 
     fetchData();

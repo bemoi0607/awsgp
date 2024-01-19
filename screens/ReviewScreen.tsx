@@ -1,15 +1,14 @@
 import React,{useEffect, useState} from 'react';
-import { View, Text,ScrollView,Dimensions,StyleSheet,TextInput,Alert} from 'react-native';
+import { View, Text,ScrollView,Dimensions,StyleSheet,TextInput,Alert,TouchableOpacity} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { HistoryScreens, HistoryStackParamList, MainScreens, MainStackParamList } from '../stacks/Navigator';
 import { RouteProp } from '@react-navigation/native';
-import Constants from 'expo-constants';
+import config from '../config'
 
-// const BASE_URL = Constants.manifest.extra.BASE_URL;
+const BASE_URL = config.SERVER_URL;
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -29,40 +28,41 @@ interface ReviewScreenProps {
 ////////////////////////////////////////////////////////////////
 const ReviewScreen:React.FunctionComponent<ReviewScreenProps> = ({ route,navigation}) => {
 
-    const { merchant_uid } = route.params;
+    const { merchant_uid,room_number,date_of_use,time_of_use } = route.params;
     const [reviewtext,setReviewText] = useState('');
     const [userData, setUserData] = useState(null);
     const [logId, setLogId] = useState(null);
 
-
-
     useEffect(() => {
-        AsyncStorage.getItem('logId')
-        .then((data) => {
-            if (data) {
-                setLogId(data);
-            }
-        })
-        .catch((error) => {
-            console.log('Error retrieving logId:', error);
-        });
+        console.log("Received:",room_number,date_of_use,time_of_use,merchant_uid);
     }, []);
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-        try {
-            const response = await axios.get(`${BASE_URL}/user/${logId}`);
-            const userData = response.data;
-            setUserData(userData);
-        } catch (error) {
-            console.log('Error fetching user data:', error);
-        }
-        };
 
-        if (logId) {
-        fetchUserData();
-        }
-    }, [logId]);
+    useEffect(() => {
+                const fetchData = async () => {
+                    try {
+                        // AsyncStorage에서 logId 가져오기
+                        let logId = await AsyncStorage.getItem('logId');
+                        if (logId) {
+                            // Remove quotes from logId, if present
+                            logId = logId.replace(/^['"](.*)['"]$/, '$1');
+                            console.log(logId);
+                            setLogId(logId); //아래에서 보낼때 로그아이디 셋팅
+
+                            // logId를 사용하여 사용자 UID 가져오기
+                            const uidResponse = await fetch(`${BASE_URL}/user/${logId}`);
+                            const uidData = await uidResponse.json();
+                            const uid = uidData.uid;
+                            console.log(uid);
+                                    
+                        }
+                    } catch (error) {
+                        console.log('Error:', error);
+                    }
+                };
+
+                fetchData();
+            }, []);
 
 //텍스트 인풋 5자이상 , 1000자 미만조절
     const MAX_CHARACTER_LIMIT = 1000;
@@ -91,7 +91,8 @@ const handleSubmit = () => {
             rating: rating,
             reviewText: reviewtext,
             logId: logId, // 수정된 부분
-            merchant_uid: merchant_uid // 수정된 부분
+            merchant_uid: merchant_uid, // 수정된 부분
+            room_number:room_number
         };
 
     console.log(data);

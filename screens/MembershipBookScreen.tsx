@@ -1,13 +1,13 @@
 import React,{useState,useEffect} from 'react';
 import { StyleSheet, Text, View, Dimensions, TouchableOpacity, ScrollView, FlatList, Image, Platform,RefreshControl} from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { MembershipStackParamList } from '../stacks/Stacks';
+import { MembershipStackParamList } from '../stacks/Navigator';
 import { roomPictures } from '../slots/roomPictures';
 import moment from 'moment';
 import { MembershipUsingTimeSlots } from '../slots/MembershipUsingTimeSlots';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
+import config from '../config'
 import 'moment/locale/ko';
 
 
@@ -15,7 +15,8 @@ moment.locale('ko');
 
 ////////////////////////////////////////////////////////////////////////타입정의
 
-const BASE_URL = "http://100.114.50.220:8080"
+
+const BASE_URL = config.SERVER_URL;
 
 
 interface MembershipScreenProps {

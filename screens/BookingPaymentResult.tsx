@@ -7,6 +7,7 @@ import MyReservationScreen from './MyReservationScreen';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainScreens, MainStackParamList } from '../stacks/Navigator';
 import { BackHandler } from 'react-native';
+import config from '../config'
 
 ////////////////////////////////////////////////////////////////
 type BookingPaymentScreenNavigationProps = StackNavigationProp<
@@ -20,7 +21,8 @@ interface BookingPaymentScreenProps {
 
 ////////////////////////////////////////////////////////////////
 
-const BASE_URL = "http://172.30.1.15:8080"
+
+const BASE_URL = config.SERVER_URL;
 
 function getBoolean(value) {
   if (typeof value === 'boolean') return value;

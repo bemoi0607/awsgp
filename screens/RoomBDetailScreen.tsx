@@ -3,9 +3,9 @@ import React,{useEffect,useState} from 'react'
 import { View,ScrollView,Text,StyleSheet,TouchableOpacity, Dimensions, Platform,RefreshControl,FlatList,Image } from 'react-native'
 import { BookingScreens, BookingStackParamList } from '../stacks/Navigator';
 import { roomPictures } from '../slots/roomPictures';
-import Constants from 'expo-constants';
+import config from '../config'
 
-// const BASE_URL = Constants.manifest.extra.BASE_URL;
+const BASE_URL = config.SERVER_URL;
 export const screenWidth = Dimensions.get('screen').width;
 export const screenHeight = Dimensions.get('screen').height;
 
@@ -40,27 +40,27 @@ const RoomBDetailScreen:React.FunctionComponent<RoomBDetailScreenProps> = (props
     const { navigation } = props;
     const [reviews, setReviews] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
-//     const fetchReviews = async () => {
-//     try {
-//         const response = await fetch(`${BASE_URL}/reviews/${roomNumber}`);
-//         const data = await response.json();
-//         console.log(data);
-//         setReviews(data);
-//     } catch (error) {
-//         console.error(error);
-//     }
-// };
+    const fetchReviews = async () => {
+    try {
+        const response = await fetch(`${BASE_URL}/reviews/${roomNumber}`);
+        const data = await response.json();
+        console.log(data);
+        setReviews(data);
+    } catch (error) {
+        console.error(error);
+    }
+};
 
-// useEffect(() => {
-//     // 서버에서 리뷰 데이터를 가져오는 함수
-//     fetchReviews();
-// }, []);
+useEffect(() => {
+    // 서버에서 리뷰 데이터를 가져오는 함수
+    fetchReviews();
+}, []);
 
 const onRefresh = () => {
     setRefreshing(true);
     
     // Call fetchReviews here
-    // fetchReviews();
+    fetchReviews();
 
     setRefreshing(false);
 };
@@ -189,7 +189,7 @@ return (
 
               {reviews.length > 0 ? (
                 <View style={{ flex: 3 }}>
-                {/* <FlatList
+                <FlatList
                   horizontal
                   keyExtractor={(item) => item.rvid.toString()}
                   data={reviews}
@@ -214,7 +214,7 @@ return (
                         </View>
                     );
                   }}
-                /> */}
+                />
               </View>
           ) : (
             // 리뷰가 없는 경우

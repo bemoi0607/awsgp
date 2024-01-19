@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View, Dimensions,Image,TextInput, Alert } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Dimensions,Image,TextInput, Alert,TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import {  MainScreens, MembershipScreens, MembershipStackParamList } from '../stacks/Navigator';
 import { RouteProp } from '@react-navigation/native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import moment from 'moment';
-// import Constants from 'expo-constants';
+import config from '../config'
 
-// const BASE_URL = Constants.manifest.extra.BASE_URL;
+const BASE_URL = config.SERVER_URL;
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -34,6 +32,7 @@ const MembershipBookedInfoScreen: React.FunctionComponent<MembershipScreenProps>
 
     const [selectedRoomNumber, setSelectedRoomNumber] = useState('');
     const [selectedDate, setSelectedDate] = useState('');
+    
 
     useEffect(() => {
         const fetchSelectedRoomNumber = async () => {
@@ -60,7 +59,7 @@ const MembershipBookedInfoScreen: React.FunctionComponent<MembershipScreenProps>
 
         fetchSelectedDate();
     }, []);
-  
+
 
     const {
         selectedUsingTimeSlot,
@@ -72,11 +71,32 @@ const MembershipBookedInfoScreen: React.FunctionComponent<MembershipScreenProps>
     } = route.params;
 
 
+    const [logId, setLogId] = useState(null);
+
+    useEffect(() => {
+    const fetchData = async () => {
+        try {
+            // Fetch logId from AsyncStorage
+            let fetchedLogId = await AsyncStorage.getItem('logId');
+            if (fetchedLogId) {
+                // Remove quotes if present
+                fetchedLogId = fetchedLogId.replace(/^['"](.*)['"]$/, '$1');
+                console.log(fetchedLogId);
+                setLogId(fetchedLogId); // Update the logId state
+            }
+        } catch (error) {
+            console.log('Error:', error);
+        }
+    };
+
+    fetchData();
+}, []);
+
+
+
     const handleSubmit = async () => {
     try {
 
-        const logId = await AsyncStorage.getItem('logId');
-        
         let startTime, endTime;
 
         if (isMorning && selectedDayTimeSlot) {
@@ -216,10 +236,8 @@ return (
                     <Text style={{fontSize:19,color:'#4F4F4F',fontWeight:'bold'}}>
                         짐프라이빗 대관
                     </Text>
-                    <Text style={{color:'#797676',fontSize:15,marginTop:3,fontWeight:'bold'}}>방 번호 : {selectedRoomNumber}</Text>
-                
-                    <View style={{marginTop:screenWidth*0.12}}>
-                        <Text style={{color:'#797676',fontSize:15,fontWeight:'bold',marginBottom:2}}>사용날짜 :  {selectedDate}</Text>
+                    <Text style={{color:'#797676',fontSize:15,marginTop:3,fontWeight:'bold',marginBottom:'3%'}}>방 번호 : {selectedRoomNumber}</Text>
+                    <Text style={{color:'#797676',fontSize:15,fontWeight:'bold',marginBottom:'3%'}}>사용날짜 :  {selectedDate}</Text>
                         <Text style={{color:'#797676',fontSize:15,fontWeight:'bold'}}>
                                 사용시간 : {' '}
                                 {isMorning && selectedDayTimeSlot
@@ -228,7 +246,7 @@ return (
                                 ? `${selectedNightTimeSlot} - ${selectedEndTime}`
                                 : null}
                             </Text>
-                        </View>
+                
                     </View>
                 </View>
             {/* <View style={{backgroundColor:'white',paddingHorizontal:25,height:screenHeight*0.17}}>

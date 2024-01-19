@@ -1,14 +1,13 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions, Image, Platform } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, StyleSheet, Dimensions, Image, Platform,ScrollView, TouchableOpacity } from 'react-native';
 import { MembershipPurchaseScreens, MembershipPurchaseParamList, MembershipScreens } from '../stacks/Navigator';
 import { RouteProp } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from 'expo-constants';
+import config from '../config'
 
-const BASE_URL = "http://172.30.1.15:8080"
+const BASE_URL = config.SERVER_URL;
 
 
 const screenWidth = Dimensions.get('screen').width;
@@ -48,49 +47,44 @@ const MembershipPurchaseScreen: React.FunctionComponent<MembershipPurchaseScreen
 
 
     useEffect(() => {
-        AsyncStorage.getItem('logId')
-        .then((data) => {
-            if (data) {
-                setLogId(data);
-            }
-        })
-        .catch((error) => {
-            console.log('Error retrieving logId:', error);
-        });
-    }, []);
-
-    useEffect(() => {
-        const fetchUserData = async () => {
+    const fetchData = async () => {
         try {
-            const response = await axios.get(`${BASE_URL}/user/${logId}`);
-            const userData = response.data;
-            console.log(response.data)
-            setUserData(userData);
-        } catch (error) {
-            console.log('Error fetching user data:', error);
-        }
-        };
-
+        // AsyncStorage에서 logId 가져오기
+        let logId = await AsyncStorage.getItem('logId');
         if (logId) {
-        fetchUserData();
+            // Remove quotes from logId, if present
+            logId = logId.replace(/^['"](.*)['"]$/, '$1');
+            console.log(logId);
+
+            // logId를 사용하여 사용자 데이터 가져오기
+            const response = await axios.get(`${BASE_URL}/user/${logId}`);
+            if (response.status === 200) {
+            setUserData(response.data);
+            console.log('Fetched User Data:', response.data);
+            }
         }
-    }, [logId]);
+        } catch (error) {
+        console.log('Error:', error);
+        }
+    };
+
+    fetchData();
+    }, []);
 
 
   //고유한 주문번호 생성
-  const now = new Date();
-  const timestamp = now.getTime(); // 밀리초 단위 타임스탬프
-  const milliseconds = now.getMilliseconds(); // 현재 밀리초
-  const [merchantUid, setMerchantUid] = useState(`mid_${timestamp}_${milliseconds}`);
-
+    const now = new Date();
+    const timestamp = now.getTime(); // 밀리초 단위 타임스탬프
+    const milliseconds = now.getMilliseconds(); // 현재 밀리초
+    const [merchantUid, setMerchantUid] = useState(`mid_${timestamp}_${milliseconds}`);
     const [buyerName, setBuyerName] = useState(null);
-    const [buyerTel, setBuyerTel] = useState('01072976384');
+    const [buyerTel, setBuyerTel] = useState(null);
     const [buyerEmail, setBuyerEmail] = useState(null);
 
   useEffect(() => {
     if (userData) {
       setBuyerName(userData.username);
-      // setBuyerTel(userData.logId);
+      setBuyerTel(userData.phone_number);
       setBuyerEmail(userData.email);
     }
   }, [userData]);

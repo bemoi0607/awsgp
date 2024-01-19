@@ -7,9 +7,9 @@ import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { HistoryScreens, HistoryStackParamList, MainScreens, MainStackParamList, MMScreens, MMStackParamList } from '../stacks/Navigator';
 import { RouteProp } from '@react-navigation/native';
-import Constants from 'expo-constants';
+import config from '../config'
 
-// const BASE_URL = Constants.manifest.extra.BASE_URL;
+const BASE_URL = config.SERVER_URL;
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;

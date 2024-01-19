@@ -4,15 +4,15 @@ import { View,Text,TouchableOpacity,StyleSheet,ScrollView, Dimensions, Platform,
 import { Fontisto } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import Constants from 'expo-constants';
 import { MembershipScreens, MembershipStackParamList } from '../stacks/Navigator';
+import config from '../config'
 
 ////////////////////////////////////////////////////////////////
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
-const BASE_URL = "http://100.114.50.220:8080"
+const BASE_URL = config.SERVER_URL;
 
 const shadowStyle = Platform.select({
     ios: {

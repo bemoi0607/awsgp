@@ -19,12 +19,14 @@ import { Fontisto } from '@expo/vector-icons';
 import axios from 'axios';
 import {PTScreens, PTStackParamList } from '../stacks/Navigator';
 import { StackNavigationProp } from '@react-navigation/stack';
-import Constants from 'expo-constants';
 import { ItemClick } from 'native-base/lib/typescript/components/composites/Typeahead/useTypeahead/types';
 import { screenWidth } from './RoomADetailScreen';
-import id from 'date-fns/esm/locale/id/index.js';
+// import id from 'date-fns/esm/locale/id/index.js';
+import config from '../config'
 
-const BASE_URL = Constants.manifest.extra.BASE_URL;///////
+const BASE_URL = config.SERVER_URL;
+
+
 
 type PayPTScreenNavigationProps = StackNavigationProp<
     PTStackParamList,

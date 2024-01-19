@@ -4,14 +4,16 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from 'axios'
-import Constants from 'expo-constants';
 import React from 'react';
 import { screenWidth } from './RoomADetailScreen';
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
+import config from '../config'
 
-// const BASE_URL = Constants.manifest.extra.BASE_URL;
+const BASE_URL = config.SERVER_URL;
+
+
 ///////////////////////////////
 
 type PTProfileScreenNavigationProps = StackNavigationProp<

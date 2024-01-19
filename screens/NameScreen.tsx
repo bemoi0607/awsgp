@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, BackHandler } from 'react-native';
-import { Input } from 'native-base';
+import { View, Text, TouchableOpacity, BackHandler, Dimensions, TextInput,Image, Button } from 'react-native';
+import { Input, KeyboardAvoidingView } from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainScreens,MainStackParamList } from '../stacks/Navigator';
+
 
 type NameScreenNavigationProps = StackNavigationProp<
     MainStackParamList, 
@@ -12,14 +13,17 @@ type NameScreenNavigationProps = StackNavigationProp<
 
 interface NameScreenProps {
     navigation: NameScreenNavigationProps; 
+
 };
 
+const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('screen').height;
 
 
 const NameScreen:React.FunctionComponent<NameScreenProps> = ({navigation}) => {
 
 
-  useEffect(() => {
+useEffect(() => {
         const backAction = () => {
             navigation.navigate(MainScreens.LogIn);
             return true; 
@@ -32,7 +36,7 @@ const NameScreen:React.FunctionComponent<NameScreenProps> = ({navigation}) => {
     
     const [name, setName] = useState<string>('');
 
-    const handleContinue = async () => {
+const handleContinue = async () => {
     try {
         await AsyncStorage.setItem('Name', name);
         console.log(name)
@@ -42,27 +46,49 @@ const NameScreen:React.FunctionComponent<NameScreenProps> = ({navigation}) => {
     }
 };
 
+    const isNameEmpty = () => {
+        return name.trim().length === 0;
+    };
+
 
     return (
-        <View style={{ height: '100%', justifyContent: 'space-between', backgroundColor: 'white' }}>
-        <View>
-            <Text style={{ color: 'black', fontSize: 20, marginBottom: '5%', fontWeight: 'bold' }}>
-              이름을 입력해주세요.
-            </Text>
+        <KeyboardAvoidingView style={{flex:1,backgroundColor:'white'}} behavior='padding'>
+        
+        <View style={{justifyContent:'space-between',alignItems:'center',flex:1, backgroundColor:'white'}} >
+                <View style={{justifyContent:'center',alignItems:'center'}}>
+                    <Image source={require('../images/1.jpg')} style={{width:screenWidth,height:80}} resizeMode='contain' />
+                    <Text style={{fontSize:20, fontWeight:'bold', }}>
+                        이름을 입력해주세요.
+                    </Text>
+                    <TextInput
+                        style={{ borderBottomWidth: 0.5, borderColor: 'gray', fontSize: 35, fontWeight: 'bold',width:screenWidth*0.9, marginTop:'10%' }}
+                        placeholder="이름"
+                        placeholderTextColor={'gray'}
+                        onChangeText={(text) => setName(text)}
+                    />  
+                </View>
+
+            <View style={{ height: screenHeight * 0.3, justifyContent: 'flex-end' }}>
+                <TouchableOpacity
+                    style={{
+                        borderRadius: 15,
+                        backgroundColor: isNameEmpty() ? 'gray' : '#4A7AFF', // 버튼 색상 조건부 설정
+                        width: screenWidth * 0.9,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: screenHeight * 0.05,
+                        marginBottom: '3%'
+                    }}
+                    onPress={handleContinue}
+                    disabled={isNameEmpty()} // 버튼 활성화 상태 조건부 설정
+                >
+                    <Text style={{ fontSize: 18, color: 'white' }}>확인</Text>
+                </TouchableOpacity>
+            </View>
+
         </View>
-        <View>
-            <Input
-            style={{ borderWidth: 1, borderColor: 'white', fontSize: 35, fontWeight: 'bold' }}
-            placeholder="이름"
-            onChangeText={(text) => setName(text)}
-            />
-        </View>
-        <View style={{ marginBottom: '3%' }}>
-            <TouchableOpacity style={{ borderWidth: 1 }} onPress={handleContinue}>
-            <Text style={{ fontSize: 20 }}>Continue</Text>
-            </TouchableOpacity>
-        </View>
-        </View>
+        </KeyboardAvoidingView>
+        
     );
 };
 

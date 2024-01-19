@@ -3,7 +3,7 @@ import { Icon, IconButton, List, Text, Image } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { MainScreens, MainStackParamList } from '../stacks/Stacks';
+import { MainScreens, MainStackParamList } from '../stacks/Navigator';
 import { BackHandler, View } from 'react-native';
 
 ////////////////////////////////////////////////////////////////

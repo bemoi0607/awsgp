@@ -7,8 +7,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MembershipPurchaseParamList, MembershipPurchaseScreens } from '../stacks/Navigator';
+import config from '../config'
 
-const BASE_URL = "http://100.114.50.220:8080"
+
+const BASE_URL = config.SERVER_URL;
 
 type MembershipPurchaseScreenNavigationProps = StackNavigationProp<
   MembershipPurchaseParamList,
