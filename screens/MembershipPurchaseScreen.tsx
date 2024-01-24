@@ -6,6 +6,8 @@ import { RouteProp } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../config'
+import { height,width } from './HomeScreen';
+import { background } from 'native-base/lib/typescript/theme/styled-system';
 
 const BASE_URL = config.SERVER_URL;
 
@@ -25,13 +27,13 @@ interface MembershipPurchaseScreenProps {
 
 const shadowStyle = Platform.select({
   ios: {
-    shadowColor: 'rgba(0, 0, 0, 0.2)',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 4,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
   },
   android: {
-    elevation: 5,
+    elevation: 3,
   },
 });
 
@@ -156,18 +158,10 @@ const MembershipPurchaseScreen: React.FunctionComponent<MembershipPurchaseScreen
 
   return (
     <ScrollView>
-      <View style={{ height: screenHeight, backgroundColor: 'white' }}>
-        <Image
-          source={require('../images/secondevent.gif')}
-          style={{ width: screenWidth, height: screenHeight * 0.25 }}
-        />
-        <View style={{marginTop: screenWidth * 0.08 }}>
-          <View style={{ backgroundColor: 'white', height: screenHeight * 0.05, marginLeft: screenWidth * 0.06}}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black'}}>
+      <View style={{ height: screenHeight, backgroundColor: '#F8F9FA',paddingHorizontal:24 }}>       
+        <Text style={styles.subtitle}>
               짐프라이빗 대관 기간권
-            </Text>
-          </View>
-
+        </Text>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 {membershipProducts.map((product) => (
                     <TouchableOpacity 
@@ -175,39 +169,22 @@ const MembershipPurchaseScreen: React.FunctionComponent<MembershipPurchaseScreen
                     style={styles.MemberShipContainer}
                     onPress={() => handlePayment(product.name, product.amount, product.duration)}
                     >
-                        <View style={{flexDirection:'row',marginTop:'5%'}}>
-                            <Text style={{ fontSize: 21, fontWeight: 'bold',color:'#797676' }}>{product.name}</Text>
-                            <View style={{
-                              backgroundColor:'#4A7AFF',
-                              width:'30%',
-                              height: screenHeight*0.028,
-                              justifyContent:'center',
-                              alignItems:'center',
-                              borderRadius:20,
-                              marginLeft:'5%',
-                              marginTop:'1.5%'
-                              
-                            }}>
-                              <Text style={{color:'white',fontWeight:'bold',fontSize:14}}>무제한이용</Text>
-                          </View>
+                    <View style={{flex:1,paddingHorizontal:24,flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
+                      <View>
+                        <Text style={styles.Body1}>{product.name}</Text>
+                        <Text style={styles.caption2}>10% 할인가</Text>
+                      </View>
+                      <TouchableOpacity style={styles.PriceContainer}>
+                        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                          <Text style={styles.caption1}>{product.amount.toLocaleString()}원</Text>
                         </View>
-
-                        <View style={{marginTop:'13%',marginLeft:'77%'}}>
-                          <Text style={{fontSize: 12, color: '#C2C2C2', textDecorationLine: 'line-through'}}>
-                              {(product.amount * 1.5).toLocaleString()}원
-                            </Text>
-                        </View>
-
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 18, fontWeight: 'bold',color:'#797676' }}>짐프라이빗 회원가</Text>
-                            <Text style={{ marginLeft: 10, fontSize: 18, fontWeight: 'bold',color:'#4A7AFF',marginLeft:'5%' }}>50%</Text>
-                            <Text style={{ fontSize: 18, fontWeight: 'bold',color:'#797676',marginLeft:'2%'  }}>{product.amount.toLocaleString()}</Text>
-                        </View>
+                      </TouchableOpacity>
+                    </View>
                     </TouchableOpacity>
                 ))}
             </View>
           </View>
-      </View>
+
     </ScrollView>
   );
 };
@@ -215,25 +192,41 @@ const MembershipPurchaseScreen: React.FunctionComponent<MembershipPurchaseScreen
 export default MembershipPurchaseScreen;
 
 const styles = StyleSheet.create({
+  subtitle:{
+    fontSize:24,
+    fontWeight:'bold',
+    marginTop:40
+},
   membershipContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    
     flex: 1,
   },
-
+  PriceContainer:{
+   width:100/width,
+   height:40/height,
+   borderRadius:8,
+   backgroundColor:'#F1F3F5'
+  },
   MemberShipContainer: {
     ...shadowStyle,
-    height: screenHeight * 0.18,
-    width: screenWidth * 0.85,
-    marginTop: 20,
-    marginBottom:10,
-    borderRadius: 10,
+    height:88/height,
+    width: '100%',
+    marginTop: 24,
+    borderRadius: 16,
     backgroundColor: 'white',
-    paddingHorizontal: 15,
   },
-  membershipTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  Body1:{
+   fontSize:20,
+   color:'black',
+   fontWeight:'bold'
   },
+  caption1:{
+    fontSize:16,
+    fontWeight:'500'
+  },
+  caption2:{
+    fontSize:12,
+    color:'#4169E1'
+  }
 });

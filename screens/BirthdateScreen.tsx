@@ -5,6 +5,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainScreens,MainStackParamList } from '../stacks/Navigator';
 
+
+
+
 type BirthdateScreenNavigationProps = StackNavigationProp<
     MainStackParamList, 
     'BirthDate'

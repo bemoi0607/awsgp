@@ -4,7 +4,7 @@ import { View,ScrollView,Text,StyleSheet,TouchableOpacity, Dimensions, Platform,
 import { BookingScreens, BookingStackParamList } from '../stacks/Navigator';
 import { roomPictures } from '../slots/roomPictures';
 import config from '../config'
-
+import { height,width } from './HomeScreen';
 const BASE_URL = config.SERVER_URL;
 
 export const screenWidth = Dimensions.get('screen').width;
@@ -21,6 +21,8 @@ const shadowStyle = Platform.select({
         elevation: 10,
     },
 })
+
+
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -287,7 +289,7 @@ return (
         <TouchableOpacity
             onPress={()=>{navigation.navigate(BookingScreens.Booking)}}
             style={{
-                backgroundColor: '#1E90FF',
+                backgroundColor: '#4169E1',
                 padding: 15,
                 marginHorizontal: 16,
                 borderRadius: 20,

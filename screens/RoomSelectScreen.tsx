@@ -112,7 +112,7 @@ const RoomSelectScreen:React.FunctionComponent<BookedInfoScreenProps> = (props) 
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center',marginTop:'5%',marginLeft:'6%'}}>
                 <Text style={{ fontSize: 18}}>₩5,000/30분</Text>
-                    <View style={{ backgroundColor: '#1F75FE', height: screenWidth * 0.05, borderRadius: 10, justifyContent: 'center', alignItems: 'center',marginLeft:'1.5%' }}>
+                    <View style={{ backgroundColor: '#4169E1', height: screenWidth * 0.05, borderRadius: 10, justifyContent: 'center', alignItems: 'center',marginLeft:'1.5%' }}>
                     <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold', paddingHorizontal: '2.5%' }}>할인쿠폰</Text>
                     </View>
               </View>
