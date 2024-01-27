@@ -1,7 +1,7 @@
 PODS:
-  - AmplifyRTNCore (1.0.13):
+  - AmplifyRTNCore (1.0.12):
     - React-Core
-  - AmplifyRTNWebBrowser (1.0.13):
+  - AmplifyRTNWebBrowser (1.0.12):
     - React-Core
   - boost (1.76.0)
   - DoubleConversion (1.1.6)
@@ -322,6 +322,9 @@ PODS:
     - ReactCommon/turbomodule/core
   - react-native-viewpager (5.0.11):
     - React-Core
+  - react-native-webview (13.6.4):
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
   - React-NativeModulesApple (0.72.6):
     - React-callinvoker
     - React-Core
@@ -427,7 +430,7 @@ PODS:
     - React-jsi (= 0.72.6)
     - React-logger (= 0.72.6)
     - React-perflogger (= 0.72.6)
-  - RNCAsyncStorage (1.21.0):
+  - RNCAsyncStorage (1.18.2):
     - React-Core
   - RNGestureHandler (2.12.1):
     - React-Core
@@ -479,6 +482,7 @@ DEPENDENCIES:
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-viewpager (from `../node_modules/@react-native-community/viewpager`)"
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -579,6 +583,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-viewpager:
     :path: "../node_modules/@react-native-community/viewpager"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-NativeModulesApple:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios"
   React-perflogger:
@@ -627,8 +633,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AmplifyRTNCore: 8ae89bf2e13d9b475f3016653d3b91917bc34461
-  AmplifyRTNWebBrowser: 99582f9ab24d962d22dcabcae33e100d87b707b0
+  AmplifyRTNCore: 193763385b67c18d4f2abca718eeb7886b03aa00
+  AmplifyRTNWebBrowser: c89453eca39b3ef96920592ce6fd5a44440b0271
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EXApplication: 042aa2e3f05258a16962ea1a9914bf288db9c9a1
@@ -663,6 +669,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: 8a7fd3f7130ef4ad2fb4276d5c9f8d3f28d2df3d
   react-native-safe-area-context: 36cc67648134e89465663b8172336a19eeda493d
   react-native-viewpager: b99b53127d830885917ef84809c5065edd614a78
+  react-native-webview: 107961c73db53d66549c867a3b64eaa20d34c41f
   React-NativeModulesApple: 63505fb94b71e2469cab35bdaf36cca813cb5bfd
   React-perflogger: e3596db7e753f51766bceadc061936ef1472edc3
   React-RCTActionSheet: 17ab132c748b4471012abbcdcf5befe860660485
@@ -680,7 +687,7 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 13b0c5e9354ccfc3dc9a391231e55debeb688523
   React-utils: fa59c9a3375fb6f4aeb66714fd3f7f76b43a9f16
   ReactCommon: 5f73972d2abd8a85e44f27317bf77418a74d3340
-  RNCAsyncStorage: 618d03a5f52fbccb3d7010076bc54712844c18ef
+  RNCAsyncStorage: ddc4ee162bfd41b0d2c68bf2d95acd81dd7f1f93
   RNGestureHandler: c0d04458598fcb26052494ae23dda8f8f5162b13
   RNScreens: 50ffe2fa2342eabb2d0afbe19f7c1af286bc7fb3
   RNSVG: d00c8f91c3cbf6d476451313a18f04d220d4f396

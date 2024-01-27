@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
  Body2:{
     fontSize:20,
     fontWeight:'600',
-    color:'333333'
+    color:'#333333'
   },
   Caption1:{
     fontSize:16,

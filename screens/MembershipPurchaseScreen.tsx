@@ -1,7 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions, Image, Platform,ScrollView, TouchableOpacity } from 'react-native';
-import { MembershipPurchaseScreens, MembershipPurchaseParamList, MembershipScreens } from '../stacks/Navigator';
+import { MembershipPurchaseScreens, MembershipPurchaseParamList} from '../stacks/Navigator';
 import { RouteProp } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -92,17 +92,18 @@ const MembershipPurchaseScreen: React.FunctionComponent<MembershipPurchaseScreen
   }, [userData]);
 
   
-  const handlePayment = async (productName, productAmount , productDuration)=> {
+  const handlePayment = async (productName , productDuration)=> {
     const data = {
       params: {
         pg: 'html5_inicis.INIpayTest',
         pay_method: 'card',
-        notice_url:`https://9866-220-127-76-219.ngrok-free.app/portone-webhook`,
+        notice_url:`https://8af0-221-153-79-55.ngrok-free.app/portone-webhook`,
         currency: undefined,
         display: undefined,
         merchant_uid: merchantUid,
         name: productName, // Set the value directly
-        amount: productAmount,
+        // amount: productAmount,
+        amount: 100,
         app_scheme: 'exampleformanagedexpo',
         tax_free: undefined,
         buyer_name: buyerName,

@@ -24,8 +24,8 @@ import RoomBDetailScreen from '../screens/RoomBDetailScreen';
 import RoomCDetailScreen from '../screens/RoomCDetailScreen';
 import BookingScreen from '../screens/BookingScreen';
 import BookedInfoScreen from '../screens/BookedInfoScreen';
-// import BookingPayment from '../screens/BookingPayment';
-// import BookingPaymentResult from '../screens/BookingPaymentResult';
+import BookingPayment from '../screens/BookingPayment';
+import BookingPaymentResult from '../screens/BookingPaymentResult';
 import MembershipRoomSelectScreen from '../screens/MembershipRoomSelectScreen';
 import MembershipRoomADetailScreen from '../screens/MembershipRoomADetailScreen';
 import MembershipRoomBDetailScreen from '../screens/MembershipRoomBDetailScreen';
@@ -238,7 +238,8 @@ export enum MembershipPurchaseScreens {
 
 export type MembershipPurchaseParamList = {//should defined;
     MembershipPurchase: undefined;
-    MembershipPayment: undefined; 
+    MembershipPayment: undefined;
+    MembershipPaymentResult:undefined
 };
 
 
@@ -360,8 +361,8 @@ const BookingStackNavigator: React.FunctionComponent = () => {
                 <BookingStack.Screen name="RoomCDetail" component={RoomCDetailScreen}/>
                 <BookingStack.Screen name="Booking" component={BookingScreen}/>
                 <BookingStack.Screen name="BookedInfo" component={BookedInfoScreen}/>
-                {/* <BookingStack.Screen name="BookingPayment" component={BookingPayment}/> */}
-                {/* <BookingStack.Screen name={BookingScreens.BookingPaymentResult} component={BookingPaymentResult}/>  */}
+                <BookingStack.Screen name="BookingPayment" component={BookingPayment}/> 
+                <BookingStack.Screen name={BookingScreens.BookingPaymentResult} component={BookingPaymentResult}/> 
             </BookingStack.Navigator>
     );
 };
@@ -384,8 +385,8 @@ const MembershipPurchaseNavigator: React.FunctionComponent = () => {
     return (
             <MembershipPurchase.Navigator screenOptions={{ headerShown : true }}>
                 <MembershipPurchase.Screen name={MembershipPurchaseScreens.MembershipPurchase} component={MembershipPurchaseScreen}/>
-                {/* <MembershipPurchase.Screen name={MembershipPurchaseScreens.MembershipPayment} component={MembershipPayment}/>
-                <MembershipPurchase.Screen name={MembershipPurchaseScreens.MembershipPaymentResult} component={MembershipPaymentResult}/> */}
+                <MembershipPurchase.Screen name={MembershipPurchaseScreens.MembershipPayment} component={MembershipPayment}/>
+                <MembershipPurchase.Screen name={MembershipPurchaseScreens.MembershipPaymentResult} component={MembershipPaymentResult}/> 
             </MembershipPurchase.Navigator>
     );
 };
@@ -395,9 +396,9 @@ const PTStackNavigator: React.FunctionComponent = () => {
             <PTStack.Navigator screenOptions={{ headerShown : true }}>
                 <PTStack.Screen name={PTScreens.PTProfile} component={PTProfileScreen}/>
                 <PTStack.Screen name={PTScreens.PayPT} component={PayPTScreen} options={{ headerShown : false }}/>
-                {/* <PTStack.Screen name={PTScreens.PaymentTest} component={PaymentTest}/>
+                <PTStack.Screen name={PTScreens.PaymentTest} component={PaymentTest}/>
                 <PTStack.Screen name={PTScreens.Payment} component={Payment}/>
-                <PTStack.Screen name={PTScreens.PaymentResult} component={PaymentResult}/> */}
+                <PTStack.Screen name={PTScreens.PaymentResult} component={PaymentResult}/> 
             </PTStack.Navigator>
     );
 };
@@ -415,7 +416,7 @@ const MMStackNavigator: React.FunctionComponent = () => {
     return (
             <MMStack.Navigator screenOptions={{ headerShown : true }}>
                 <MMStack.Screen name={MMScreens.MyMembership} component={MyMembershipScreen}/>
-                {/* <MMStack.Screen name={MMScreens.PTReview} component={PTReviewScreen}/> */}
+                <MMStack.Screen name={MMScreens.PTReview} component={PTReviewScreen}/> 
             </MMStack.Navigator>
     );
 };

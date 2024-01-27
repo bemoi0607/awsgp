@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   ScrollView,
+  StyleSheet,
   Text,
   Dimensions,
   Platform,
@@ -23,6 +24,9 @@ import { ItemClick } from 'native-base/lib/typescript/components/composites/Type
 import { screenWidth } from './RoomADetailScreen';
 // import id from 'date-fns/esm/locale/id/index.js';
 import config from '../config'
+import { height,width } from './HomeScreen';
+
+
 
 const BASE_URL = config.SERVER_URL;
 
@@ -37,9 +41,22 @@ interface PayPTScreenProps {
     navigation: PayPTScreenNavigationProps;
 }
 
+const shadowStyle = Platform.select({
+  ios: {
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+  },
+  android: {
+    elevation: 3,
+  },
+});
 
-const WIDTH = Dimensions.get("screen").width
-const height =Dimensions.get("screen").height
+
+const WIDTH = Dimensions.get('screen').width;
+const HEIGHT = Dimensions.get('screen').height;
+
 
 
 
@@ -99,18 +116,7 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
       fetchReviews();
     }, []);
 
-  // 그림자 효과를 위한 스타일 객체 생성
-  const shadowStyle = Platform.select({
-    ios: {
-      shadowColor: 'rgba(0, 0, 0, 0.2)',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 1,
-      shadowRadius: 4,
-    },
-    android: {
-      elevation: 10,
-    },
-  });
+
 
   useEffect(() => {
     fetchTrainerData(); // Retrieve trainer data
@@ -161,40 +167,7 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
     return <Text>Loading...</Text>;
   }
 
-  const addToWishlist = async () => {
-    try {
-      const response = await fetch(`${BASE_URL}/wishlist`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id }),
-        
-      });
-      const data = await response.json();
-      setIsWishlist(true);
-      scale();
-      console.log(id)
-      alert('위시리스트에 추가되었습니다!'); 
-      // 위시리스트 추가 결과 처리
-    } catch (error) {
-      // 에러 처리
-    }
-  };
-
-  const removeWishlist = async () => {
-    try {
-      const response = await fetch(`${BASE_URL}/wishlist/${id}`, {
-        method: 'DELETE',
-      });
-      const data = await response.json();
-      setIsWishlist(false);
-      // 위시리스트 삭제 결과 처리
-    } catch (error) {
-      // 에러 처리
-    }
-  };
-
+ 
   const headerOpacity = scrollY.interpolate({
     inputRange: [250, 400],
     outputRange: [0, 1],
@@ -320,7 +293,7 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
         
       
         <Animated.ScrollView ref={scrollViewRef}
-          style={{ marginTop: height*0.1, flex: 1 }}
+          style={{ marginTop: HEIGHT*0.1, flex: 1 }}
           showsVerticalScrollIndicator={false}
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { y: scrollY } } }],
@@ -427,30 +400,33 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
             <View style={{width:screenWidth,height:screenWidth*0.2,backgroundColor:'white',justifyContent:'center'}}>
                 <Text style={{fontSize:23,fontWeight:'bold',marginLeft:'7%'}}>PT</Text>
             </View>
-              <View style={{width:screenWidth,height:'auto',backgroundColor:'white',alignItems:'center',borderBottomWidth:1,borderBottomColor:'#EEEDED'}}>
+              <View style={{width:screenWidth,height:'auto',backgroundColor:'white',alignItems:'center',borderBottomWidth:1,borderBottomColor:'#EEEDED',paddingHorizontal:24}}>
                 {ptproducts.map((item, index) => (
-                  <TouchableOpacity 
-                  key={index} style={{width:'90%',height:screenWidth*0.32,backgroundColor:'white',borderRadius:10,...shadowStyle,justifyContent:'center',paddingHorizontal:'4%',paddingVertical:'3%',marginBottom:25}}
-                  onPress={() => {
-                    navigation.push('PaymentTest', {
-                      amount:item.session*item.price ,
-                      trainerId: item.trainer_id,
-                      name: item.trainer_name,
-                      session:item.session
-                    });
-                    console.log(item.trainer_name)
-                }}
-                  >
-                    <View style={{flex:1,backgroundColor:'white'}}>
-                      <Text style={{fontSize:23,fontWeight:'bold',color:'#1F75FE'}}>1:1PT {item.session}회</Text>
-                      <Text style={{fontSize:14,color:'#C2C2C2',textDecorationLine: 'line-through',marginLeft:'auto',marginTop:'auto',marginBottom:'2%'}}>{item.price} 원</Text>
-                      <View style={{ flexDirection: 'row',marginLeft:'auto' }}>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold',color:'#797676' }}>짐프라이빗회원가</Text>
-                        <Text style={{ marginLeft: 10, fontSize: 18, fontWeight: 'bold',color:'#1F75FE',marginLeft:'3%',marginRight:'1%' }}>10%</Text>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold',color:'#797676',marginLeft:'2%'  }}>{item.price.toLocaleString()}원/회</Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
+                 <TouchableOpacity 
+                 key={index} 
+                 style={styles.MemberShipContainer}
+                 onPress={() => handlePayment(product.name, product.amount, product.duration)} onPress={() => {
+                 navigation.push('PaymentTest', {
+                  amount:item.session*item.price ,
+                  trainerId: item.trainer_id,
+                  name: item.trainer_name,
+                  session:item.session
+                 });
+                 
+             }} >
+                 <View style={{flex:1,paddingHorizontal:24,flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
+                   <View>
+                     <Text style={styles.Body1}>1:1PT {item.session}회</Text>
+                     <Text style={styles.caption2}>10% 할인가</Text>
+                   </View>
+                   <TouchableOpacity style={styles.PriceContainer}>
+                     <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                       <Text style={styles.caption1}>{(item.price*item.session).toLocaleString()}원</Text>
+                     </View>
+                   </TouchableOpacity>
+                 </View>
+                 </TouchableOpacity>
+                  
                 ))}
               </View>
             
@@ -548,7 +524,7 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
        <TouchableOpacity
        onPress={() => handleScrollToView(4)}
             style={{
-                backgroundColor: '#1E90FF',
+                backgroundColor: '#4169E1',
                 padding: 15,
                 marginHorizontal: 16,
                 borderRadius: 20,
@@ -573,3 +549,43 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
 
 export default PayPtScreen;
 
+const styles = StyleSheet.create({
+  subtitle:{
+    fontSize:24,
+    fontWeight:'bold',
+    marginTop:40
+},
+  membershipContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  PriceContainer:{
+   width:100,
+   height:40/height,
+   borderRadius:8,
+   backgroundColor:'#F1F3F5'
+  },
+  MemberShipContainer: {
+    ...shadowStyle,
+    height:88/height,
+    width: '100%',
+    marginTop: 12,
+    borderRadius: 16,
+    backgroundColor: 'white',
+    marginBottom:12
+  },
+  Body1:{
+   fontSize:20,
+   color:'black',
+   fontWeight:'bold'
+  },
+  caption1:{
+    fontSize:16,
+    fontWeight:'500'
+  },
+  caption2:{
+    fontSize:12,
+    color:'#4169E1'
+  }
+});

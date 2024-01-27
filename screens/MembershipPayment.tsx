@@ -6,7 +6,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { MembershipPurchaseParamList, MembershipPurchaseScreens } from '../stacks/Navigator';
+import { MembershipPurchaseParamList, MembershipPurchaseScreens  } from '../stacks/Navigator';
 import config from '../config'
 
 
@@ -40,7 +40,7 @@ const fetchUpdatedPaymentRequest = async (merchantUid) => {
   }
 };
 
-const handlePaymentComplete = async (response) => {
+const handlePaymentComplete= (navigation) =>  async (response) => {
   try {
     const merchantUid = response.merchant_uid;
     const paymentRequest = await fetchUpdatedPaymentRequest(merchantUid);
@@ -92,7 +92,7 @@ const MembershipPayment= ({ navigation, route }) => {
         userCode="imp11480521"
         loading={<Loading />}
         data={params}
-        callback={handlePaymentComplete}
+        callback={handlePaymentComplete(navigation)}
       />
     </SafeAreaView>
   );

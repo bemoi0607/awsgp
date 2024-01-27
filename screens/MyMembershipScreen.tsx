@@ -40,8 +40,8 @@ const MyMembershipScreen:React.FunctionComponent<MyMembershipScreenProps> = (pro
   const {navigation} = props;
   const [periodmembershipData, setperiodMembershipData] = useState([]);
   const [trainerMembershipData, setTrainerMembershipData] = useState([]);
-
   const [trainerreview, setTrainerReview] = useState([]);
+
   console.log(trainerreview)
   useEffect(() => {
     const fetchData = async () => {
@@ -146,13 +146,12 @@ const MyMembershipScreen:React.FunctionComponent<MyMembershipScreenProps> = (pro
           <View style={{width:screenWidth,height:screenWidth*0.15,backgroundColor:'white',justifyContent:'center'}}>
             <Text style={{fontSize:18,fontWeight:'bold',marginLeft:'5%'}}>PT 회원권</Text>
           </View>
-          {trainerreview.length === 0 ? (
+          {trainerMembershipData.length === 0 ? (
             <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, height: screenHeight*0.5 }}>
               <Text style={{ fontSize: 18, fontWeight: 'bold' }}>트레이너 회원권이 없습니다.</Text>
             </View>
           ) : (
-            trainerreview.map((item) => {
-              // 이제 트레이너 회원권 데이터를 사용하여 스크린을 구성할 수 있습니다.
+            trainerMembershipData.map((item) => {
               return (
                 <View
                 key={item.tmid}

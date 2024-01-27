@@ -8,6 +8,7 @@ import Constants from 'expo-constants';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { View } from 'react-native';
+import config from '../config';
 ////////////////////////////////////////////////////////////////////////
 
 type PaymentTestNavigationProps = StackNavigationProp<
@@ -30,7 +31,7 @@ const Payment= ({ navigation, route }) => {
   // 주문내역 정보가 들어있음
   const params = route.params; // Get the params directly from route.params
   console.log(params);
-  const BASE_URL = Constants.manifest.extra.BASE_URL;
+  const BASE_URL = config.SERVER_URL;
   
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -70,32 +71,38 @@ const Payment= ({ navigation, route }) => {
   
   // 결제 요청 데이터를 가져오기 위한 새로운 함수 생성
   const handleSubmit = async (merchantUid) => {
-      try {
-          const logId = await AsyncStorage.getItem('logId');
-          const productName = await AsyncStorage.getItem('productName');
-          const startDate = await AsyncStorage.getItem('startDate');
-          const Gender = await AsyncStorage.getItem('Gender');
-          const Session = await AsyncStorage.getItem('Session');
-          const TrainerId = await AsyncStorage.getItem('TrainerId');
-          
-  
-       await axios.post(`${BASE_URL}/training_membership`, {
-          name: productName,
-          logId: logId,
-          merchantUid: merchantUid,
-          pstate: 1,
-          startDate:startDate,
-          Gender:Gender,
-          Session: Session,
-          TrainerId:TrainerId
-          });
-  
-          console.log('Reservation created successfully');
-      // 응답에 대한 처리
-      } catch (error) {
-          console.error(error);
-      }
-  };
+    try {
+        let logId = await AsyncStorage.getItem('logId');
+
+        // logId가 존재하면 양쪽의 따옴표 제거
+        if (logId) {
+            logId = logId.replace(/^['"](.*)['"]$/, '$1');
+            console.log(logId);
+        }
+
+        const productName = await AsyncStorage.getItem('productName');
+        const Gender = await AsyncStorage.getItem('Gender');
+        const Session = await AsyncStorage.getItem('Session');
+        const TrainerId = await AsyncStorage.getItem('TrainerId');
+
+        await axios.post(`${BASE_URL}/training_membership`, {
+            name: productName,
+            logId: logId,
+            merchantUid: merchantUid,
+            pstate: 1,
+            Gender: Gender,
+            Session: Session,
+            TrainerId: TrainerId
+        });
+
+        console.log('Reservation created successfully');
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+
+
   
   return (
     <View style={{ flex: 1}}>

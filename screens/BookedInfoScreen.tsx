@@ -209,9 +209,9 @@ useEffect(() => {
           <View style={{flexDirection:'row',backgroundColor:'white',height:screenHeight*0.19,paddingHorizontal:25}}>
             <Image
             style={{
-              width: 135,
-              height: 135,
-              borderRadius:15,
+              width: '35%',
+              height: '80%',
+              borderRadius:8,
               marginTop:20
             }}
             source={require('../images/rooms1.png')}/>
