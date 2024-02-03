@@ -59,16 +59,16 @@ interface HomeScreenProps {
 //////////////////////////////////////////////////////////////// 
 
 
-const images = [
-    require('../images/earlybird.jpeg'),
-    require('../images/earlybird.jpeg'),
-    require('../images/earlybird.jpeg'),
-    require('../images/earlybird.jpeg'),
-    require('../images/earlybird.jpeg'),
-];
+
 
 
 const HomeScreen: React.FunctionComponent<HomeScreenProps> = ({navigation,route}) => {
+
+    const images = [
+        require('../images/리뷰이벤트.png'),
+        require('../images/리뷰이벤트3.png'),
+        require('../images/firstevent.png'),
+    ];
 
     //자동슬라이드 스크롤뷰 
     const [activeIndex, setActiveIndex] = useState(0);
@@ -129,11 +129,11 @@ useEffect(() => {
                 const uid = uidData.uid;
                 console.log(uid);
 
-                // uid 로 pstate 가져오기
-                const pstateResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
-                const pstateData = await pstateResponse.json();
-                setPState(pstateData.p_state);
-                console.log(pstateData)
+                // uid 로 period_membership pstate 가져오기
+                const membershipResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
+                const membershipData = await membershipResponse.json();
+                setPState(membershipData.pstate);
+                console.log(membershipData[0].pstate)
                         
             }
         } catch (error) {
@@ -173,7 +173,7 @@ return (
             >
                 {images.map((image, index) => (
                     <Image
-                        source={{uri:'/Users/isangbeom/Desktop/awsgp/images/firstevent.png'}} 
+                        source={images[index]}
                         style={{ width:screenWidth-48, height: '100%', borderRadius: 16,marginRight:48 }}
                     />
                 ))}
@@ -215,7 +215,21 @@ return (
                 <AntDesign name="right" size={24} color="#FFFFFF" />
             </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.Box3}>
+        <TouchableOpacity 
+        style={styles.Box3}
+        onPress={() => {
+            const url = 'https://talk.naver.com/ct/w4f4np?frm=mnmb&frm=nmb_detail';
+            Linking.canOpenURL(url)
+              .then((supported) => {
+                if (supported) {
+                  Linking.openURL(url);
+                } else {
+                  console.log("Can't handle URL: " + url);
+                }
+              })
+              .catch((err) => console.error('An error occurred', err));
+          }}
+        >
             <View style={{flex:1,paddingHorizontal:24,flexDirection:'row',justifyContent:'space-between',alignItems:'center',paddingVertical:2}}>
                 <View>
                     <Text style={styles.Caption2Black}>궁금한 점이 있으신가요?</Text>

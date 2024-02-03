@@ -197,8 +197,7 @@ useEffect(() => {
 
 
     const cancelPay = (reservation) => {
-        const cancelUrl = "http://172.30.1.42:8080/payments/cancel"; // Replace with the actual URL
-        
+        const cancelUrl = `${BASE_URL}/payments/cancel`; // Replace with the actual URL
         const requestData = {
         merchant_uid: reservation.merchant_uid,
         cancel_request_amount: "", 
@@ -232,7 +231,6 @@ const cancelReservation = async (reservation) => {
     console.log(merchant_uid)
     const apiUrl = `${BASE_URL}/delete_reservation/${merchant_uid}`;
     const response = await axios.post(apiUrl);
-
     console.log(response.data);
     alert("예약이 취소되었습니다.");
     navigation.navigate(MainScreens.MyReservation)

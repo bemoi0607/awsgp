@@ -64,16 +64,20 @@ const handleSubmit = async (merchantUid) => {
         const logId = await AsyncStorage.getItem('logId');
         const productName = await AsyncStorage.getItem('productName');
         const productDuration = await AsyncStorage.getItem('productDuration');
+        const productType = await AsyncStorage.getItem('type');
+        const productTotaltime = await AsyncStorage.getItem('productTotaltime');
 
      await axios.post(`${BASE_URL}/period_membership`, {
         name: productName,
         duration: productDuration,
         logId: logId,
         merchantUid: merchantUid,
-        pstate: 1
+        pstate: 1,
+        type:productType,
+        productTotaltime:productTotaltime
         });
-
-        console.log('Reservation created successfully');
+        console.log(productType)
+        console.log('created successfully');
     // 응답에 대한 처리
     } catch (error) {
         console.error(error);

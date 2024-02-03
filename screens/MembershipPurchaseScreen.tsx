@@ -92,12 +92,12 @@ const MembershipPurchaseScreen: React.FunctionComponent<MembershipPurchaseScreen
   }, [userData]);
 
   
-  const handlePayment = async (productName , productDuration)=> {
+  const handlePayment = async (productName ,productAmount,productDuration,producttype,productTotaltime)=> {
     const data = {
       params: {
         pg: 'html5_inicis.INIpayTest',
         pay_method: 'card',
-        notice_url:`https://8af0-221-153-79-55.ngrok-free.app/portone-webhook`,
+        notice_url:`${BASE_URL}/portone-webhook`,
         currency: undefined,
         display: undefined,
         merchant_uid: merchantUid,
@@ -129,9 +129,11 @@ const MembershipPurchaseScreen: React.FunctionComponent<MembershipPurchaseScreen
     try {
       await AsyncStorage.setItem('productName', productName);
       await AsyncStorage.setItem('productDuration', String(productDuration));
+      await AsyncStorage.setItem('type', producttype);
+      await AsyncStorage.setItem('productTotaltime',String(productTotaltime));
       // 백엔드로 결제 요청 정보 전송
       await axios.post(`${BASE_URL}/payment/requests`, data); //// / ? _
-
+      console.log(producttype)
       navigation.navigate(MembershipPurchaseScreens.MembershipPayment, data.params);
       console.log(data)
     } catch (error) {
@@ -168,7 +170,7 @@ const MembershipPurchaseScreen: React.FunctionComponent<MembershipPurchaseScreen
                     <TouchableOpacity 
                     key={product.id} 
                     style={styles.MemberShipContainer}
-                    onPress={() => handlePayment(product.name, product.amount, product.duration)}
+                    onPress={() => handlePayment(product.name, product.amount,product.duration, product.type , product.total_time)}
                     >
                     <View style={{flex:1,paddingHorizontal:24,flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
                       <View>

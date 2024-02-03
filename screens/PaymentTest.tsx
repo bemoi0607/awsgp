@@ -11,6 +11,7 @@ import { RouteProp } from '@react-navigation/native';
 import { Dimensions, TextInput, TouchableOpacity, View } from 'react-native';
 import {Linking} from 'react-native';
 import config from '../config';
+import { Item } from 'react-native-paper/lib/typescript/components/List/List';
 const BASE_URL = config.SERVER_URL;
 const WIDTH = Dimensions.get("screen").width
 
@@ -80,7 +81,7 @@ const PaymentTest: React.FunctionComponent<PaymentTestProps> = ({ route,navigati
   const [buyerName, setBuyerName] = useState(null);
   const [buyerTel, setBuyerTel] = useState('');
   const [buyerEmail, setBuyerEmail] = useState(null);
-  const { name, amount,session,trainerId } = route.params || {};
+  const { name, amount,session,trainerId,uri } = route.params || {};
   
 
 
@@ -100,7 +101,7 @@ const PaymentTest: React.FunctionComponent<PaymentTestProps> = ({ route,navigati
       params: {
         pg: 'html5_inicis.INIpayTest',
         pay_method: 'card',
-        notice_url:`https://8af0-221-153-79-55.ngrok-free.app/portone-webhook`,
+        notice_url:`${BASE_URL}/portone-webhook`,
         currency: undefined,
         display: undefined,
         merchant_uid: merchantUid,
@@ -164,7 +165,7 @@ const PaymentTest: React.FunctionComponent<PaymentTestProps> = ({ route,navigati
                   borderRadius:15,
                   
                 }}
-              source={require('../images/Room1.jpeg')}/>
+              source={{uri:uri}}/>
            </View>
           <View style={{justifyContent:'center',flex:1}}>
               <Text style={{fontSize:19,color:'#4F4F4F',fontWeight:'bold'}}>

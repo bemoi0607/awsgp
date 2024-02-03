@@ -5,9 +5,9 @@ import Loading from '../Loading';
 import { BookingScreens, BookingStackParamList } from '../stacks/Navigator';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from 'expo-constants';
+import config from '../config'
 
-const BASE_URL = "http://172.30.1.15:8080"
+const BASE_URL = config.SERVER_URL;
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const BookingPayment = ({ navigation, route }) => {

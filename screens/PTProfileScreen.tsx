@@ -96,7 +96,7 @@ const PTProfileScreen = ({ navigation }: Props) => {
                     </Text>
                   </View>
                   <View style={{flex:1}}>
-                   <Image source={require('../images/5.png')} style={styles.trainerimage}/>
+                   <Image source={{ uri: item.uri }} style={styles.trainerimage}/>
                   </View>
                 </View>
               </TouchableOpacity>

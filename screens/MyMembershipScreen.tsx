@@ -29,6 +29,7 @@ const shadowStyle = Platform.select({
 type MyMembershipScreenNavigationProps = StackNavigationProp<
   MMStackParamList,
   MMScreens.MyMembership
+
 >;
 
 interface MyMembershipScreenProps {
@@ -85,15 +86,19 @@ const MyMembershipScreen:React.FunctionComponent<MyMembershipScreenProps> = (pro
   }, []);
   return (
   <>
-    {periodmembershipData.length === 0 ? (
-      <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, height: screenHeight*0.5 }}>
-        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>보유회원권이 없습니다.</Text>
-      </View>
-    ) : (
+ 
       <ScrollView>
+      {periodmembershipData.length === 0 ? (
+         <View style={{ justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{width:screenWidth,height:'auto',backgroundColor:'white',justifyContent:'center'}}>
+            <Text style={{fontSize:22,fontWeight:'bold',marginLeft:'5%',paddingTop:24}}>시설 회원권</Text>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#868E96',marginTop:24,alignSelf:'center'}}>보유회원권이 없습니다.</Text>
+          </View>
+       </View>
+       ) : (
         <View style={{ alignItems: 'center',backgroundColor:'white',height:'auto',flex:1,borderBottomColor:'#E5E5E5',borderBottomWidth:1 }}>
           <View style={{width:screenWidth,height:screenWidth*0.15,backgroundColor:'white',justifyContent:'center'}}>
-            <Text style={{fontSize:18,fontWeight:'bold',marginLeft:'5%'}}>시설 회원권</Text>
+            <Text style={{fontSize:22,fontWeight:'bold',marginLeft:'5%'}}>시설 회원권</Text>
           </View>
           {periodmembershipData.map((item) => {
             // Calculate the difference in days between the expiration date and the current date
@@ -107,7 +112,7 @@ const MyMembershipScreen:React.FunctionComponent<MyMembershipScreenProps> = (pro
             const formattedDate = format(expirationDate, 'yyyy-MM-dd');
 
             return (
-              <TouchableOpacity
+              <View
                 key={item.pmid}
                 style={{
                   width: screenWidth * 0.9,
@@ -125,7 +130,7 @@ const MyMembershipScreen:React.FunctionComponent<MyMembershipScreenProps> = (pro
                 <View style={{ flex:1,backgroundColor:'white'}}>  
                   <View style={{flex:1,backgroundColor:'white',flexDirection:'row',marginTop:'6%'}}>
                     <View style={{flex:1,backgroundColor:'white'}}>
-                      <Text style={{color:'#797676',fontSize:25,fontWeight:'bold'}}>{item.duration}일 기간권</Text>
+                      <Text style={{color:'#797676',fontSize:25,fontWeight:'bold'}}>{item.name}</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:'white'}}>
                       <View style={{marginLeft:'auto',width:'32%',height:'42%',backgroundColor:'#1E90FF',borderRadius:20,justifyContent:'center',alignItems:'center'}}>
@@ -134,22 +139,25 @@ const MyMembershipScreen:React.FunctionComponent<MyMembershipScreenProps> = (pro
                     </View>
                   </View>
                   <View style={{backgroundColor:'white',flex:1}}>
-                    <Text style={{marginTop:'auto',color:'#797676'}}>시설 무제한 이용가능</Text>
                     <Text style={{marginBottom:'6%',color:'#797676'}}>{formattedDate}일까지 이용가능</Text>
                   </View>
                 </View>
-              </TouchableOpacity>
+              </View>
             );
           })}
         </View>
+        )}
         <View style={{ alignItems: 'center',backgroundColor:'white',height:'auto',flex:1 }}>
           <View style={{width:screenWidth,height:screenWidth*0.15,backgroundColor:'white',justifyContent:'center'}}>
-            <Text style={{fontSize:18,fontWeight:'bold',marginLeft:'5%'}}>PT 회원권</Text>
+            <Text style={{fontSize:22,fontWeight:'bold',marginLeft:'5%'}}>PT 회원권</Text>
           </View>
           {trainerMembershipData.length === 0 ? (
-            <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, height: screenHeight*0.5 }}>
-              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>트레이너 회원권이 없습니다.</Text>
-            </View>
+           <View style={{ justifyContent: 'center', alignItems: 'center'}}>
+           <View style={{width:screenWidth,height:'auto',backgroundColor:'white',justifyContent:'center'}}>
+             <Text style={{fontSize:22,fontWeight:'bold',marginLeft:'5%',paddingTop:24}}>PT 회원권</Text>
+             <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#868E96',marginTop:24,alignSelf:'center'}}>보유회원권이 없습니다.</Text>
+           </View>
+        </View>
           ) : (
             trainerMembershipData.map((item) => {
               return (
@@ -216,7 +224,6 @@ const MyMembershipScreen:React.FunctionComponent<MyMembershipScreenProps> = (pro
           )}
         </View>
       </ScrollView>
-    )}
   </>
 );
 

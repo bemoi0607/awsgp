@@ -46,6 +46,8 @@ const YNMemberScreen: React.FunctionComponent<YNMemberScreenProps> = ({navigatio
 
         const [selectedImage, setSelectedImage] = useState(null);
         const [pState, setPState] = useState(0);
+        const [totalTime, setTotalTime] = useState(0);
+        const [usedTime, setUsedTime] = useState(0);
         const [userData, setUserData] = useState(null);
         const [logId, setLogId] = useState(null);
 
@@ -65,11 +67,13 @@ const YNMemberScreen: React.FunctionComponent<YNMemberScreenProps> = ({navigatio
                         const uid = uidData.uid;
                         console.log(uid);
 
-                        // uid 로 pstate 가져오기
-                        const pstateResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
-                        const pstateData = await pstateResponse.json();
-                        setPState(pstateData.p_state);
-                        console.log(pstateData)
+                        // uid 로 peirod_membership 가져오기
+                        const membershipResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
+                        const membershipData = await membershipResponse.json();
+                        setPState(membershipData[0].pstate);
+                        setTotalTime(membershipData[0].total_time);
+                        setUsedTime(membershipData[0].used_time);
+                     
                                 
                     }
                 } catch (error) {
@@ -83,7 +87,7 @@ const YNMemberScreen: React.FunctionComponent<YNMemberScreenProps> = ({navigatio
 
 
     const handleMembershipPress = () => {
-        if (pState === 1) {
+        if (pState === 1 && totalTime > usedTime) {
         navigation.navigate(MainScreens.Membership);
         } else {
         navigation.navigate(MainScreens.MembershipPurchase1);

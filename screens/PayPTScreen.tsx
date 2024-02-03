@@ -410,9 +410,9 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
                   amount:item.session*item.price ,
                   trainerId: item.trainer_id,
                   name: item.trainer_name,
-                  session:item.session
+                  session:item.session,
+                  uri:data.uri
                  });
-                 
              }} >
                  <View style={{flex:1,paddingHorizontal:24,flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
                    <View>

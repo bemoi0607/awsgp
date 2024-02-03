@@ -5,6 +5,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import { BackHandler } from 'react-native';
 
 
+
+
 function getBoolean(value) {
   if (typeof value === 'boolean') return value;
   if (typeof value === 'string') return value === 'true';
