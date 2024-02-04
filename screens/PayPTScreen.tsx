@@ -233,7 +233,6 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
                     zIndex: 1,
                   }}
                 >
-                  <AntDesign name="shoppingcart" size={30} color="#131515" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -281,11 +280,7 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
                       zIndex: 1,
                     }}
                   >
-                    <AntDesign
-                      name="shoppingcart"
-                      size={30}
-                      color="#7f7f7f"
-                    />
+                  
                   </TouchableOpacity>
                 </View>
               </View>
@@ -308,50 +303,7 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
               marginTop: WIDTH*0.7,
             }}
           >
-            <View
-              style={{
-                height: 60,
-                width: 60,
-                position: 'absolute',
-                top: -30,
-                backgroundColor: 'white',
-                borderRadius:30,
-                right: 20,
-                ...shadowStyle,
-                justifyContent: 'center',
-                alignItems:'center'
-              }}
-            >
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: 'white',
-                    width: 10 * 4,
-                    height: 10 * 4,
-                    alignItems: 'center',
-                    justifyContent:'center',
-                    
-                    transform: [ {scale: buttonScale}]
-                  }}
-                  onPress={() => {
-                    if (isWishlist) {
-                      removeWishlist(data.id);
-                    } else {
-                      addToWishlist(data.id);
-                    }
-                  }}
-                >
-                  {isWishlist ? (
-                    <Ionicons name="heart" size={10 * 3} color="red" />
-                  ) : (
-                    <Ionicons
-                      name="heart-outline"
-                      size={10 * 3}
-                      color="#7f7f7f"
-                    />
-                  )}
-                </TouchableOpacity>
-            </View>
-            
+           
 
             <View style={{width:WIDTH,height:WIDTH*0.9,backgroundColor:'white',marginTop:WIDTH*0.13}}>
               <View style={{flex:1,justifyContent:'center',backgroundColor:'white',flexDirection:'row',paddingHorizontal:'7%',alignItems:'center'}}>
