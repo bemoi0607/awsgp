@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     },
     subtitle:{
       fontSize:24,
-      color:'#33333',
+      color:'black',
       fontWeight:'bold',
       marginTop:36
     },
