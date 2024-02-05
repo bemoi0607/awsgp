@@ -3,8 +3,8 @@
   "cognitoConfig": {
     "identityPoolName": "testAuthIdentityPool",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "awsgym0a0f04c4",
-    "userPoolName": "awsgymprivate",
+    "resourceNameTruncated": "awsgpeb3bdaaf",
+    "userPoolName": "awsgp",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -25,10 +25,9 @@
       "Requires Uppercase"
     ],
     "requiredAttributes": [
-      "email",
-      "birthdate",
-      "gender",
       "name",
+      "gender",
+      "birthdate",
       "phone_number"
     ],
     "aliasAttributes": [],
@@ -36,10 +35,10 @@
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [],
     "userpoolClientReadAttributes": [],
-    "userpoolClientLambdaRole": "awsgym0a0f04c4_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "awsgpeb3bdaaf_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "0a0f04c4",
-    "resourceName": "awsgymprivate",
+    "sharedId": "eb3bdaaf",
+    "resourceName": "awsgp",
     "authSelections": "identityPoolAndUserPool",
     "serviceName": "Cognito",
     "usernameAttributes": [

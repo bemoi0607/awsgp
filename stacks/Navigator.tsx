@@ -49,6 +49,11 @@ import UsingRuleScreen from '../screens/UsingRuleScreen';
 import LogInLoading from '../screens/LogInLoading'
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import NewPasswordScreen from '../screens/NewPasswordScreen';
+import { Dimensions } from 'react-native';
+
+
+const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('screen').height;
 
 export enum MainScreens {
     Landing='Landing',
@@ -282,6 +287,7 @@ function MainTabNavigator(): React.ReactElement {
     return (
         <MainTab.Navigator
             initialRouteName={MainScreens.Home}
+            barStyle={{ backgroundColor:'white',borderRadius:10,justifyContent:'center',alignItems:'center',height:screenHeight*0.05}}
             >
             <MainTab.Screen
                 name={MainScreens.Home}

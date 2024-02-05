@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button,StyleSheet, Image,Text, View, Dimensions, TouchableOpacity, Platform,ScrollView,RefreshControl } from 'react-native';
+import { Button,StyleSheet, Image,Text, View, Dimensions, TouchableOpacity, Platform,ScrollView,RefreshControl, Linking } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
@@ -231,6 +231,40 @@ const onRefresh = async () => {
             </View>
             </TouchableOpacity>
             </View>
+                <View style={{height:screenHeight*0.2,marginTop:'5%',justifyContent:'center'}}>
+                <View style={{height:screenHeight*0.09,backgroundColor:'white',paddingHorizontal:'4%',justifyContent:'center',alignItems:'center',borderTopColor:'#E5E5E5',borderTopWidth:1}}>
+                    <Text style={{color:'#797676',fontSize:12,fontWeight:'bold'}}>
+                                    주식회사 라이프팔레트
+                    </Text>
+                    <Text style={{color:'#797676',fontSize:10,marginTop:'2.5%'}}>
+                            주식회사 라이프팔레트는 통신판매중개자로서 통신판매의 당사자가 아니며 입점판매자가 등록한 상품정보 및 거래에 대한 책임을 지지 않습니다.
+                    </Text>
+                    
+                    
+            </View>
+                    <View style={{flex:0.2,marginBottom:'1.7%',justifyContent:'center',backgroundColor:'white'}}>
+                        <View style={{flex:0.7,flexDirection:'row',justifyContent:'center'}}>
+                            <TouchableOpacity 
+                            style={{width:screenWidth*0.15,height:40,justifyContent:'center',alignItems:'center'}}
+                            onPress={() => Linking.openURL('https://sites.google.com/view/using-gymprivate/%ED%99%88')}>
+                                    <Text style={{ color: '#797676', fontSize: 10 }}>이용약관   |</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                            style={{width:screenWidth*0.2,height:40,justifyContent:'center',alignItems:'center'}}
+                            onPress={() => Linking.openURL('https://sites.google.com/view/gymprivate/%ED%99%88')}>
+                                <Text style={{color:'#797676',fontSize:10}}> 개인정보처리방침 </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                            style={{width:screenWidth*0.2,height:40,justifyContent:'center',alignItems:'center'}}
+                            onPress={() => Linking.openURL('https://sites.google.com/view/gymprivateusingduration/%ED%99%88')}>
+                                <Text style={{ color: '#797676', fontSize: 10 }}>|   PT이용기간</Text>
+                            </TouchableOpacity>
+                        </View>
+                        
+                    </View>
+
+            </View>
+
 
         </View>
         </ScrollView>

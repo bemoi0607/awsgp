@@ -173,6 +173,7 @@ return (
             >
                 {images.map((image, index) => (
                     <Image
+                        key={index} 
                         source={images[index]}
                         style={{ width:screenWidth-48, height: '100%', borderRadius: 16,marginRight:48 }}
                     />
