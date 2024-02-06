@@ -1,20 +1,21 @@
 {
   "staging": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-awsgp-staging-104831-authRole",
-      "UnauthRoleArn": "arn:aws:iam::370870007882:role/amplify-awsgp-staging-104831-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::370870007882:role/amplify-awsgp-staging-104831-authRole",
+      "AuthRoleName": "amplify-gpaws-staging-03238-authRole",
+      "UnauthRoleArn": "arn:aws:iam::370870007882:role/amplify-gpaws-staging-03238-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::370870007882:role/amplify-gpaws-staging-03238-authRole",
       "Region": "ap-northeast-2",
-      "DeploymentBucketName": "amplify-awsgp-staging-104831-deployment",
-      "UnauthRoleName": "amplify-awsgp-staging-104831-unauthRole",
-      "StackName": "amplify-awsgp-staging-104831",
-      "StackId": "arn:aws:cloudformation:ap-northeast-2:370870007882:stack/amplify-awsgp-staging-104831/1a6746b0-c414-11ee-8d17-0210c412bc18",
-      "AmplifyAppId": "d26etgbpz0xes3"
+      "DeploymentBucketName": "amplify-gpaws-staging-03238-deployment",
+      "UnauthRoleName": "amplify-gpaws-staging-03238-unauthRole",
+      "StackName": "amplify-gpaws-staging-03238",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:370870007882:stack/amplify-gpaws-staging-03238/3b7a3d80-c487-11ee-9246-027f48f97e2e",
+      "AmplifyAppId": "d35opt62qzss7f"
     },
     "categories": {
       "auth": {
         "awsgymprivate": {},
-        "awsgp": {}
+        "awsgp": {},
+        "GPaws": {}
       }
     }
   }
