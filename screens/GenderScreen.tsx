@@ -37,7 +37,7 @@
         
 //         <View style={{justifyContent:'space-between',alignItems:'center',flex:1, backgroundColor:'white'}} >
 //                 <View style={{justifyContent:'center',alignItems:'center'}}>
-//                     <Image source={require('../images/3.jpg')} style={{width:screenWidth,height:80}} resizeMode='contain' />
+//                     <Image source={require('../images/3.png')} style={{width:screenWidth,height:80}} resizeMode='contain' />
 //                     <Text style={{fontSize:20, fontWeight:'bold', }}>
 //                         성별을 선택해주세요.
 //                     </Text>
@@ -101,7 +101,7 @@ const GenderScreen: React.FunctionComponent<GenderScreenProps> = ({ navigation }
         <KeyboardAvoidingView style={{ flex: 1, backgroundColor: 'white' }} behavior='padding'>
             <View style={{ justifyContent: 'space-between', alignItems: 'center', flex: 1, backgroundColor: 'white' }}>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../images/3.jpg')} style={{ width: screenWidth, height: 80 }} resizeMode='contain' />
+                    <Image source={require('../images/3.png')} style={{ width: screenWidth, height: 80 }} resizeMode='contain' />
                     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
                         성별을 선택해주세요.
                     </Text>

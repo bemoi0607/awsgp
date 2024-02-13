@@ -1,6 +1,6 @@
 {
   "auth": {
-    "GPaws": {
+    "awsgymprivate": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {

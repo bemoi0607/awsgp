@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "awsgymprivate",
-    "slug": "awsgp",
+    "slug": "awsgymprivate",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,7 +25,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "cb4eab07-5e5b-4337-87fe-4066cb599748"
+        "projectId": "0e07720f-a8f8-4e41-a55b-f31deb19a78f"
       }
     },
     "owner": "lifepalette"

@@ -92,7 +92,7 @@ const RoomSelectScreen:React.FunctionComponent<BookedInfoScreenProps> = (props) 
                     style={styles.roomContainer}>
                         <Image 
                         style={styles.roomImage}
-                        source = {require('../images/rooms1.png')}
+                        source = {require('../images/rooms1.jpg')}
                         resizeMode='cover'/>
                 </TouchableOpacity>
               </View>
@@ -127,7 +127,7 @@ const RoomSelectScreen:React.FunctionComponent<BookedInfoScreenProps> = (props) 
                     style={styles.roomContainer}>
                         <Image 
                         style={{width:'100%',height:'100%',borderRadius:20}}
-                        source = {require('../images/rooms2.png')}
+                        source = {require('../images/rooms2.jpg')}
                         resizeMode='cover'/>
                 </TouchableOpacity>
               </View>

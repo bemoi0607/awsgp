@@ -26,8 +26,8 @@ interface BookedInfoScreenProps {
 
 const BookedInfoScreen: React.FunctionComponent<BookedInfoScreenProps> = ({navigation,route}) => {
   const roomImages = {
-    1: require('../images/rooms1.png'),
-    2: require('../images/rooms2.png'),
+    1: require('../images/rooms1.jpg'),
+    2: require('../images/rooms2.jpg'),
     3: require('../images/rooms3.jpeg'),
     // 이하 생략, 필요한 모든 방 번호에 대해 반복
   };

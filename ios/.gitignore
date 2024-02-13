@@ -24,7 +24,7 @@ project.xcworkspace
 .xcode.env.local
 
 # Bundle artifacts
-*.jsbundle
+# *.jsbundle
 
 # CocoaPods
 /Pods/

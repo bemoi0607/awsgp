@@ -6,7 +6,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "eas-build-pre-install": "echo $AWS_EXPORTS | base64 -d > ./src/aws-exports.js"
+    "eas-build-pre-install": "echo $AWS_EXPORTS | base64 -d > ./src/aws-exports.js",
+    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/awsgymprivate/main.jsbundle' --dev=false --platform='ios'"
   },
   "dependencies": {
     "@aws-amplify/auth": "^6.0.8",
