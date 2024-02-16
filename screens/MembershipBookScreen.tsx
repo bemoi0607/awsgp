@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity, ScrollView, FlatList, Image, Platform,RefreshControl} from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity, ScrollView, FlatList, Image, Platform,RefreshControl, Alert} from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MembershipStackParamList } from '../stacks/Navigator';
 import { roomPictures } from '../slots/roomPictures';
@@ -170,13 +170,49 @@ const handleReserveNighttime = () => {
     });
 };
 
+// const handleReserve = () => {
+//     if (isMorning && selectedDayTimeSlot) {
+//         handleReserveDaytime();
+//         saveDayTimeData(); // Add this line to execute the saveDayTimeData function
+//     } else if (isEvening && selectedNightTimeSlot) {
+//         handleReserveNighttime();
+//         saveNightTimeData(); // Add this line to execute the saveNightTimeData function
+//     }
+// };
+
 const handleReserve = () => {
-    if (isMorning && selectedDayTimeSlot) {
-        handleReserveDaytime();
-        saveDayTimeData(); // Add this line to execute the saveDayTimeData function
-    } else if (isEvening && selectedNightTimeSlot) {
-        handleReserveNighttime();
-        saveNightTimeData(); // Add this line to execute the saveNightTimeData function
+    // 시간 슬롯이 중복되는지 확인
+    const isTimeSlotOverlapped = () => {
+        const selectedStartTime = isMorning ? selectedDayTimeSlot : selectedNightTimeSlot;
+        const startTime = moment(selectedStartTime, 'HH:mm');
+        const duration = parseInt(selectedUsingTimeSlot, 10); // 문자열을 숫자로 변환, 10진법
+        const endTime = startTime.clone().add(duration, 'minutes');
+
+        // 선택된 시간대가 예약된 시간대와 중복되는지 확인
+        const reservedTimeSlots = isMorning ? availableDayTimeSlots : availableNightTimeSlots;
+        for (const slot of reservedTimeSlots) {
+            const slotStartTime = moment(slot.time, 'HH:mm');
+            const slotEndTime = slotStartTime.clone().add(30, 'minutes'); // 각 슬롯은 30분 간격으로 설정됨
+
+            if (startTime.isBefore(slotEndTime) && endTime.isAfter(slotStartTime) && slot.disabled) {
+                return true; // 중복됨
+            }
+        }
+        return false; // 중복되지 않음
+    };
+
+    if (isTimeSlotOverlapped()) {
+        // 시간 슬롯이 중복되면 경고 메시지 표시
+        Alert.alert("예약불가", "예약 시간이 중복됩니다!");
+    } else {
+        // 중복되지 않는 경우 예약 처리
+        if (isMorning && selectedDayTimeSlot) {
+            handleReserveDaytime();
+            saveDayTimeData();
+        } else if (isEvening && selectedNightTimeSlot) {
+            handleReserveNighttime();
+            saveNightTimeData();
+        }
     }
 };
 
@@ -286,15 +322,15 @@ const fetchReservationData = async (convertedDate) => {
 };
 
 const fetchReservationTime = async (convertedDate) => {
-  try {
-    const roomNumber = await AsyncStorage.getItem('selectedRoomNumber');
-    const response = await axios.get(`${BASE_URL}/reservations`, { params: { date: convertedDate,roomNumber} });
-    const data = response.data;
-    const reservedTimeSlots = data.map((reservation) => {
-        const timeRange = reservation.time_of_use.split('-');
-        const startTime = moment(timeRange[0], 'HH:mm').format('HH:mm');
-        const endTime = moment(timeRange[1], 'HH:mm').format('HH:mm');
-        return `${startTime}-${endTime}`;
+    try {
+        const roomNumber = await AsyncStorage.getItem('selectedRoomNumber');
+        const response = await axios.get(`${BASE_URL}/reservations`, { params: { date: convertedDate,roomNumber} });
+        const data = response.data;
+        const reservedTimeSlots = data.map((reservation) => {
+            const timeRange = reservation.time_of_use.split('-');
+            const startTime = moment(timeRange[0], 'HH:mm').format('HH:mm');
+            const endTime = moment(timeRange[1], 'HH:mm').format('HH:mm');
+            return `${startTime}-${endTime}`;
     });
 
     console.log(reservedTimeSlots);

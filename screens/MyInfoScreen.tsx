@@ -176,7 +176,7 @@ const onRefresh = async () => {
 
             <View style={{alignItems:'center'}}>
                 <Image 
-                        source={require('../images/firstevent.png')}
+                        source={require('../images/리뷰이벤트.png')}
                         style={{
                         width:screenWidth*0.9,
                         height:screenHeight*0.2,

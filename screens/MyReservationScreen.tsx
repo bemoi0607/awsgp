@@ -234,7 +234,7 @@ const onRefresh = async () => {
                       
                         <Image 
                         style={{width:screenWidth*0.85,height:screenWidth*0.5,borderRadius:20}}
-                        source={require('../images/firstevent.png')} />
+                        source={require('../images/리뷰이벤트3.png')} />
           </TouchableOpacity>
       </View>
 
