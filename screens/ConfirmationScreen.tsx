@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import { View, TextInput, Button, Text, Dimensions,TouchableOpacity, Platform, Alert } from 'react-native';
-import { signUp, confirmSignUp } from 'aws-amplify/auth';
+import { signUp, confirmSignUp,resendSignUpCode } from 'aws-amplify/auth';
 import { Amplify } from 'aws-amplify';
 import awsconfig from '../src/aws-exports';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -46,6 +46,15 @@ const Confirmation: React.FunctionComponent<ConfirmationScreenProps> = ({navigat
     const [phoneNumber, setPhoneNumber] = useState<string>('');
     const [confirmationCode, setConfirmationCode] = useState<string>('');
     const [authState, setAuthState] = useState<string>('signUp');
+
+    const resendConfirmationCode = async () => {
+        try {
+            await resendSignUpCode({username});
+            console.log('코드를 다시 보냈습니다.');
+        } catch (error) {
+            console.error('코드를 다시 보내는 데 실패했습니다.', error);
+        }
+        }
 
 
 
@@ -253,9 +262,30 @@ case 'signUp':
                         인증하기
                     </Text>
                 </TouchableOpacity>
+                <View style={{marginTop:'10%',justifyContent:'center',alignItems:'center'}}>
+                    <Text style={{fontSize:15}}>
+                        인증번호가 오지 않나요 ?
+                    </Text>
+
+                <TouchableOpacity 
+                style={{
+                    backgroundColor: '#84a1f3',
+                    borderRadius:15,
+                    width:screenWidth*0.4,
+                    justifyContent:'center',
+                    alignItems:'center',
+                    marginTop:'5%',
+                    height:screenHeight*0.05}}
+                
+                onPress={() => resendConfirmationCode()}>
+                    <Text style={{color:'white', fontWeight:'bold'}}>인증번호 다시보내기</Text>
+                </TouchableOpacity>
+                </View>
+                
 
             </View>
-                
+
+        
             </View>
 
             );
