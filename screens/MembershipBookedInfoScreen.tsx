@@ -92,7 +92,7 @@ const MembershipBookedInfoScreen: React.FunctionComponent<MembershipScreenProps>
 
 
 
-    const handleSubmit = async () => {
+const handleSubmit = async () => {
     try {
         let startTime, endTime;
         if (isMorning && selectedDayTimeSlot) {
@@ -118,7 +118,7 @@ const MembershipBookedInfoScreen: React.FunctionComponent<MembershipScreenProps>
         const { total_time, used_time } = periodMembershipData[0];
         const minutes = parseInt(selectedUsingTimeSlot.replace(/[^0-9]/g, ''), 10); // 분 단위 숫자 추출
         const bookingTimeInHours = minutes / 60; // 분을 시간으로 변환
-       
+    
         if (used_time + bookingTimeInHours > total_time) {
             Alert.alert('잔여 시간이 부족합니다.');
             return;
@@ -136,9 +136,16 @@ const MembershipBookedInfoScreen: React.FunctionComponent<MembershipScreenProps>
     });
         console.log(response.data);
         console.log('success');
-        Alert.alert('알림', '예약이 완료되었습니다!');
-        navigation.navigate(MainScreens.MyReservation);
-    } catch (error) {
+        Alert.alert(
+            '예약완료', 
+            '예약이 완료되었습니다! 추가로 예약하시겠습니까?',
+            [
+                { text: '아니오', onPress: () => navigation.navigate(MainScreens.MyReservation) },
+                { text: '예', onPress: () => navigation.navigate(MembershipScreens.MembershipRoomSelect) }
+            ],
+            { cancelable: false }
+        );
+        } catch (error) {
         console.error(error);
     }
     // navigation.navigate(MainScreens.MyReservation);
