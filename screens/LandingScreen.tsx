@@ -29,8 +29,8 @@ const screenHeight = Dimensions.get('screen').height;
 
 const authConfig: ResourcesConfig['Auth'] = {
         Cognito: {
-            userPoolId: 'ap-northeast-2_Dr7DjaWDb',
-            userPoolClientId: '3r24ukm2n2f9e016a53j2omlee'
+            userPoolId: 'ap-northeast-2_pwU98HT1p',
+            userPoolClientId: '1jd71cp4ln4mejku8s3t3rervm'
         }
     };
 

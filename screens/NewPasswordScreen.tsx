@@ -60,7 +60,7 @@ const ConfirmResetPasswordScreen: React.FunctionComponent<NewPassWordScreenProps
             ]);
         } catch (error) {
             console.error(error);
-            Alert.alert('실패', '비밀번호 재설정에 실패했습니다.');
+            Alert.alert('실패', '인증코드나 비밀번호를 확인해주세요!.');
         }
     };
 

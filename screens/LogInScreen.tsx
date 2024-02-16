@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { View, TextInput, Button, Text, BackHandler, Dimensions,TouchableOpacity,Image,StyleSheet } from 'react-native';
+import { View, TextInput, Button, Text, BackHandler, Dimensions,TouchableOpacity,Image,StyleSheet, Alert } from 'react-native';
 import { signIn, signOut, autoSignIn, getCurrentUser, fetchAuthSession, } from 'aws-amplify/auth';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainScreens,MainStackParamList } from '../stacks/Navigator';
@@ -16,8 +16,8 @@ const screenHeight = Dimensions.get('screen').height;
 
 const authConfig: ResourcesConfig['Auth'] = {
         Cognito: {
-            userPoolId: 'ap-northeast-2_Dr7DjaWDb',
-            userPoolClientId: '3r24ukm2n2f9e016a53j2omlee'
+            userPoolId: 'ap-northeast-2_pwU98HT1p',
+            userPoolClientId: '1jd71cp4ln4mejku8s3t3rervm'
         }
     };
 
@@ -106,18 +106,26 @@ const LogIn: React.FunctionComponent<LogInScreenProps> = ({navigation}) => {
 
 
 
-    const handleSignIn = async () => {
+const handleSignIn = async () => {
     try {
         const { isSignedIn } = await signIn({ username, password });
 
         if (isSignedIn) {
-            console.log("log in succesful")
+            console.log("log in successful");
             navigation.navigate(MainScreens.LogInLoading);
         }
     } catch (error) {
-        console.log('Error signing in', error);
+    console.log('Error signing in:', error);
+        if (error.message.includes('NotAuthorizedException') || error.message.includes('Incorrect username or password.')) {
+            Alert.alert("로그인 실패", "아이디나 비밀번호가 잘못되었습니다!");
+        } else if (error.message.includes('UserNotFoundException') || error.message.includes('User does not exist.')) {
+            Alert.alert("로그인 실패", "존재하지 않는 사용자입니다.");
+        } else {
+            Alert.alert("로그인 실패", "정보를 모두 입력해주세요!");
+        }
     }
 };
+
 
     const renderAuthForm = () => {
         switch (authState) {

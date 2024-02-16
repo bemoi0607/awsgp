@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { View, TextInput, Button, Text, Dimensions,TouchableOpacity, Platform } from 'react-native';
+import { View, TextInput, Button, Text, Dimensions,TouchableOpacity, Platform, Alert } from 'react-native';
 import { signUp, confirmSignUp } from 'aws-amplify/auth';
 import { Amplify } from 'aws-amplify';
 import awsconfig from '../src/aws-exports';
@@ -98,7 +98,7 @@ const Confirmation: React.FunctionComponent<ConfirmationScreenProps> = ({navigat
             password,
             options: {
             userAttributes: {
-                phone_number: `+82${phoneNumber}`,
+                phone_number: `+8210${phoneNumber}`,
                 name: name,
                 gender: gender, 
                 birthdate: formattedDate
@@ -117,19 +117,29 @@ const Confirmation: React.FunctionComponent<ConfirmationScreenProps> = ({navigat
 
 
 const handleSignUpConfirmation = async () => {
-        try {
+    try {
         const { isSignUpComplete } = await confirmSignUp({
             username,
             confirmationCode
         });
 
         if (isSignUpComplete) {
-            navigation.navigate(MainScreens.Main);
+            // 회원가입 성공 알림 표시
+            Alert.alert(
+                "회원가입 성공", // 대화 상자 제목
+                "회원가입에 성공했습니다! 로그인 해주세요.", // 메시지 내용
+                [
+                    { text: "OK", onPress: () => navigation.navigate(MainScreens.LogIn) }
+                    // 사용자가 OK 버튼을 누르면 로그인 화면으로 이동
+                ],
+                { cancelable: false } // 안드로이드에서 뒤로가기 버튼으로 대화 상자를 닫을 수 없게 설정
+            );
         }
-        } catch (error) {
+    } catch (error) {
         console.log('Error confirming sign up', error);
-        }
-    };
+    }
+};
+
 
     const isConfirmationCodeEmpty = () => {
         return confirmationCode.trim().length === 0;
@@ -217,7 +227,7 @@ case 'signUp':
             return (
             <View style={{height:screenHeight,width:screenWidth,justifyContent:'space-between',alignItems:'center',backgroundColor:'white'}}>
             <View style={{height:screenHeight*0.3,width:screenWidth,justifyContent:'center',alignItems:'center'}}>
-                <Text style={{fontSize:20,fontWeight:'bold',color:'black'}}>가입하신 이메일을 확인하고</Text>
+                
                 <Text style={{fontSize:20,fontWeight:'bold',color:'black'}}>인증번호를 입력해주세요.</Text>
             </View>
             <View style={{height:screenHeight*0.9,bottom:'5%'}}>

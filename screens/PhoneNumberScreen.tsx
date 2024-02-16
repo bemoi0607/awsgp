@@ -45,9 +45,10 @@ const PhoneNumberScreen: React.FunctionComponent<PhoneNumberScreenProps> = ({nav
                     <Text style={{fontSize:20, fontWeight:'bold', }}>
                         전화번호를 입력해주세요.
                     </Text>
+    
                     <TextInput
-                        style={{ borderBottomWidth: 0.5, borderColor: 'gray', fontSize: 35, fontWeight: 'bold',width:screenWidth*0.9, marginTop:'10%' }}
-                        placeholder="전화번호"
+                        style={{ borderBottomWidth: 0.5, borderColor: 'gray', fontSize: 20, fontWeight: 'bold',width:screenWidth*0.9, marginTop:'10%' }}
+                        placeholder="010을 제외하고 입력해주세요"
                         keyboardType="numeric" 
                         onChangeText={(text) => setPhoneNumber(text)}
                     />  
