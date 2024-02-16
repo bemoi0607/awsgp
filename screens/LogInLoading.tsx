@@ -26,8 +26,8 @@ interface LogInLoadingProps {
 
 const authConfig: ResourcesConfig['Auth'] = {
         Cognito: {
-            userPoolId: 'ap-northeast-2_Dr7DjaWDb',
-            userPoolClientId: '3r24ukm2n2f9e016a53j2omlee'
+            userPoolId: 'ap-northeast-2_pwU98HT1p',
+            userPoolClientId: '1jd71cp4ln4mejku8s3t3rervm'
         }
     };
 
@@ -97,7 +97,7 @@ const LogInLoading:React.FunctionComponent<LogInLoadingProps> = ({navigation}) =
 
   return (
     <View flex={1} alignItems={'center'} justifyContent={'center'}>
-        <Text fontSize={20}>잠시만 기다려주세요...</Text>
+        <Text fontSize={20}>로그인 중입니다...</Text>
     </View>
   )
 }

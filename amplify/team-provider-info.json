@@ -18,5 +18,41 @@
         "GPaws": {}
       }
     }
+  },
+  "awsgp": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-awsgymprivate-awsgp-155551-authRole",
+      "UnauthRoleArn": "arn:aws:iam::370870007882:role/amplify-awsgymprivate-awsgp-155551-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::370870007882:role/amplify-awsgymprivate-awsgp-155551-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-awsgymprivate-awsgp-155551-deployment",
+      "UnauthRoleName": "amplify-awsgymprivate-awsgp-155551-unauthRole",
+      "StackName": "amplify-awsgymprivate-awsgp-155551",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:370870007882:stack/amplify-awsgymprivate-awsgp-155551/46b48ad0-cbcf-11ee-9a09-024c7b8c89a6",
+      "AmplifyAppId": "d1ya2x1wm2tqfq"
+    },
+    "categories": {
+      "auth": {
+        "awsgymprivate": {}
+      }
+    }
+  },
+  "testawsgp": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-awsgymprivate-testawsgp-160825-authRole",
+      "UnauthRoleArn": "arn:aws:iam::370870007882:role/amplify-awsgymprivate-testawsgp-160825-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::370870007882:role/amplify-awsgymprivate-testawsgp-160825-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-awsgymprivate-testawsgp-160825-deployment",
+      "UnauthRoleName": "amplify-awsgymprivate-testawsgp-160825-unauthRole",
+      "StackName": "amplify-awsgymprivate-testawsgp-160825",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:370870007882:stack/amplify-awsgymprivate-testawsgp-160825/05d89ef1-cbd1-11ee-99fc-061de60f01b2",
+      "AmplifyAppId": "d1ya2x1wm2tqfq"
+    },
+    "categories": {
+      "auth": {
+        "awsgymprivate": {}
+      }
+    }
   }
 }
