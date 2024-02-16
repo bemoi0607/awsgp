@@ -55,21 +55,24 @@ import { Dimensions } from 'react-native';
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
+
+
+
 export enum MainScreens {
-    Landing='Landing',
-    LogIn='LogIn',
-    Name= 'Name',
+    Landing = 'Landing',
+    LogIn = 'LogIn',
+    Name = 'Name',
     PassWord = 'PassWord',
-    Gender='Gender',
+    Gender = 'Gender',
     BirthDate = 'BirthDate',
-    Email='Email',
-    PhoneNumber ='PhoneNumber',
+    Email = 'Email',
+    PhoneNumber = 'PhoneNumber',
     Confirmation = 'Confirmation',
     ForgotPassword = 'ForgotPassword',
-    NewPassword='NewPassword',
-    LogInLoading ='LogInLoading',
+    NewPassword = 'NewPassword',
+    LogInLoading = 'LogInLoading',
     Home = 'Home',
-    YNMember= 'YNMember',
+    YNMember = 'YNMember',
     PT = 'PT',
     MyInfo = 'MyInfo',
     MyReservation = 'MyReservation',
@@ -77,15 +80,17 @@ export enum MainScreens {
     Cart = 'Cart',
     Main = 'Main',
     Book = 'Book',
-    BookingHistory= 'BookingHistory',
-    MineMembership= 'MineMembership',
-    LogInfo= 'LogInfo',
-    GymService='GymService',
-    Franchise='Franchise',
-    Review= 'Review',
-    Membership= 'Membership',
+    BookingHistory = 'BookingHistory',
+    MineMembership = 'MineMembership',
+    LogInfo = 'LogInfo',
+    GymService = 'GymService',
+    Franchise = 'Franchise',
+    Review = 'Review',
+    Membership = 'Membership',
     MembershipPurchase1 = 'MembershipPurchase1',
-    LogOut= 'LogOut',
+    LogOut = 'LogOut',
+    MembershipBooking = "MembershipBooking",
+    MembershipRoomSelect = "MembershipRoomSelect"
 };
 
 

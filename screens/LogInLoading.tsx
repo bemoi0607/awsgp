@@ -95,11 +95,11 @@ const LogInLoading:React.FunctionComponent<LogInLoadingProps> = ({navigation}) =
         })
 
 
-  return (
+return (
     <View flex={1} alignItems={'center'} justifyContent={'center'}>
         <Text fontSize={20}>로그인 중입니다...</Text>
     </View>
-  )
+)
 }
 
 export default LogInLoading
