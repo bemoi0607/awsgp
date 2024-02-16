@@ -15,16 +15,15 @@ import {
   FlatList
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import axios from 'axios';
 import {PTScreens, PTStackParamList } from '../stacks/Navigator';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { ItemClick } from 'native-base/lib/typescript/components/composites/Typeahead/useTypeahead/types';
 import { screenWidth } from './RoomADetailScreen';
 // import id from 'date-fns/esm/locale/id/index.js';
 import config from '../config'
 import { height,width } from './HomeScreen';
+import LottieView from 'lottie-react-native';
 
 
 
@@ -99,8 +98,6 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
     fetchAverageRating();
   }, []);
   
-
-
   useEffect(() => {
       const fetchReviews = async () => {
         try {
@@ -116,11 +113,8 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
       fetchReviews();
     }, []);
 
-
-
   useEffect(() => {
-    fetchTrainerData(); // Retrieve trainer data
-    fetchWishlistData(); // Retrieve wishlist data
+    fetchTrainerData(); 
   }, [id]);
 
   const fetchTrainerData = async () => {
@@ -149,45 +143,23 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
     fetchPTproduct();
   }, []);
 
-  const fetchWishlistData = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/wishlist`);
-      const wishlistData = response.data;
-      const isTrainerInWishlist = wishlistData.some(
-        (item) => item.trainer_id === id
-      );
-      setIsWishlist(isTrainerInWishlist);
-
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   if (!data) {
-    return <Text>Loading...</Text>;
+    return (
+    <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
+      <LottieView
+        autoPlay
+        loop
+        style={{ width: 100, height: 100 }}
+        source={require('../src/lottie/loading.json')}
+      />      
+    </View>
+   )
   }
 
- 
   const headerOpacity = scrollY.interpolate({
     inputRange: [250, 400],
     outputRange: [0, 1],
     extrapolate: 'clamp',
-  });
-
-  //하트아이콘 크기조절
-  const scale = () => {
-    scaleValue.setValue(0);
-    Animated.timing(scaleValue, {
-      toValue: 1,
-      duration: 300,
-      easing: Easing.easeOutBack,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const buttonScale = scaleValue.interpolate({
-    inputRange: [0, 0.5, 1],
-    outputRange: [1, 1.5, 1]
   });
 
   return (
@@ -359,7 +331,8 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
                  style={styles.MemberShipContainer}
                  onPress={() => handlePayment(product.name, product.amount, product.duration)} onPress={() => {
                  navigation.push('PaymentTest', {
-                  amount:item.session*item.price ,
+                  // amount:item.session*item.price ,
+                  amount:100,
                   trainerId: item.trainer_id,
                   name: item.trainer_name,
                   session:item.session,

@@ -1,5 +1,5 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Dimensions, Image, Platform,ScrollView, TouchableOpacity } from 'react-native';
 import { MembershipPurchaseScreens, MembershipPurchaseParamList} from '../stacks/Navigator';
 import { RouteProp } from '@react-navigation/native';
@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../config'
 import { height,width } from './HomeScreen';
 import { background } from 'native-base/lib/typescript/theme/styled-system';
+import LottieView from 'lottie-react-native';
 
 const BASE_URL = config.SERVER_URL;
 
@@ -41,38 +42,33 @@ const shadowStyle = Platform.select({
 
 const MembershipPurchaseScreen: React.FunctionComponent<MembershipPurchaseScreenProps> = (props) => {
   const { navigation } = props;
-  
-
-    const [userData, setUserData] = useState(null);
-    const [logId, setLogId] = useState(null);
-
+  const [userData, setUserData] = useState(null);
+  const [logId, setLogId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); 
 
 
     useEffect(() => {
-    const fetchData = async () => {
+      const fetchData = async () => {
+        setIsLoading(true);
         try {
-        // AsyncStorage에서 logId 가져오기
-        let logId = await AsyncStorage.getItem('logId');
-        if (logId) {
-            // Remove quotes from logId, if present
+          let logId = await AsyncStorage.getItem('logId');
+          if (logId) {
             logId = logId.replace(/^['"](.*)['"]$/, '$1');
-            console.log(logId);
-
-            // logId를 사용하여 사용자 데이터 가져오기
             const response = await axios.get(`${BASE_URL}/user/${logId}`);
             if (response.status === 200) {
-            setUserData(response.data);
-            console.log('Fetched User Data:', response.data);
+              setUserData(response.data);
             }
-        }
+          }
+          const response = await axios.get(`${BASE_URL}/period_membership_product`);
+          setMembershipProducts(response.data);
         } catch (error) {
-        console.log('Error:', error);
+          console.error('Error:', error);
         }
-    };
-
-    fetchData();
+        setIsLoading(false); 
+      };
+  
+      fetchData();
     }, []);
-
 
   //고유한 주문번호 생성
     const now = new Date();
@@ -91,7 +87,7 @@ const MembershipPurchaseScreen: React.FunctionComponent<MembershipPurchaseScreen
     }
   }, [userData]);
 
-  
+
   const handlePayment = async (productName ,productAmount,productDuration,producttype,productTotaltime)=> {
     const data = {
       params: {
@@ -102,7 +98,8 @@ const MembershipPurchaseScreen: React.FunctionComponent<MembershipPurchaseScreen
         display: undefined,
         merchant_uid: merchantUid,
         name: productName, // Set the value directly
-        amount: productAmount,
+        // amount: productAmount,
+        amount:100,
         app_scheme: 'exampleformanagedexpo',
         tax_free: undefined,
         buyer_name: buyerName,
@@ -157,39 +154,47 @@ const MembershipPurchaseScreen: React.FunctionComponent<MembershipPurchaseScreen
     fetchMembershipProducts();
     
   }, []);
-
+  
+  const animation = useRef(null);
+  
   return (
-    <ScrollView>
-      <View style={{ height: screenHeight, backgroundColor: '#F8F9FA',paddingHorizontal:24 }}>       
-        <Text style={styles.subtitle}>
-              짐프라이빗 대관 기간권
-        </Text>
+    isLoading ?(
+        <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
+          <LottieView
+            autoPlay
+            loop
+            style={{ width: 100, height: 100 }}
+            source={require('../src/lottie/loading.json')}
+          />      
+      </View>
+    ) : (
+      <ScrollView>
+        <View style={{ height: screenHeight, backgroundColor: '#F8F9FA', paddingHorizontal: 24 }}>
+          <Text style={styles.subtitle}>짐프라이빗 대관 기간권</Text>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                {membershipProducts.map((product) => (
-                    <TouchableOpacity 
-                    key={product.id} 
-                    style={styles.MemberShipContainer}
-                    onPress={() => handlePayment(product.name, product.amount,product.duration, product.type , product.total_time)}
-                    >
-                    <View style={{flex:1,paddingHorizontal:24,flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
-                      <View>
-                        <Text style={styles.Body1}>{product.name}</Text>
-                        <Text style={styles.caption2}>10% 할인가</Text>
-                      </View>
-                      <TouchableOpacity style={styles.PriceContainer}>
-                        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-                          <Text style={styles.caption1}>{product.amount.toLocaleString()}원</Text>
-                        </View>
-                      </TouchableOpacity>
+            {membershipProducts.map((product) => (
+              <TouchableOpacity key={product.id} style={styles.MemberShipContainer} onPress={() => handlePayment(product.name, product.amount, product.duration, product.type, product.total_time)}>
+                <View style={{ flex: 1, paddingHorizontal: 24, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <View>
+                    <Text style={styles.Body1}>{product.name}</Text>
+                    <Text style={styles.caption2}>10% 할인가</Text>
+                  </View>
+                  <TouchableOpacity style={styles.PriceContainer}>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                      <Text style={styles.caption1}>{product.amount.toLocaleString()}원</Text>
                     </View>
-                    </TouchableOpacity>
-                ))}
-            </View>
+                  </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
+            ))}
           </View>
-
-    </ScrollView>
+        </View>
+      </ScrollView>
+    )
   );
 };
+
+
 
 export default MembershipPurchaseScreen;
 

@@ -8,6 +8,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MembershipPurchaseParamList, MembershipPurchaseScreens  } from '../stacks/Navigator';
 import config from '../config'
+import { View } from 'react-native';
 
 
 const BASE_URL = config.SERVER_URL;
@@ -91,14 +92,14 @@ const MembershipPayment= ({ navigation, route }) => {
   console.log(params);
   
   return (
-    <SafeAreaView style={{ flex: 1, marginTop: -35}}>
+    <View style={{ flex: 1, marginTop: -35}}>
       <IMP.Payment
         userCode="imp11480521"
         loading={<Loading />}
         data={params}
         callback={handlePaymentComplete(navigation)}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

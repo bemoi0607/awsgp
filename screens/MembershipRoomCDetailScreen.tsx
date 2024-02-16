@@ -4,6 +4,7 @@ import { View,ScrollView,Text,StyleSheet,TouchableOpacity, Dimensions, Platform,
 import { MembershipScreens, MembershipStackParamList } from '../stacks/Navigator';
 import { roomPictures } from '../slots/roomPictures';
 import config from '../config'
+import LottieView from 'lottie-react-native';
 
 const BASE_URL = config.SERVER_URL;
 
@@ -42,7 +43,10 @@ const MembershipRoomCDetailScreen:React.FunctionComponent<MembershipRoomCDetailS
     const [reviews, setReviews] = useState([]);
     const roomNumber= 3;
     const [refreshing, setRefreshing] = useState(false);
+    const [isLoading, setIsLoading] = useState(true); 
+
     const fetchReviews = async () => {
+    setIsLoading(true);
     try {
         const response = await fetch(`${BASE_URL}/reviews/${roomNumber}`);
         const data = await response.json();
@@ -50,6 +54,8 @@ const MembershipRoomCDetailScreen:React.FunctionComponent<MembershipRoomCDetailS
         setReviews(data);
     } catch (error) {
         console.error(error);
+    }finally {
+        setIsLoading(false); 
     }
 };
 
@@ -67,6 +73,19 @@ const onRefresh = () => {
     setRefreshing(false);
 };
 
+ //데이터 로딩이 끝날때 까지 로딩화면 재생
+ if (isLoading) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <LottieView
+          autoPlay
+          loop
+          style={{ width: 100, height: 100 }}
+          source={require('../src/lottie/loading.json')}
+        />
+      </View>
+    );
+  }
     
 
 return (

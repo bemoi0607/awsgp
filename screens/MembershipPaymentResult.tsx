@@ -3,6 +3,7 @@ import { Icon, IconButton, List, Text,View,Image } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons';
 import { BackHandler } from 'react-native';
+import { MainScreens } from '../stacks/Navigator';
 
 
 
@@ -26,8 +27,6 @@ const PaymentResult = ({ route, navigation }) =>{
   const message = route.params?.message;
   const error_msg = route.params?.error_msg;
 
-  // [WARNING: 이해를 돕기 위한 것일 뿐, imp_success 또는 success 파라미터로 결제 성공 여부를 장담할 수 없습니다.]
-  // 아임포트 서버로 결제내역 조회(GET /payments/${imp_uid})를 통해 그 응답(status)에 따라 결제 성공 여부를 판단하세요.
   const isSuccess =
     getBoolean(imp_success) ??
     getBoolean(success) ??
@@ -47,11 +46,10 @@ const PaymentResult = ({ route, navigation }) =>{
   }, []);
 
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         justifyContent: 'center',
-        margin: 10,
         backgroundColor: '#fff',
         alignItems: 'center',
       }}
@@ -100,12 +98,11 @@ const PaymentResult = ({ route, navigation }) =>{
       </List>
       <IconButton
         icon={<Icon as={FontAwesome} name={'arrow-left'} size={20} />}
-        /* @ts-ignore */
         onPress={() => navigation.navigate(MainScreens.MyInfo)} //// reload 되면서 내 정보로 갈수 있도록 코드 수정 
       >
         <Text>돌아가기</Text>
       </IconButton>
-    </SafeAreaView>
+    </View>
   );
 }
 

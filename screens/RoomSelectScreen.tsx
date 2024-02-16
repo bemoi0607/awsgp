@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Fontisto } from '@expo/vector-icons';
 import config from '../config'
+import LottieView from 'lottie-react-native';
 
 const BASE_URL = config.SERVER_URL;
 
@@ -59,28 +60,46 @@ const saveRoomTypeToAsyncStorage = async (roomNumber: number) => {
 const RoomSelectScreen:React.FunctionComponent<BookedInfoScreenProps> = (props) => {
   const { navigation } = props;
   const [averageRatings, setAverageRatings] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
       useEffect(() => {
         const roomNumbers = [1, 2, 3]; // 가져올 방번호들을 배열로 설정
-
+  
         const fetchAverageRatings = async () => {
-          const promises = roomNumbers.map((roomNumber) =>
-            fetch(`${BASE_URL}/average_rating/${roomNumber}`)
-              .then((response) => response.json())
-              .then((data) => (data.average_rating !== null ? data.average_rating.toFixed(2) : "0.00")) // 리뷰값이 없을 경우 "0.00"으로 표현
-              .catch((error) => {
-                console.error('Error:', error);
-                return 'N/A';
-              })
-          );
-
-          const ratings = await Promise.all(promises);
-          setAverageRatings(ratings);
+          setIsLoading(true); // 데이터 로딩 시작 전에 isLoading을 true로 설정
+          try {
+            const promises = roomNumbers.map((roomNumber) =>
+              fetch(`${BASE_URL}/average_rating/${roomNumber}`)
+                .then((response) => response.json())
+                .then((data) => (data.average_rating !== null ? data.average_rating.toFixed(2) : "0.00")) // 리뷰값이 없을 경우 "0.00"으로 표현
+            );
+  
+            const ratings = await Promise.all(promises);
+            setAverageRatings(ratings);
+          } catch (error) {
+            console.error('Error:', error);
+          } finally {
+            setIsLoading(false); // 데이터 로딩 완료 또는 에러 발생 후에 isLoading을 false로 설정
+          }
         };
-
+  
         fetchAverageRatings();
-      }, [])
-
+      }, []);
+  
+       //데이터 로딩이 끝날때 까지 로딩화면 재생
+    if (isLoading) {
+      return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <LottieView
+            autoPlay
+            loop
+            style={{ width: 100, height: 100 }}
+            source={require('../src/lottie/loading.json')}
+          />
+        </View>
+      );
+    }
+    
     return (
     <ScrollView>
         <View style={{justifyContent:'center', alignItems:'center',height:'auto',backgroundColor:'white'}}>

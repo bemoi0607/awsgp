@@ -86,20 +86,18 @@ const MyMembershipScreen:React.FunctionComponent<MyMembershipScreenProps> = (pro
   }, []);
   return (
   <>
- 
-      <ScrollView>
+      <ScrollView style={{backgroundColor:'white'}}>
+        <View style={{flex:1,paddingHorizontal:24}}>
+          <Text style={{fontSize:22,fontWeight:'bold',marginTop:24}}>시설 회원권</Text>
+        </View>
       {periodmembershipData.length === 0 ? (
-         <View style={{ justifyContent: 'center', alignItems: 'center'}}>
-          <View style={{width:screenWidth,height:'auto',backgroundColor:'white',justifyContent:'center'}}>
-            <Text style={{fontSize:22,fontWeight:'bold',marginLeft:'5%',paddingTop:24}}>시설 회원권</Text>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#868E96',marginTop:24,alignSelf:'center'}}>보유회원권이 없습니다.</Text>
+         <View style={{width:screenWidth,height:screenWidth*0.5}}>
+          <View style={{backgroundColor:'white',flex:2,justifyContent:'center',alignItems:'center'}}>
+            <Text style={{ fontSize: 18, fontWeight: 'medium', color:'#868E96',marginTop:24}}>보유회원권이 없습니다.</Text>
           </View>
        </View>
        ) : (
         <View style={{ alignItems: 'center',backgroundColor:'white',height:'auto',flex:1,borderBottomColor:'#E5E5E5',borderBottomWidth:1 }}>
-          <View style={{width:screenWidth,height:screenWidth*0.15,backgroundColor:'white',justifyContent:'center'}}>
-            <Text style={{fontSize:22,fontWeight:'bold',marginLeft:'5%'}}>시설 회원권</Text>
-          </View>
           {periodmembershipData.map((item) => {
             // Calculate the difference in days between the expiration date and the current date
             const currentDate = new Date();
@@ -122,11 +120,9 @@ const MyMembershipScreen:React.FunctionComponent<MyMembershipScreenProps> = (pro
                   borderRadius: 15,
                   marginBottom: screenWidth * 0.08,
                   marginTop: screenWidth * 0.04,
-                  paddingHorizontal:'5%',
-  
+                  paddingHorizontal:24,
                 }}
               >
-                {/* Render your membership data here */}
                 <View style={{ flex:1,backgroundColor:'white'}}>  
                   <View style={{flex:1,backgroundColor:'white',flexDirection:'row',marginTop:'6%'}}>
                     <View style={{flex:1,backgroundColor:'white'}}>
@@ -147,84 +143,85 @@ const MyMembershipScreen:React.FunctionComponent<MyMembershipScreenProps> = (pro
           })}
         </View>
         )}
-        <View style={{ alignItems: 'center',backgroundColor:'white',height:'auto',flex:1 }}>
-          <View style={{width:screenWidth,height:screenWidth*0.15,backgroundColor:'white',justifyContent:'center'}}>
-            <Text style={{fontSize:22,fontWeight:'bold',marginLeft:'5%'}}>PT 회원권</Text>
-          </View>
-          {trainerMembershipData.length === 0 ? (
-           <View style={{ justifyContent: 'center', alignItems: 'center'}}>
-           <View style={{width:screenWidth,height:'auto',backgroundColor:'white',justifyContent:'center'}}>
-             <Text style={{fontSize:22,fontWeight:'bold',marginLeft:'5%',paddingTop:24}}>PT 회원권</Text>
-             <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#868E96',marginTop:24,alignSelf:'center'}}>보유회원권이 없습니다.</Text>
-           </View>
+
+       <View style={{flex:1,height:'auto',backgroundColor:'white'}}>
+        <View style={{width: screenWidth, height: screenWidth * 0.16, backgroundColor: 'white', justifyContent: 'center'}}>
+          <Text style={{fontSize: 22, fontWeight: 'bold', marginLeft: 24}}>PT 회원권</Text>
         </View>
-          ) : (
-            trainerMembershipData.map((item) => {
-              return (
-                <View
-                key={item.tmid}
-                style={{
-                  width: screenWidth * 0.9,
-                  height: screenHeight * 0.18,
-                  ...shadowStyle,
-                  backgroundColor: 'white',
-                  borderRadius: 15,
-                  marginBottom: screenWidth * 0.08,
-                  marginTop: screenWidth * 0.04,
-                  
-                }}
-              >
-                {/* Render your membership data here */}
-                <View style={{ flex:1,backgroundColor:'white',borderTopLeftRadius:15,borderTopRightRadius:15,borderBottomLeftRadius:15,borderBottomRightRadius:15}}>  
-                  <View style={{flex:1,backgroundColor:'white',flexDirection:'row',marginTop:'6%',paddingHorizontal:'5%'}}>
-                    <View style={{flex:1,backgroundColor:'white'}}>
-                      <Text style={{color:'#797676',fontSize:25,fontWeight:'bold'}}>1:1PT</Text>
-                    </View>
-                    <View style={{flex:1,backgroundColor:'white'}}>
-                      <View style={{marginLeft:'auto',width:'32%',height:'85%',backgroundColor:'#1E90FF',borderRadius:20,justifyContent:'center',alignItems:'center'}}>
-                        <Text style={{fontSize:14,fontWeight:'bold',color:'white'}}>{item.session}회</Text>
-                      </View>
-                    </View>
-                  </View>
-                  <View style={{backgroundColor:'white',flex:1,paddingHorizontal:'5%'}}>
-                    <Text style={{fontSize:16,color:'#797676'}}>{item.name}트레이너</Text>
-                  </View>
-                  <View style={{backgroundColor:'white',flex:1.5,borderTopColor:'#E5E5E5',borderTopWidth:1,justifyContent:'center',alignItems:'center',borderBottomLeftRadius:15,borderBottomRightRadius:15}}>
-                    <View style={{width:'90%',height:'60%',borderRadius:10,backgroundColor:'#1E90FF'}}>
-                    <TouchableOpacity
-                        onPress={() => {
-                          if (item.rvid === null) {
-                            navigation.navigate(MMScreens.PTReview, {
-                              name: item.name,
-                              merchant_uid: item.merchant_uid,
-                              trainer_id: item.trainer_id
-                            });
-                          }
-                        }}
-                        disabled={item.rvid !== null}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          backgroundColor: item.rvid !== null ? 'lightgray' : '#1E90FF',
-                          borderRadius: 10,
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}
-                      >
-                        <Text style={{ color: 'white', fontSize: 13, fontWeight: 'bold' }}>
-                          {item.rvid !== null ? '후기 작성 완료' : '후기 작성하기'}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
+        {trainerMembershipData.length === 0 ? (
+         <View style={{width:screenWidth,height:screenWidth*0.5}}>
+          <View style={{backgroundColor:'white',flex:2,justifyContent:'center',alignItems:'center'}}>
+            <Text style={{ fontSize: 18, fontWeight: 'medium', color:'#868E96',marginTop:24}}>보유회원권이 없습니다.</Text>
+          </View>
+       </View>
+       ) : (
+        <View style={{alignItems:'center',justifyContent:'center'}}>  
+        {trainerMembershipData.map((item) => (
+          <View
+            key={item.tmid}
+            style={{
+              width: screenWidth * 0.9,
+              height: screenHeight * 0.18,
+              ...shadowStyle,
+              backgroundColor: 'white',
+              borderRadius: 15,  
+              marginBottom: screenWidth * 0.08,
+              marginTop: screenWidth * 0.04,
+              paddingHorizontal:24
+            }}
+          >
+            <View style={{ flex: 1, backgroundColor: 'white', borderTopLeftRadius: 15, borderTopRightRadius: 15, borderBottomLeftRadius: 15, borderBottomRightRadius: 15 }}>  
+              <View style={{ flex: 1, backgroundColor: 'white', flexDirection: 'row', marginTop: '6%' }}>
+                <View style={{ flex: 1, backgroundColor: 'white' }}>
+                  <Text style={{ color: '#797676', fontSize: 25, fontWeight: 'bold' }}>1:1PT</Text>
+                </View>
+                <View style={{ flex: 1, backgroundColor: 'white' }}>
+                  <View style={{ marginLeft: 'auto', width: '32%', height: '85%', backgroundColor: '#1E90FF', borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ fontSize: 14, fontWeight: 'bold', color: 'white' }}>{item.session}회</Text>
                   </View>
                 </View>
               </View>
-              );
-            })
-          )}
+              <View style={{ backgroundColor: 'white', flex: 1}}>
+                <Text style={{ fontSize: 16, color: '#797676' }}>{item.name}트레이너</Text>
+              </View>
+              <View style={{ backgroundColor: 'white', flex: 1.5, borderTopColor: '#E5E5E5', borderTopWidth: 1, justifyContent: 'center', alignItems: 'center', borderBottomLeftRadius: 15, borderBottomRightRadius: 15 }}>
+                <View style={{ width: '100%', height: '60%', borderRadius: 10, backgroundColor: '#1E90FF' }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (item.rvid === null) {
+                        navigation.navigate(MMScreens.PTReview, {
+                          name: item.name,
+                          merchant_uid: item.merchant_uid,
+                          trainer_id: item.trainer_id
+                        });
+                      }
+                    }}
+                    disabled={item.rvid !== null}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      backgroundColor: item.rvid !== null ? 'lightgray' : '#1E90FF',
+                      borderRadius: 10,
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Text style={{ color: 'white', fontSize: 13, fontWeight: 'bold' }}>
+                      {item.rvid !== null ? '후기 작성 완료' : '후기 작성하기'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </View>
+
+        ))}
         </View>
-      </ScrollView>
+       )}
+      </View>
+    </ScrollView>
   </>
+  
 );
 
 };

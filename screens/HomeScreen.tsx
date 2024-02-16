@@ -9,22 +9,11 @@ import {Linking} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import config from '../config'
+import LottieView from 'lottie-react-native';
+
 const BASE_URL = config.SERVER_URL;
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
-
-const shadowStyle = Platform.select({
-    ios: {
-        shadowColor: 'rgba(0, 0, 0, 0.2)',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 1,
-        shadowRadius: 4,
-    },
-    android: {
-        elevation: 2,
-    },
-})
-
 
 export const basicDimensions = {
     height: 852,
@@ -63,7 +52,7 @@ interface HomeScreenProps {
 
 
 const HomeScreen: React.FunctionComponent<HomeScreenProps> = ({navigation,route}) => {
-
+    const [isLoading, setIsLoading] = useState(true);
     const images = [
         require('../images/리뷰이벤트.png'),
         require('../images/리뷰이벤트3.png'),
@@ -105,6 +94,8 @@ const HomeScreen: React.FunctionComponent<HomeScreenProps> = ({navigation,route}
         const [refreshing, setRefreshing] = useState(false);
         const [userData, setUserData] = useState(null);
         const [logId, setLogId] = useState(null);
+        const [totalTime, setTotalTime] = useState(0);
+        const [usedTime, setUsedTime] = useState(0);
 
         const onRefresh = () => {
             setRefreshing(true)
@@ -115,6 +106,7 @@ const HomeScreen: React.FunctionComponent<HomeScreenProps> = ({navigation,route}
 //정기권 구매여부 확인
 useEffect(() => {
     const fetchData = async () => {
+        setIsLoading(true); 
         try {
             // AsyncStorage에서 logId 가져오기
             let logId = await AsyncStorage.getItem('logId');
@@ -132,17 +124,40 @@ useEffect(() => {
                 // uid 로 period_membership pstate 가져오기
                 const membershipResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
                 const membershipData = await membershipResponse.json();
-                setPState(membershipData.pstate);
-                console.log(membershipData[0].pstate)
-                        
+                setPState(membershipData[0].pstate);
+                setTotalTime(membershipData[0].total_time);
+                setUsedTime(membershipData[0].used_time);
             }
         } catch (error) {
             console.log('Error:', error);
         }
+       setIsLoading(false);
     };
 
     fetchData();
 }, []);
+
+const handleMembershipPress = () => {
+    if (pState === 1 && totalTime > usedTime) {
+    navigation.navigate(MainScreens.Membership);
+    } else {
+    navigation.navigate(MainScreens.MembershipPurchase1);
+    }
+};
+
+if (isLoading) {
+    // 로딩 중이라면 로티 애니메이션 표시
+    return (
+        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+            <LottieView
+                source={require('../src/lottie/loading.json')}
+                style={{width:100,height:100}}
+                autoPlay
+                loop
+            />
+        </View>
+    );
+}
 
 return (
         <ScrollView style={{backgroundColor:'white'}}
@@ -154,7 +169,7 @@ return (
                 <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',height:screenWidth*0.13,backgroundColor:'white'}}>
                     <View>
                         <Image 
-                            source={require('../images/logogp.jpeg')}
+                            source={require('../images/logogp1.png')}
                             style={{width:screenWidth*0.45,height:'70%'}}
                             resizeMode='cover'
                         />
@@ -207,7 +222,7 @@ return (
                 </View>
             </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.Box2}  onPress={()=>{navigation.navigate(MainScreens.MembershipPurchase1)}}>
+        <TouchableOpacity style={styles.Box2}  onPress={handleMembershipPress}>
             <View style={{flex:1,paddingHorizontal:24,flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
                 <View>
                     <Text style={styles.Caption2}>처음이신가요?</Text>

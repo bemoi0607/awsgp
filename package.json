@@ -35,6 +35,7 @@
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
     "iamport-react-native": "^2.0.10",
+    "lottie-react-native": "5.1.6",
     "metro-react-native-babel-transformer": "^0.77.0",
     "moment": "^2.30.1",
     "native-base": "^3.4.28",

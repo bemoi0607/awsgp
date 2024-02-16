@@ -1,5 +1,5 @@
 import { fetchAuthSession } from '@aws-amplify/auth';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View,Text,StyleSheet,Image, Dimensions} from 'react-native'
 import { Amplify, type ResourcesConfig } from 'aws-amplify';
 import { defaultStorage } from 'aws-amplify/utils';
@@ -9,6 +9,7 @@ import { MainScreens, MainStackParamList } from '../stacks/Navigator';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../config'
+import { height } from './HomeScreen';
 
 const BASE_URL = config.SERVER_URL;
 
@@ -118,22 +119,9 @@ useEffect(() => {
 }, []);
 
     return (
-    <View style={styles.container}>
-                <View style={styles.navigation} />
-                <View style={styles.body}>
-                    <Image source={require('../images/gymprivate.jpeg')} style={styles.gymIcon} />
-                    
-                    <View style={styles.body2}>
-                        <Image source={require('../images/gpname.jpeg')} style={styles.gymIcon2} />
-                    </View>
-
-                    <View style={styles.gymContainer}>
-                        <Text style={styles.gymTitle}>프라이빗한 공간에서</Text>
-                    </View>
-                    <Text style={styles.gymText}>나만의 운동을 즐겨보세요!</Text>
-                </View>
-                <View style={styles.footer} />
-            </View>
+    <View style={styles.container}>    
+        <Image source={require('../assets/adaptive-icon1.png')} style={styles.gymIcon} />          
+     </View>
     )
 }
 
@@ -144,56 +132,13 @@ const styles = StyleSheet.create({
 container: {
     flex: 1,
     backgroundColor: 'rgba(255,255,255,1)',
-},
-navigation: {
-    flex: 2,
-    backgroundColor: 'rgba(255,255,255,1)',
-},
-body: {
-    flex: 9,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,1)',
-},
-body2:{
-    bottom:'25%',
-    flex: 9,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,1)',
+    justifyContent:'center',
+    alignItems:'center'
 },
 gymIcon: {
-    width: 270,
-    height: 270,
-    marginBottom: '70%',
-},
-gymIcon2: {
-    width: screenWidth,
-    height: 100,
-    marginBottom: '70%',
-},
-gymContainer: {
-    bottom:'10%',
-    width: screenWidth - 100,
-    // borderBottomColor: 'rgba(138,151,239,1)',
-    // borderBottomWidth: 0.8,
-    padding: 5,
-    alignItems: 'center',
-},
-gymTitle: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#8d8d8d',
-},
-gymText: {
-    bottom:'10%',
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#8d8d8d',
+    width:screenWidth,
+    height:screenWidth,  
 },
 
-footer: {
-    flex: 1,
-    backgroundColor: 'rgba(255,255,255,1)',
-},
+
 });

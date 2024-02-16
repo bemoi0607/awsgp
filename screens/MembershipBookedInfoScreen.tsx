@@ -28,8 +28,6 @@ const MembershipBookedInfoScreen: React.FunctionComponent<MembershipScreenProps>
     const timestamp = now.getTime(); // 밀리초 단위 타임스탬프
     const milliseconds = now.getMilliseconds(); // 현재 밀리초
     const merchantUid = `mid_${timestamp}_${milliseconds}`;
-    console.log(merchantUid)
-
     const [selectedRoomNumber, setSelectedRoomNumber] = useState('');
     const [selectedDate, setSelectedDate] = useState('');
     
@@ -96,9 +94,7 @@ const MembershipBookedInfoScreen: React.FunctionComponent<MembershipScreenProps>
 
     const handleSubmit = async () => {
     try {
-
         let startTime, endTime;
-
         if (isMorning && selectedDayTimeSlot) {
             startTime = selectedDayTimeSlot;
             endTime = selectedEndTime;
@@ -109,21 +105,35 @@ const MembershipBookedInfoScreen: React.FunctionComponent<MembershipScreenProps>
             return; // Handle the case when the time slot is not selected properly
         }
 
+        //used_time + 예약시간 < total_time인지 로그아이디로 조회: 잔여시간에 따른 예약 제한
+        const uidResponse = await fetch(`${BASE_URL}/user?logid=${logId}`);
+        const uidData = await uidResponse.json();
+        const uid = uidData.uid;
+        
+        const periodMembershipResponse = await fetch(`${BASE_URL}/Myperiodmembership?uid=${uid}&pstate=1`);
+        const periodMembershipData = await periodMembershipResponse.json();
+        console.log(periodMembershipData)
 
-        const response = await axios.post(`${BASE_URL}/reservation`, {
-            room: selectedRoomNumber,
-            date: selectedDate,
-            startTime: startTime,
-            endTime: endTime,
-            usingTime: selectedUsingTimeSlot,
-            logId: logId,
-            amount:0,
-            merchantUid:merchantUid
-            
+    
+        const { total_time, used_time } = periodMembershipData[0];
+        const minutes = parseInt(selectedUsingTimeSlot.replace(/[^0-9]/g, ''), 10); // 분 단위 숫자 추출
+        const bookingTimeInHours = minutes / 60; // 분을 시간으로 변환
+       
+        if (used_time + bookingTimeInHours > total_time) {
+            Alert.alert('잔여 시간이 부족합니다.');
+            return;
+        }
 
-         // Spread the user information into the request body
-        });
-
+    const response = await axios.post(`${BASE_URL}/reservation`, {
+        room: selectedRoomNumber,
+        date: selectedDate,
+        startTime: startTime,
+        endTime: endTime,
+        usingTime: selectedUsingTimeSlot,
+        logId: logId,
+        amount:0,
+        merchantUid:merchantUid
+    });
         console.log(response.data);
         console.log('success');
         Alert.alert('알림', '예약이 완료되었습니다!');
@@ -131,92 +141,11 @@ const MembershipBookedInfoScreen: React.FunctionComponent<MembershipScreenProps>
     } catch (error) {
         console.error(error);
     }
-
     // navigation.navigate(MainScreens.MyReservation);
 };
     
-
- // const [Price, setPrice] = useState(0);
-
-// useEffect(() => {
-//         const fetchPrice = async () => {
-//         try {
-//             const response = await axios.post(`${BASE_URL}/booking_price/price`, {
-//                 usingTime: selectedUsingTimeSlot,
-//             });
-
-//         if (response.status === 200) {
-//             const priceData = response.data;
-//             setPrice(priceData.price);
-//         } else {
-//             console.error('Failed to fetch price');
-//         }
-//         } catch (error) {
-//         console.error('Error fetching price:', error);
-//         }
-//     };
-
-//         fetchPrice();
-//     }, [selectedUsingTimeSlot]);
-
-    // const name = '짐프라이빗 대관'
-    // const amount = Price
-    // const [merchantUid, setMerchantUid] = useState(`mid_${new Date().getTime()}`);
-    // const [buyerName, setBuyerName] = useState('이상범');
-    // const [buyerTel, setBuyerTel] = useState('01072976384');
-    // const [buyerEmail, setBuyerEmail] = useState('tkdqjay384@gmail.com');
-    
-
-    //결제 요청
-//   const handlePayment = async () => {
-//     const data = {
-//       params: {
-//         pg: 'html5_inicis.INIpayTest',
-//         pay_method: 'card',
-//         currency: undefined,
-//         //웹훅 수신 url
-//         notice_url:`https://c766-220-127-76-219.ngrok-free.app/portone-webhook`,
-//         display: undefined,
-//         merchant_uid: merchantUid,
-//         name,
-//         amount,
-//         app_scheme: 'exampleformanagedexpo',
-//         tax_free: undefined,
-//         buyer_name: buyerName,
-//         buyer_tel: buyerTel,
-//         buyer_email: buyerEmail,
-//         buyer_addr: undefined,
-//         buyer_postcode: undefined,
-//         custom_data: undefined,
-//         vbank_due: undefined,
-//         popup: undefined,
-//         digital: undefined,
-//         language: undefined,
-//         biz_num: undefined,
-//         customer_uid: undefined,
-//         naverPopupMode: undefined,
-//         naverUseCfm: undefined,
-//         naverProducts: undefined,
-//         m_redirect_url: undefined,
-//         escrow: false,
-//       },
-//       tierCode: undefined,
-//     };
-
-//     try {
-//       // 백엔드로 결제 요청 정보 전송
-//       await axios.post(`${BASE_URL}/payment/requests`, data);
-//       console.log(data)
-//       navigation.navigate(BookingScreens.BookingPayment, data.params,);
-//       console.log(data)
-//     } catch (error) {
-//       console.error('결제 요청 중 오류가 발생했습니다.', error.response);
-//     }
-//   };
-
 return (
     <>     
-        
         <View style={{backgroundColor:'white',height:2000}}>
             <View style={{backgroundColor:'white',paddingHorizontal:25,height:screenHeight*0.08}}>
             <Text style={{marginTop:screenWidth*0.1,fontSize:23 ,fontWeight:'bold',color:'#4F4F4F'}}>
@@ -249,26 +178,7 @@ return (
                 
                     </View>
                 </View>
-            {/* <View style={{backgroundColor:'white',paddingHorizontal:25,height:screenHeight*0.17}}>
-                <Text style={{marginTop:screenWidth*0.1,fontSize:23 ,fontWeight:'bold',color:'#4F4F4F'}}>
-                가격정보
-                </Text>
-                <Text style={{marginTop:screenWidth*0.05,fontSize:18,fontWeight:'bold',color:'#797676'}}>총 상품가격 : {Price}</Text>
-            </View> */}
-            {/* <View style={{width:screenWidth*0.9,alignSelf:'center',borderTopColor:'#E5E5E5',borderTopWidth:1,backgroundColor:'white',paddingHorizontal:10,height:screenHeight*0.2}}>
-                <Text style={{marginTop:screenWidth*0.1,fontSize:23 ,fontWeight:'bold',color:'#4F4F4F'}}>
-                구매자정보
-                </Text>
-                <Text style={{marginTop:25,fontSize:14,fontWeight:'bold',color:'#797676'}}>이름</Text>
-                <TextInput
-                style={styles.input}
-                placeholder="이름을 입력해주세요"
-                value={buyerName}
-                onChangeText={setBuyerName}
-                />
-            </View> */}
-            </View> 
-        
+            </View>  
             <View
             style={{
                 position: 'absolute',

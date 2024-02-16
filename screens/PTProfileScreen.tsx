@@ -11,7 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import config from '../config'
 import { height, width } from './HomeScreen';
-
+import LottieView from 'lottie-react-native';
 
 const BASE_URL = config.SERVER_URL;
 
@@ -34,6 +34,7 @@ interface PTProfileScreenProps {
 const PTProfileScreen = ({ navigation }: Props) => {
   const [trainer, setTrainer] = useState([]);
   const [averageRatings, setAverageRatings] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   
   
 
@@ -69,6 +70,8 @@ const PTProfileScreen = ({ navigation }: Props) => {
       
     } catch (error) {
       console.log(error.response);
+    }finally {
+      setIsLoading(false); // 데이터 로딩 완료
     }
   };
   
@@ -76,6 +79,19 @@ const PTProfileScreen = ({ navigation }: Props) => {
     getTrainer();
   }, []);
   
+  if (isLoading) {
+    return (
+      <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+        <LottieView
+          source={require('../src/lottie/loading.json')} 
+          loop
+          autoPlay
+          style={{width:100,height:100}}
+        />
+      </View>
+    );
+  }
+
   
   return (
     <ScrollView>

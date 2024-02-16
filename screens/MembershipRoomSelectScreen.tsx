@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { MembershipScreens, MembershipStackParamList } from '../stacks/Navigator';
 import config from '../config'
+import LottieView from 'lottie-react-native';
 
 ////////////////////////////////////////////////////////////////
 
@@ -60,29 +61,46 @@ const saveRoomTypeToAsyncStorage = async (roomNumber: number) => {
 const MembershipRoomSelectScreen:React.FunctionComponent<MembershipRoomSelectScreenProps> = (props) => {
 const { navigation } = props;
 const [averageRatings, setAverageRatings] = useState([]);
+const [isLoading, setIsLoading] = useState(true);
 
-      useEffect(() => {
-        const roomNumbers = [1, 2, 3]; // 가져올 방번호들을 배열로 설정
+    useEffect(() => {
+      const roomNumbers = [1, 2, 3]; // 가져올 방번호들을 배열로 설정
 
-        const fetchAverageRatings = async () => {
+      const fetchAverageRatings = async () => {
+        setIsLoading(true); // 데이터 로딩 시작 전에 isLoading을 true로 설정
+        try {
           const promises = roomNumbers.map((roomNumber) =>
             fetch(`${BASE_URL}/average_rating/${roomNumber}`)
               .then((response) => response.json())
               .then((data) => (data.average_rating !== null ? data.average_rating.toFixed(2) : "0.00")) // 리뷰값이 없을 경우 "0.00"으로 표현
-              .catch((error) => {
-                console.error('Error:', error);
-                return 'N/A';
-              })
           );
 
           const ratings = await Promise.all(promises);
           setAverageRatings(ratings);
-        };
+        } catch (error) {
+          console.error('Error:', error);
+        } finally {
+          setIsLoading(false); // 데이터 로딩 완료 또는 에러 발생 후에 isLoading을 false로 설정
+        }
+      };
 
-        fetchAverageRatings();
-      }, [])
+      fetchAverageRatings();
+    }, []);
 
-
+    //데이터 로딩이 끝날때 까지 로딩화면 재생
+    if (isLoading) {
+      return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <LottieView
+            autoPlay
+            loop
+            style={{ width: 100, height: 100 }}
+            source={require('../src/lottie/loading.json')}
+          />
+        </View>
+      );
+    }
+    
     return (
   <ScrollView>
         <View style={{justifyContent:'center', alignItems:'center',height:'auto',backgroundColor:'white'}}>
@@ -189,109 +207,6 @@ const [averageRatings, setAverageRatings] = useState([]);
               </View>
               </View>
             </View>
-            {/* <View style={{width:screenWidth,height:screenWidth*0.9,backgroundColor:'white'}}>
-              <View style={{flex:3.6,backgroundColor:'white',justifyContent:'center',alignItems:'center'}}>
-                <TouchableOpacity 
-                    onPress={()=>{navigation.navigate(MembershipScreens.MembershipRoomDDetail)
-                        saveRoomTypeToAsyncStorage(4);}}
-                    style={styles.roomContainer}>
-                        <Image 
-                        style={{width:'100%',height:'100%',borderRadius:20}}
-                        source = {require('../images/Room1.jpeg')}
-                        resizeMode='cover'/>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{flex:1.7,backgroundColor:'white'}}>
-              <View style={{ flexDirection: 'row', alignItems: 'center',paddingHorizontal:screenWidth*0.06 }}>
-                <Text style={{ fontSize: 21 }}>짐프라이빗 4번룸</Text>              
-                <Fontisto name="star" size={13} color="black" style={{marginLeft:'auto'}} />
-                <Text style={{ fontSize: 14 }}>{averageRatings[3]}</Text>
-              </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center',marginLeft:'6%',marginTop:'1%'  }}>
-                <Image
-                source={require('../images/placeholder.png')}
-                style={{ width: screenWidth * 0.035, height: screenWidth * 0.045 }}
-                />
-                <Text style={{ fontSize: 16, color: '#797676',marginLeft:'1%'}}>역삼역 3번출구 도보 1분</Text>
-              </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center',marginTop:'5%',marginLeft:'6%'}}>
-                <Text style={{ fontSize: 18}}>₩7,500/30분</Text>
-                    <View style={{ backgroundColor: '#1F75FE', height: screenWidth * 0.05, borderRadius: 10, justifyContent: 'center', alignItems: 'center',marginLeft:'1.5%' }}>
-                    <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold', paddingHorizontal: '2.5%' }}>할인쿠폰</Text>
-                    </View>
-              </View>
-              </View>
-            </View>
-            <View style={{width:screenWidth,height:screenWidth*0.9,backgroundColor:'white'}}>
-              <View style={{flex:3.6,backgroundColor:'white',justifyContent:'center',alignItems:'center'}}>
-                <TouchableOpacity 
-                    onPress={()=>{navigation.navigate(MembershipScreens.MembershipRoomEDetail)
-                        saveRoomTypeToAsyncStorage(5);}}
-                    style={styles.roomContainer}>
-                        <Image 
-                        style={{width:'100%',height:'100%',borderRadius:20}}
-                        source = {require('../images/Room1.jpeg')}
-                        resizeMode='cover'/>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{flex:1.7,backgroundColor:'white'}}>
-              <View style={{ flexDirection: 'row', alignItems: 'center',paddingHorizontal:screenWidth*0.06 }}>
-                <Text style={{ fontSize: 21 }}>짐프라이빗 5번룸</Text>              
-                <Fontisto name="star" size={13} color="black" style={{marginLeft:'auto'}} />
-                <Text style={{ fontSize: 14 }}>{averageRatings[4]}</Text>
-              </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center',marginLeft:'6%',marginTop:'1%'  }}>
-                <Image
-                source={require('../images/placeholder.png')}
-                style={{ width: screenWidth * 0.035, height: screenWidth * 0.045 }}
-                />
-                <Text style={{ fontSize: 16, color: '#797676',marginLeft:'1%'}}>역삼역 3번출구 도보 1분</Text>
-              </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center',marginTop:'5%',marginLeft:'6%'}}>
-                <Text style={{ fontSize: 18}}>₩7,500/30분</Text>
-                    <View style={{ backgroundColor: '#1F75FE', height: screenWidth * 0.05, borderRadius: 10, justifyContent: 'center', alignItems: 'center',marginLeft:'1.5%' }}>
-                    <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold', paddingHorizontal: '2.5%' }}>할인쿠폰</Text>
-                    </View>
-              </View>
-              </View>
-            </View> */}
-            {/* <View style={{width:screenWidth,height:screenWidth*0.9,backgroundColor:'white'}}>
-              <View style={{flex:3.6,backgroundColor:'white',justifyContent:'center',alignItems:'center'}}>
-                <TouchableOpacity 
-                    onPress={()=>{navigation.navigate(MembershipScreens.MembershipRoomFDetail)
-                        saveRoomTypeToAsyncStorage(6);}}
-                    style={styles.roomContainer}>
-                        <Image 
-                        style={{width:'100%',height:'100%',borderRadius:20}}
-                        source = {require('../images/Room1.jpeg')}
-                        resizeMode='cover'/>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{flex:1.7,backgroundColor:'white',marginBottom:'5%'}}>
-              <View style={{ flexDirection: 'row', alignItems: 'center',paddingHorizontal:screenWidth*0.06 }}>
-                <Text style={{ fontSize: 21 }}>짐프라이빗 6번룸</Text>              
-                <Fontisto name="star" size={13} color="black" style={{marginLeft:'auto'}} />
-                <Text style={{ fontSize: 14 }}>{averageRatings[5]}</Text>
-              </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center',marginLeft:'6%',marginTop:'1%'  }}>
-                <Image
-                source={require('../images/placeholder.png')}
-                style={{ width: screenWidth * 0.035, height: screenWidth * 0.045 }}
-                />
-                <Text style={{ fontSize: 16, color: '#797676',marginLeft:'1%'}}>역삼역 3번출구 도보 1분</Text>
-              </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center',marginTop:'5%',marginLeft:'6%'}}>
-                <Text style={{ fontSize: 18}}>₩7,500/30분</Text>
-                    <View style={{ backgroundColor: '#1F75FE', height: screenWidth * 0.05, borderRadius: 10, justifyContent: 'center', alignItems: 'center',marginLeft:'1.5%' }}>
-                    <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold', paddingHorizontal: '2.5%' }}>할인쿠폰</Text>
-                    </View>
-              </View>
-              </View>
-            </View> */}
-    
       </View>
     </ScrollView>
     );

@@ -220,7 +220,7 @@ const onRefresh = async () => {
 
                     <View>
                         <Image 
-                            source={require('../images/logogp.jpeg')}
+                            source={require('../images/logogp1.png')}
                             style={{width:screenWidth*0.45,height:'70%'}}
                             resizeMode='cover'
                         />
