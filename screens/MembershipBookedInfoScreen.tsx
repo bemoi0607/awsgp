@@ -6,6 +6,7 @@ import { RouteProp } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../config'
+import { height } from './HomeScreen';
 
 const BASE_URL = config.SERVER_URL;
 
@@ -24,6 +25,12 @@ interface MembershipScreenProps {
 }
 
 const MembershipBookedInfoScreen: React.FunctionComponent<MembershipScreenProps> = ({navigation,route}) => {
+    const roomImages = {
+        1: require('../images/rooms1.jpg'),
+        2: require('../images/rooms2.jpg'),
+        3: require('../images/rooms3.jpeg'),
+        // 이하 생략, 필요한 모든 방 번호에 대해 반복
+      };
     const now = new Date();
     const timestamp = now.getTime(); // 밀리초 단위 타임스탬프
     const milliseconds = now.getMilliseconds(); // 현재 밀리초
@@ -153,53 +160,38 @@ const handleSubmit = async () => {
     
 return (
     <>     
-        <View style={{backgroundColor:'white',height:2000}}>
-            <View style={{backgroundColor:'white',paddingHorizontal:25,height:screenHeight*0.08}}>
-            <Text style={{marginTop:screenWidth*0.1,fontSize:23 ,fontWeight:'bold',color:'#4F4F4F'}}>
-            예약정보
-            </Text>
-            </View>
-            <View style={{flexDirection:'row',backgroundColor:'white',height:screenHeight*0.19,paddingHorizontal:25}}>
-                <Image
-                style={{
-                width: 135,
-                height: 135,
-                borderRadius:15,
-                marginTop:20
-                }}
-                source={require('../images/Room1.jpeg')}/>
-                <View style={{marginLeft:30,marginTop:20}}>
-                    <Text style={{fontSize:19,color:'#4F4F4F',fontWeight:'bold'}}>
-                        짐프라이빗 대관
-                    </Text>
-                    <Text style={{color:'#797676',fontSize:15,marginTop:3,fontWeight:'bold',marginBottom:'3%'}}>방 번호 : {selectedRoomNumber}</Text>
-                    <Text style={{color:'#797676',fontSize:15,fontWeight:'bold',marginBottom:'3%'}}>사용날짜 :  {selectedDate}</Text>
-                        <Text style={{color:'#797676',fontSize:15,fontWeight:'bold'}}>
-                                사용시간 : {' '}
-                                {isMorning && selectedDayTimeSlot
-                                ? `${selectedDayTimeSlot} - ${selectedEndTime}`
-                                : isEvening && selectedNightTimeSlot
-                                ? `${selectedNightTimeSlot} - ${selectedEndTime}`
-                                : null}
-                            </Text>
-                
-                    </View>
-                </View>
-            </View>  
-            <View
-            style={{
-                position: 'absolute',
-                bottom: 20,
-                width: '100%',
-            }}
-        >
+        <View style={{flex:1}}>
+        <View style={{paddingHorizontal:24,backgroundColor:'white',paddingBottom:24}}>
+          <Text style={styles.subtitle}>예약정보</Text>
+          <View style={{flexDirection:'row',marginTop:24}}>
+            <Image
+                style={styles.image}
+                source={roomImages[selectedRoomNumber]}
+            />
+            <View style={{marginLeft:24}}>
+              <Text style={styles.caption1gray}>방 번호 : {selectedRoomNumber}</Text> 
+              <Text style={styles.caption1gray}>사용날짜 :  {selectedDate}</Text>
+              <Text style={styles.caption1gray}>
+                사용시간 : {' '}
+                {isMorning 
+                ? `${selectedDayTimeSlot} - ${selectedEndTime}`
+                : isEvening 
+                ? `${selectedNightTimeSlot} - ${selectedEndTime}`
+                : null}
+              </Text>
+          </View>
+          </View>
+        </View>
+        </View>
+        <View style={{backgroundColor:'transparent'}}>
             <TouchableOpacity
             style={{
-                backgroundColor: '#4A7AFF',
+                backgroundColor: '#4169E1',
                 padding: 15,
                 marginHorizontal: 16,
                 borderRadius: 20,
                 alignItems: 'center',
+                marginBottom:30
             }}
             onPress={handleSubmit}
             //   disabled={!name}
@@ -223,73 +215,22 @@ return (
 export default MembershipBookedInfoScreen;
 
 const styles = StyleSheet.create({
-    container: {
-        marginTop: screenWidth*0.05,
-        justifyContent: 'center',
-        alignItems: 'center',
+    
+    subtitle:{
+      fontSize:24,
+      color:'black',
+      fontWeight:'bold',
+      marginTop:36
     },
-    InfoContainer: {
-        flex: 1,
-        width: screenWidth / 1.2,
-        borderRadius:15,
-        height: screenHeight / 4,
-        marginBottom: 10,
-        backgroundColor: 'white',
+    image:{
+      width: 120/height,
+      height: 112/height,
+      borderRadius:8,
     },
-    PayInfo1Container: {
-        flex: 1,
-        borderColor: 'black',
-        borderWeight: 3,
-        borderRadius:15,
-        width: screenWidth / 1.2,
-        height: screenHeight / 13,
-        marginBottom: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'red',
-    },
-    PayInfo2Container: {
-        flex: 1,
-        flexDirection: 'row',
-        borderBottomColor: 'black',
-        borderRadius:15,
-        width: screenWidth / 1.2,
-        height: screenHeight / 13,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: 'blue',
-    },
-    InfoTitle: {
-        fontSize: 20,
-    },
-    payBar: {
-        flexDirection: 'row',
-        flex: 1,
-        backgroundColor: 'rgba(242,242,242,242)',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    input: {
-        marginTop:15,
-        borderWidth: 1,
-        borderColor: '#4A7AFF',
-        borderRadius: 5,
-        width: screenWidth * 0.85,
-        height: screenWidth* 0.12,
-        paddingHorizontal:10,
-        backgroundColor:'#FCF8F8'
-      },
-    payNavigation: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        color: 'rgba(255,255,255,1)',
-        
-    },
-    payTitle: {
-        fontSize: 17,
-        color: 'rgba(255,255,255,1)',
-        fontWeight: 'bold',
-        
-    },
-    });
+    caption1gray:{
+      fontSize:18,
+      fontWeight:'600',
+      color:'#868E96',
+      marginTop:8/height
+    }
+  });
