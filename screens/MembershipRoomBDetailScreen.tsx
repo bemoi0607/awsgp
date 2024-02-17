@@ -303,7 +303,7 @@ return (
         <TouchableOpacity
             onPress={()=>{navigation.navigate(MembershipScreens.MembershipBooking)}}
             style={{
-                backgroundColor: '#1E90FF',
+                backgroundColor: '#4169E1',
                 padding: 15,
                 marginHorizontal: 16,
                 borderRadius: 20,

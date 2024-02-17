@@ -241,12 +241,12 @@ useEffect(() => {
       <View style={{backgroundColor:'transparent'}}>
         <TouchableOpacity
         style={{
-            backgroundColor:  '#4A7AFF',
+            backgroundColor:  '#4169E1',
             padding: 15,
             marginHorizontal: 16,
             borderRadius: 20,
             alignItems: 'center',
-            marginBottom:20
+            marginBottom:30
           }}
           onPress={handlePayment}
 >

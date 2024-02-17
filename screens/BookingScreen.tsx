@@ -772,7 +772,7 @@ return (
                         onPress={handleReserve}
                         style={[styles.tabBarContainer,
                             !allSlotSelected && { backgroundColor:'#797676',opacity:0.5 },
-                            allSlotSelected && { backgroundColor: '#4A7AFF' }
+                            allSlotSelected && { backgroundColor: '#4169E1' }
                         ]}
                     >
                         <Text style={{fontSize:18,fontWeight:'bold',color:'white'}}>예약하기</Text>
