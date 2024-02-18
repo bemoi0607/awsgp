@@ -1,61 +1,99 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Dimensions, Platform, TouchableOpacity,Image,RefreshControl, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Platform, Dimensions, ScrollView, Image,RefreshControl,StyleSheet} from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { HistoryScreens, MainScreens, MainStackParamList } from '../stacks/Navigator';
+import { MainStackParamList, MainScreens } from '../stacks/Navigator';
 import moment from 'moment';
 import config from '../config'
+import LottieView from 'lottie-react-native';
+
+
 
 const BASE_URL = config.SERVER_URL;
 
-////////////////////////////////////////////////////////////////
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
+// 그림자 효과를 위한 스타일 객체 생성
 const shadowStyle = Platform.select({
-  ios: {
-      shadowColor: 'rgba(0, 0, 0, 0.2)',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 1,
-      shadowRadius: 4,
-  },
-  android: {
-      elevation: 5,
-  },
-})
+    ios: {
+        shadowColor: 'rgba(0, 0, 0, 0.2)',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 1,
+        shadowRadius: 4,
+    },
+    android: {
+        elevation: 5,
+    },
+});
 
-//////////////////////////////////////////////////////////////// 코드 타입정의
-
-
-
-type MyReservationScreenNavigationProps = StackNavigationProp<
-    MainStackParamList, 
+type MyReservationScreenyNavigationProps = StackNavigationProp<
+    MainStackParamList,
     MainScreens.MyReservation
 >;
 
 interface MyReservationScreenProps {
-    navigation: MyReservationScreenNavigationProps; 
-};
+    navigation: MyReservationScreenyNavigationProps
+}
 
+const MyReservationScreen: React.FunctionComponent<MyReservationScreenProps> = (props) => {
+    const { navigation } = props;
+    const [reservations, setReservations] = useState([]);
+    const [userData, setUserData] = useState(null);
+    const [refreshing, setRefreshing] = useState(false);
+    const [allReservations, setAllReservations] = useState([]);
+    const [todayReservations, setTodayReservations] = useState([]);
+    const [CompleteReservations, setCompleteReservations] = useState([]);
+    const [filter, setFilter] = useState('all'); 
+    const [isLoading, setIsLoading] = useState(true);
 
-////////////////////////////////////////////////////////////////
+    const onRefresh = async () => {
+        setRefreshing(true);
+        try {
+            const logId = await AsyncStorage.getItem('logId');
+            if (logId) {
+                const formattedLogId = logId.replace(/^['"](.*)['"]$/, '$1');
+                const response = await axios.get(`${BASE_URL}/reservationHistory/${formattedLogId}`);
+                let fetchedReservations = response.data
+                    // 우선 데이터 정렬
+                    .sort((a, b) => {
+                        const dateA = moment(a.date_of_use + ' ' + a.time_of_use.split('-')[0], 'YYYY-MM-DD HH:mm');
+                        const dateB = moment(b.date_of_use + ' ' + b.time_of_use.split('-')[0], 'YYYY-MM-DD HH:mm');
+                        return dateA.diff(dateB);
+                    })
+                    // 유효성 검사를 통과한 데이터만 필터링
+                    .filter(reservation => reservation.date_of_use && reservation.time_of_use);
+    
+                // 유효한 데이터만 상태에 저장
+                setAllReservations(fetchedReservations);
+    
+                const now = moment();
+                let todayReservations = fetchedReservations.filter(reservation => {
+                    const endDate = moment(reservation.date_of_use);
+                    const endTimeMoment = moment(`${reservation.date_of_use.split('T')[0]} ${reservation.time_of_use.split('-')[1]}`, 'YYYY-MM-DD HH:mm');
+                    return endDate.isSame(now, 'day') && endTimeMoment.isAfter(now);
+                });
+    
+                let completedReservations = fetchedReservations.filter(reservation => {
+                    const endDate = moment(reservation.date_of_use);
+                    const endTimeMoment = moment(`${reservation.date_of_use.split('T')[0]} ${reservation.time_of_use.split('-')[1]}`, 'YYYY-MM-DD HH:mm');
+                    return endDate.isBefore(now, 'day') || (endDate.isSame(now, 'day') && endTimeMoment.isBefore(now));
+                });
+    
+                // 상태 업데이트
+                setTodayReservations(todayReservations);
+                setCompleteReservations(completedReservations);
+            }
+        } catch (error) {
+            console.error('Error fetching reservations:', error);
+        } finally {
+            setRefreshing(false);
+        }
+    };
 
-
-const MyReservationScreen:React.FunctionComponent<MyReservationScreenProps> = (props) => {
-  const {navigation} = props;
-  const [willUseReservation, setWillUseReservation] = useState(null);
-  const [refreshing, setRefreshing] = useState(false);
-
-  // const [lastReservation, setLastReservation] = useState(null);
-  // const [totalExerciseTime, setTotalExerciseTime] = useState(0);
-
-  const [userData, setUserData] = useState(null);
-  const [logId, setLogId] = useState(null);
-
-  useEffect(() => {
+useEffect(() => {
     const fetchData = async () => {
         try {
         // AsyncStorage에서 logId 가져오기
@@ -63,7 +101,6 @@ const MyReservationScreen:React.FunctionComponent<MyReservationScreenProps> = (p
         if (logId) {
             // Remove quotes from logId, if present
             logId = logId.replace(/^['"](.*)['"]$/, '$1');
-            console.log(logId);
 
             // logId를 사용하여 사용자 데이터 가져오기
             const response = await axios.get(`${BASE_URL}/user/${logId}`);
@@ -78,372 +115,372 @@ const MyReservationScreen:React.FunctionComponent<MyReservationScreenProps> = (p
     };
 
     fetchData();
-    }, []); // 빈 의존성 배열로, 컴포넌트 마운트 시에만 실행
+    }, []);
 
+    useEffect(() => {
+        fetchReservations();
+    }, [filter]);
 
+    
 
-  useEffect(() => {
-    const fetchWillUseReservation = async () => {
-      try {
-        // AsyncStorage에서 로그인된 사용자의 logId 가져오기
-        const logId = await AsyncStorage.getItem('logId');
+    const fetchReservations = async () => {
+        setIsLoading(true);
+        try {
+            const logId = await AsyncStorage.getItem('logId');
+            if (logId) {
+                const formattedLogId = logId.replace(/^['"](.*)['"]$/, '$1');
+                const response = await axios.get(`${BASE_URL}/reservationHistory/${formattedLogId}`);
+                let fetchedReservations = response.data
+                    // 우선 데이터 정렬
+                    .sort((a, b) => {
+                        const dateA = moment(a.date_of_use + ' ' + a.time_of_use.split('-')[0], 'YYYY-MM-DD HH:mm');
+                        const dateB = moment(b.date_of_use + ' ' + b.time_of_use.split('-')[0], 'YYYY-MM-DD HH:mm');
+                        return dateA.diff(dateB);
+                    })
+                    // 유효성 검사를 통과한 데이터만 필터링
+                    .filter(reservation => reservation.date_of_use && reservation.time_of_use);
+    
+                // 유효한 데이터만 상태에 저장
+                setAllReservations(fetchedReservations);
+    
+                const now = moment();
+                let todayReservations = fetchedReservations.filter(reservation => {
+                    const endDate = moment(reservation.date_of_use);
+                    const endTimeMoment = moment(`${reservation.date_of_use.split('T')[0]} ${reservation.time_of_use.split('-')[1]}`, 'YYYY-MM-DD HH:mm');
+                    return endDate.isSame(now, 'day') && endTimeMoment.isAfter(now);
+                });
+    
+                let completedReservations = fetchedReservations.filter(reservation => {
+                    const endDate = moment(reservation.date_of_use);
+                    const endTimeMoment = moment(`${reservation.date_of_use.split('T')[0]} ${reservation.time_of_use.split('-')[1]}`, 'YYYY-MM-DD HH:mm');
+                    return endDate.isBefore(now, 'day') || (endDate.isSame(now, 'day') && endTimeMoment.isBefore(now));
+                });
+    
+                // 상태 업데이트
+                setTodayReservations(todayReservations);
+                setCompleteReservations(completedReservations);
+                console.log('Fetched Reservations Data:', fetchedReservations);
+            }
 
-        
-        if (logId) {
-          const formattedLogId = logId.replace(/^['"](.*)['"]$/, '$1');
-          axios
-            .get(`${BASE_URL}/user/${formattedLogId}`)
-            .then((response) => {
-              setWillUseReservation(response.data);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
+        } catch (error) {
+            console.error('Error fetching reservations:', error);
+        } finally {
+            setIsLoading(false);
         }
-      } catch (error) {
-        console.error(error);
-      }
+    };
+    
+    //필터가 바뀔때 마다 정확하게 적용되도록 코드 추가 
+    useEffect(() => {
+        switch (filter) {
+            case 'all':
+                setReservations(allReservations);
+                break;
+            case 'today':
+                setReservations(todayReservations);
+                break;
+            case 'complete':
+                setReservations(CompleteReservations);
+                break;
+            default:
+                setReservations(allReservations);
+        }
+    }, [filter, allReservations, todayReservations, CompleteReservations]);
+
+    // useEffect(()=>{
+    //     console.log("todayReservation:",todayReservations)
+    // })
+
+
+    const cancelPay = (reservation) => {
+        const cancelUrl = `${BASE_URL}/payments/cancel`; // Replace with the actual URL
+        const requestData = {
+        merchant_uid: reservation.merchant_uid,
+        cancel_request_amount: "", 
+        reason: "주문 오류", 
+        };
+    
+        console.log('Cancellation Request Data:', requestData);
+    
+        axios({
+        url: cancelUrl,
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        data: requestData,
+        })
+        .then((response) => {
+            // Handle success response
+            console.log("Cancellation request successful", response);
+            alert("예약이 취소되었습니다.");
+        })
+        .catch((error) => {
+            // Handle error response
+            console.error("Error cancelling payment", error);
+        });
     };
 
-    fetchWillUseReservation();
-  }, []);
-
-
-
-const onRefresh = async () => {
-  setRefreshing(true);
-
-  try {
-    // AsyncStorage에서 로그인된 사용자의 logId 가져오기
-    const logId = await AsyncStorage.getItem('logId');
-    
-    if (logId) {
-      const formattedLogId = logId.replace(/^['"](.*)['"]$/, '$1');
-
-      // Fetch user data
-      try {
-        const userResponse = await axios.get(`${BASE_URL}/user/${formattedLogId}`);
-        if (userResponse.status === 200) {
-          setUserData(userResponse.data);
-          console.log("Updated user data:", userResponse.data);
-        } else {
-          console.log('Error fetching updated user data. Status:', userResponse.status);
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-
-      // Fetch reservation data
-      try {
-        const reservationResponse = await axios.get(`${BASE_URL}/user/${formattedLogId}`);
-        setWillUseReservation(reservationResponse.data);
-        console.log("Updated reservation data:", reservationResponse.data);
-      } catch (error) {
-        console.error('Error fetching reservation data:', error);
-      }
+const cancelReservation = async (reservation) => {
+    try {
+        const merchant_uid = reservation.merchant_uid; 
+        console.log(merchant_uid)
+        const apiUrl = `${BASE_URL}/delete_reservation/${merchant_uid}`;
+        const response = await axios.post(apiUrl);
+        console.log(response.data);
+        alert("예약이 취소되었습니다.");
+        navigation.navigate(MainScreens.MyReservation)
+    } catch (error) {
+        console.error("에러:", error);
     }
-  } catch (error) {
-    console.error('Error fetching logId from AsyncStorage:', error);
-  }
+};
 
-  setRefreshing(false);
+const handleCancellation = (reservation) => {
+    if (reservation.amount === 0) {
+        // reservation.amount가 0이면 예약 취소 함수를 실행합니다.
+        cancelReservation(reservation);
+    } else {
+        // 그렇지 않으면 결제 취소 함수를 실행합니다.
+        cancelPay(reservation);
+    }
+};
+
+const roomImages = {
+    1: require('../images/rooms1.jpg'),
+    2: require('../images/rooms2.jpg'),
+    3: require('../images/rooms3.jpeg'),
+    // 이하 생략, 필요한 모든 방 번호에 대해 반복222
 };
 
 
+if (isLoading) {
+    // 로딩 중이라면 로티 애니메이션 표시
+    return (
+        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+            <LottieView
+                source={require('../src/lottie/loading.json')}
+                style={{width:100,height:100}}
+                autoPlay
+                loop
+            />
+        </View>
+    );
+}
 
 
-
-  // useEffect(() => {
-  //   const fetchLastReservation = async () => {
-  //     try {
-  //       // AsyncStorage에서 로그인된 사용자의 logId 가져오기
-  //       const logId = await AsyncStorage.getItem('logId');
-        
-  //       if (logId) {
-  //         axios
-  //           .get(`${BASE_URL}/userlast/${logId}`)
-  //           .then((response) => {
-  //             setLastReservation(response.data);
-  //           })
-  //           .catch((error) => {
-  //             console.error(error);
-  //           });
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   fetchLastReservation();
-  // }, []);
-
-
-
-
-
-
-// useEffect(() => {
-//   const fetchTotalExerciseTime = async () => {
-//     try {
-//       // Get logId of logged in user from AsyncStorage
-//       const logId = await AsyncStorage.getItem('logId');
-
-//       if (logId) {
-//         axios
-//           .get(`${BASE_URL}/totalUsingTime/${logId}`)
-//           .then((response) => {
-//             // Calculate the total exercise time
-//             const totalUsageTime = response.data.totalUsageTime || 0;
-//             setTotalExerciseTime(totalUsageTime);
-//           })
-//           .catch((error) => {
-//             console.error(error);
-//           });
-//       }
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
-
-//   fetchTotalExerciseTime();
-// }, []);
-
-
-  return (
-    <ScrollView
-    style={{backgroundColor:'white'}}
-    refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
-      <View style={{height:'auto',backgroundColor:'white'}}>
-        <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',height:screenWidth*0.13,backgroundColor:'white',borderBottomWidth:0.5,borderBottomColor:'gray'}}>
-
-                    <View>
-                        <Image 
-                            source={require('../images/logogp1.png')}
-                            style={{width:screenWidth*0.45,height:'70%'}}
-                            resizeMode='cover'
-                        />
-                    </View>
+    return (
+        <View style={styles.container}>
+            <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',height:screenWidth*0.13,backgroundColor:'white',borderBottomWidth:0.5,borderBottomColor:'gray'}}>
+                <View>
+                    <Image 
+                    source={require('../images/logogp1.png')}
+                    style={{width:screenWidth*0.45,height:'70%'}}
+                    resizeMode='cover'
+                    />
                 </View>
-
-      <View style={{backgroundColor:'white',height:screenWidth*0.6,width:screenWidth,justifyContent:'center',alignItems:'center'}}>
-          <TouchableOpacity
-                    style={{borderRadius:20}}
-                    onPress={()=>{navigation.navigate('프로필')}}>
-                      
-                        <Image 
-                        style={{width:screenWidth*0.85,height:screenWidth*0.5,borderRadius:20}}
-                        source={require('../images/리뷰이벤트3.png')} />
-          </TouchableOpacity>
-      </View>
-
-
-    <View style={{justifyContent:'center',alignItems:'center',marginTop:'3%'}}>
-      <View style={{backgroundColor:'white',width:screenWidth*0.9,height:screenWidth*0.15,justifyContent:'space-between',marginBottom:'3%',flexDirection:'row'}}>
-      
-      <View style={{alignItems:'flex-start',backgroundColor:'white',marginTop:'3%'}}>
-        <Text style={{fontSize:20,fontWeight:'bold',marginLeft:'7%'}}>예약내역</Text>
-      </View>
-      
-      <View>
-        <TouchableOpacity
-          onPress={()=>{navigation.navigate(MainScreens.BookingHistory)}}>
-            <View style={{alignItems:'flex-end',marginTop:'15%'}}>
-              <View style={{backgroundColor:'white',width:screenWidth*0.2}}>
-                <Text style={{fontSize:15,color:'#4A7AFF',fontWeight:'bold'}}>상세보기 <AntDesign  name="right" size={15} color='#4A7AFF' /></Text>
-                
-              </View>
             </View>
 
+        <View style={{justifyContent:'center',alignItems:'center'}}>
+            <View style={{backgroundColor:'white',width:screenWidth,height:screenWidth*0.3,justifyContent:'space-between',flexDirection:'row'}}>
             
-        </TouchableOpacity>
-      </View>
-      
-    </View>
-
-    </View>
-
-
-
-
-
-
-  
-
-{/* <View>
-  {lastReservation && lastReservation.rid ? (
-
-  <View key={lastReservation.rid}>
-          
-    <View style={{justifyContent:'center',alignItems:'center',height:screenWidth*0.58,backgroundColor:'white',bottom:'10%'}}>
-        <View style={{justifyContent:'center',alignItems:'center',height:screenWidth*0.58,backgroundColor:'white'}}>
-          <View style={{width:'90%',height:'80%',backgroundColor:'white',flexDirection:'row',borderRadius:15,borderWidth:2,borderColor:'black'}}>
-            
-              <View style={{flex:4,backgroundColor:'white',marginLeft:'5%'}}>
-
-                  <View style={{flex:2,justifyContent:'center',backgroundColor:'white',borderBottomWidth:1.2,borderBottomColor:'#C1C1C1'}}>
-                      <Text style={{fontSize:21,color:'#4A7AFF',fontWeight:'bold'}}>이전예약</Text>
-                      <Text style={{fontSize:13,color:'#797676',marginTop:'4%'}}>사용하신 예약에 대한 정보입니다.</Text>
-                  </View>
-
-                <View style={{flex:1.2,backgroundColor:'white',justifyContent:'center'}}>
-                    <Text style={{fontWeight:'bold'}}>{lastReservation.room_number}번방, {moment(lastReservation.date_of_use).format('MM/DD(dd)')}, {lastReservation.time_of_use}</Text>
+                <View style={{alignItems:'flex-start',backgroundColor:'white',justifyContent:'center'}}>
+                <View style={{flexDirection:'row',marginLeft:'11%'}}>
+                    <View>
+                        <Text style={{fontSize:30,fontWeight:'bold'}}>{userData?.username} </Text>
+                    </View>
+                    <View style={{justifyContent:'flex-end',marginBottom:'2%'}}>
+                        <Text style={{fontSize:17,fontWeight:'200'}}>님의 예약</Text>
+                    </View>
+                </View>
                 </View>
 
-              </View>
-
-              <View style={{flex:1.5,backgroundColor:'white',borderTopRightRadius:15,borderBottomRightRadius:15,alignItems:'center'}}>
-                
-                <Image 
-                source={require('../images/alarm-clock.png')}
-                style={{width:'40%',height:'20%',top:'10%'}}
-                />
-
-              </View>
-              
-          </View>
-        </View>
-    </View>
-
-  </View>
-
-      ) : (
-
-        <View style={{justifyContent:'center',alignItems:'center',height:screenWidth*0.58,backgroundColor:'white',bottom:'10%'}}>
-        <View style={{justifyContent:'center',alignItems:'center',height:screenWidth*0.58,backgroundColor:'white'}}>
-          <View style={{width:'90%',height:'80%',backgroundColor:'white',flexDirection:'row',borderRadius:15,borderWidth:2,borderColor:'black'}}>
-            
-              <View style={{flex:4,backgroundColor:'white',marginLeft:'5%'}}>
-
-                  <View style={{width:screenWidth*0.4,height:screenHeight*0.12,justifyContent:'center',backgroundColor:'white'}}>
-                      <Text style={{fontSize:21,color:'#4A7AFF',fontWeight:'bold'}}>이전예약</Text>
-                      
-                  </View>
-
-
-              <View style={{justifyContent:'center',width:screenWidth*0.8,backgroundColor:'white'}}>
-                <Text style={{fontSize:12,fontWeight:'500',color:'gray'}}>신청하신 예약 건이 없습니다.</Text>
-                <Text style={{fontSize:12,fontWeight:'500',color:'gray'}}>서비스를 둘러보고 원하는 예약을 선택해주세요.</Text>
-              </View>
-                
-
-              </View>
-
-              <View style={{width:screenWidth*0.25,height:screenWidth*0.25,backgroundColor:'white',borderTopRightRadius:15,borderBottomRightRadius:15,alignItems:'center',justifyContent:'center'}}>
-                
-                <Image 
-                source={require('../images/alarm-clock.png')}
-                style={{width:'40%',height:'40%'}}
-                />
-
-              </View>
-              
-          </View>
-        </View>
-        </View>
-        
-      )}
-  </View> */}
-
-
-
-
-<View style={{justifyContent:'center',alignItems:'center',backgroundColor:'white'}}>
-      
-  <View>
-  
-  {willUseReservation && willUseReservation.rid ? ( 
-    <View key={willUseReservation.rid}>
-      <View style={{justifyContent:'center',alignItems:'center',height:screenWidth*0.58,backgroundColor:'white',width:screenWidth,bottom:'10%'}}>
-        <View style={{justifyContent:'center',alignItems:'center',height:screenWidth*0.58,backgroundColor:'white'}}>
-          <View style={{width:'90%',height:'80%',backgroundColor:'white',flexDirection:'row',borderRadius:15,borderWidth:2,borderColor:'black'}}>
-            
-              <View style={{flex:4,backgroundColor:'white',marginLeft:'5%'}}>
-
-                  <View style={{flex:2,justifyContent:'center',backgroundColor:'white',borderBottomWidth:1.2,borderBottomColor:'#C1C1C1'}}>
-                      <Text style={{fontSize:21,color:'#4A7AFF',fontWeight:'bold'}}>이용예정</Text>
-                      <Text style={{fontSize:13,color:'#797676',marginTop:'4%'}}>사용하실 예약에 대한 정보입니다.</Text>
-                  </View>
-
-                <View style={{flex:1.2,backgroundColor:'white',justifyContent:'center'}}>
-                    <Text style={{fontWeight:'bold'}}>{willUseReservation.room_number}번방, {moment(willUseReservation.date_of_use).format('MM/DD(dd)')}, {willUseReservation.time_of_use}</Text>
+                <View style={{alignItems:'flex-end',justifyContent:'center',marginRight:'3%'}}>
+                    <Image 
+                            source={require('../images/Man.png')}
+                            style={{
+                            height: 50,
+                            width: 50,
+                            borderRadius: 45,
+                            marginBottom:10
+                            }}
+                        />
                 </View>
-
-              </View>
-
-              <View style={{flex:1.5,backgroundColor:'white',borderTopRightRadius:15,borderBottomRightRadius:15,alignItems:'center'}}>
-                
-                <Image 
-                source={require('../images/alarm-clock.png')}
-                style={{width:'40%',height:'20%',top:'10%'}}
-                />
-
-              </View>
-              
-          </View>
-        </View>
-    </View>  
-    
-        
-    </View>
-
-  ) : (
-      <View style={{justifyContent:'center',alignItems:'center',height:screenWidth*0.58,width:screenWidth,backgroundColor:'white',bottom:'10%'}}>
-        <View style={{justifyContent:'center',alignItems:'center',height:screenWidth*0.58,backgroundColor:'white'}}>
-          <View style={{width:'90%',height:'80%',backgroundColor:'white',flexDirection:'row',borderRadius:15,borderWidth:2,borderColor:'black'}}>
             
-              <View style={{flex:4,backgroundColor:'white',marginLeft:'5%'}}>
-
-                  <View style={{width:screenWidth*0.4,height:screenHeight*0.12,justifyContent:'center',backgroundColor:'white'}}>
-                      <Text style={{fontSize:21,color:'#4A7AFF',fontWeight:'bold'}}>이용예정</Text>
-                  </View>
+            </View>
 
 
-              <View style={{justifyContent:'center',width:screenWidth*0.8,backgroundColor:'white'}}>
-                <Text style={{fontSize:12,fontWeight:'500',color:'gray'}}>신청하신 예약 건이 없습니다.</Text>
-                <Text style={{fontSize:12,fontWeight:'500',color:'gray'}}>서비스를 둘러보고 원하는 예약을 선택해주세요.</Text>
-              </View>
+        </View>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity 
+                    style={[styles.button, filter === 'all' ? styles.buttonActive : styles.buttonInactive]} 
+                    onPress={() =>  {
+                        setReservations(allReservations)
+                        setFilter('all')    
+                    }}>
+                    <Text style={[styles.buttonText, filter === 'all' ? styles.buttonTextActive : styles.buttonTextinActive]}>전체 {allReservations.length}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    style={[styles.button, filter === 'today' ? styles.buttonActive : styles.buttonInactive]} 
+                    onPress={() => {
+                        setReservations(todayReservations);
+                        setFilter('today')                        
+                        }
+                        }>
+                    <Text style={[styles.buttonText,filter === 'today' ? styles.buttonTextActive : styles.buttonTextinActive]}>오늘이용 {todayReservations.length}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    style={[styles.button, filter === 'complete' ? styles.buttonActive : styles.buttonInactive]} 
+                    onPress={() => {
+                        setReservations(CompleteReservations);
+                        setFilter('complete')                        
+                        }
+                        }>
+                    <Text style={[styles.buttonText,filter === 'complete' ? styles.buttonTextActive : styles.buttonTextinActive]}>이용완료 {CompleteReservations.length}</Text>
+                </TouchableOpacity>  
                 
 
-              </View>
-
-              <View style={{width:screenWidth*0.25,height:screenWidth*0.25,backgroundColor:'white',borderTopRightRadius:15,borderBottomRightRadius:15,alignItems:'center',justifyContent:'center'}}>
+            </View>
+            {reservations.length > 0 ? (
+            <ScrollView
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            >
+               {reservations.map((reservation) => {
+                    if (
+                        reservation.merchant_uid !== null &&
+                        reservation.rid !== null &&
+                        reservation.room_number !== null &&
+                        reservation.time_of_use !== null &&
+                        reservation.date_of_use !== null
+                        ){
+                            const [startTime, endTime] = reservation.time_of_use.split('-');
+                            const startDateTime = moment(reservation.date_of_use).format('YYYY-MM-DD') + ' ' + startTime;
+                            const endDateTime = moment(reservation.date_of_use).format('YYYY-MM-DD') + ' ' + endTime;
+                            const isBeforeNow = moment().isBefore(endDateTime);
+        
+                            return (
+                                <View key={reservation.rid}>
+                                <View style={{ alignItems: 'center', width: screenWidth, height: screenWidth * 0.75, justifyContent: 'center' }}>
+                                <View style={{ width: '90%', height: screenWidth * 0.63, ...shadowStyle, backgroundColor: 'white', borderRadius: 15 }}>
+                                    <View style={{ flex: 1, backgroundColor: 'white', borderRadius: 15, flexDirection: 'row', alignItems: 'center', paddingHorizontal: '6%' }}>
+                                        <Text style={{ color: '#C2C2C2', fontSize: 13 }}>대관 예약번호   {reservation.merchant_uid}</Text>
+                                        <TouchableOpacity
+                                        disabled={!isBeforeNow}
+                                        style={{ marginLeft: 'auto',opacity: isBeforeNow ? 1 : 0.2,  }}
+                                        onPress={() => handleCancellation(reservation)}><Text style={{ fontSize: 13, color: '#EB0D0D' }}>예약취소</Text>
+                                        </TouchableOpacity>
+                                    </View>
                 
-                <Image 
-                source={require('../images/alarm-clock.png')}
-                style={{width:'40%',height:'40%',top:'10%'}}
-                />
-
-              </View>
-              
-          </View>
+                                    <View style={{ flex: 3, flexDirection: 'row', backgroundColor: 'white', borderTopWidth: 1, borderTopColor: '#E5E5E5' }}>
+                                        <View style={{ flex: 1, backgroundColor: 'white', justifyContent: 'center' }}>
+                                        <Image
+                                            style={{
+                                            width: '75%',
+                                            height: '85%',
+                                            marginLeft: '10%',
+                                            borderRadius: 8,
+                                            }}
+                                            source={roomImages[reservation.room_number]} />
+                                    </View>
+                                    <View style={{ marginLeft: 'auto', flex: 1, justifyContent: 'center' }}>
+                                        <Text style={{ fontSize: 18, color: '#4F4F4F', fontWeight: 'bold' }}>
+                                            짐프라이빗 대관
+                                        </Text>
+                                        <Text style={{ color: '#797676', fontSize: 14, fontWeight: 'bold' }}>방 번호 : {reservation.room_number}</Text>
+                
+                                        <View style={{ marginTop: '20%' }}>
+                                            <Text style={{ color: '#797676', fontSize: 14, fontWeight: 'bold' }}>사용날짜 : {moment(reservation.date_of_use).format('YYYY-MM-DD')}</Text>
+                                            <Text style={{ color: '#797676', fontSize: 14, fontWeight: 'bold' }}>
+                                            사용시간 : {reservation.time_of_use}
+                                            </Text>
+                                        </View>
+                                        </View>
+                                    </View>
+                
+                                    <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1.1, backgroundColor: 'white', borderBottomRightRadius: 15, borderBottomLeftRadius: 15 }}>
+                                        <TouchableOpacity
+                                        style={{
+                                            backgroundColor: reservation.rvid !== null || isBeforeNow ? 'lightgray' : '#1E90FF',
+                                            width: '90%',
+                                            height: '65%',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            borderRadius: 8,
+                                        }}
+                                        onPress={() => {
+                                            if (reservation.rvid === null) {
+                                            navigation.navigate(MainScreens.Review, {
+                                                room_number: reservation.room_number,
+                                                date_of_use: reservation.date_of_use,
+                                                time_of_use: reservation.time_of_use,
+                                                merchant_uid: reservation.merchant_uid,
+                                            });
+                                            }
+                                        }}
+                                        disabled={reservation.rvid !== null || isBeforeNow }
+                                        >
+                                        <Text style={{ color: 'white', fontSize: 13, fontWeight: 'bold' }}>
+                                            {reservation.rvid !== null ? '후기 작성 완료' : '후기 작성하기'}
+                                        </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    </View>
+                                </View>
+                                </View>   
+                            );
+                        }
+                    })}
+            </ScrollView>
+                    ) : (
+                        <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+                            <View style={{height:screenHeight*0.5,justifyContent:'center',alignItems:'center'}}>
+                                <Text style={{fontSize:20}}>예약 내역이 없습니다.</Text>
+                            </View>
+                        </ScrollView>
+                        )}
         </View>
-        </View>
-  )}
-</View>
-</View>
-
-
-{/* 
-    {userData && (
-      <View style={{justifyContent:'center',alignItems:'center',height:screenWidth*0.4,backgroundColor:'white',bottom:'5%'}}>
-        <View style={{...shadowStyle,width:screenWidth*0.8,height:screenWidth*0.23,backgroundColor:'#1F75FE',marginBottom:'5%',justifyContent:'center',alignItems:'center',borderRadius:20}}>
-          <Text style={{fontSize:14,fontWeight:'500',color:'white'}}><Text style={{fontSize:20,color:'white',fontWeight:'bold'}}>{userData.username}</Text> 님의 총 운동시간은</Text>
-          <Text style={{fontSize:14,fontWeight:'500',color:'white'}}>
-            <Text style={{ color: 'white', fontSize: 22,fontWeight:'bold' }}>{totalExerciseTime} 분</Text> 이네요 :)
-          </Text>
-        </View>
-      </View>
-      
-    )} */}
-
-
-  </View>
-</ScrollView>
-
-  );
+    );
 };
+
 
 export default MyReservationScreen;
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        height:60,
+        paddingHorizontal:24,
+        backgroundColor:'white',
+        alignItems:'center'
+    },
+    button: {
+        borderWidth: 1,
+        borderColor: 'black',
+        borderRadius: 16,
+        marginHorizontal: 10,
+        height:30,
+        width:90,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    buttonActive: {
+        backgroundColor: 'blue',
+        borderColor: '#4169E1',
+    },
+    buttonInactive: {
+        backgroundColor: 'transparent',
+        borderColor:'#DEE2E6'
+    },
+    buttonText: {
+        color: '#868E96',
+    }
+    ,
+    buttonTextActive:{
+        color:'white',
+        fontWeight:'bold'
+    },
+    buttonTextinActive:{
+        color:'#868E96'
+    }
+});

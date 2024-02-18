@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { HistoryScreens, HistoryStackParamList, MainScreens, MainStackParamList } from '../stacks/Navigator';
+import { MainScreens, MainStackParamList } from '../stacks/Navigator';
 import { RouteProp } from '@react-navigation/native';
 import config from '../config'
 
@@ -16,12 +16,12 @@ const screenHeight = Dimensions.get('screen').height;
 ////////////////////////////////////////////////////////////////
 
 type ReviewScreenNavigationProps = StackNavigationProp<
-    HistoryStackParamList,
-    HistoryScreens.Review
+    MainStackParamList,
+    MainScreens.Review
     >
 
 interface ReviewScreenProps {
-    route: RouteProp<HistoryStackParamList, 'Review'>;
+    route: RouteProp<MainStackParamList, 'Review'>;
     navigation: ReviewScreenNavigationProps;
 }
 
@@ -101,7 +101,7 @@ const handleSubmit = () => {
             console.log(response.data);
             if (response.data.message === 'Review inserted successfully') {
                 Alert.alert('알림!', '리뷰가 작성되었습니다');
-                navigation.navigate(HistoryScreens.History); 
+                navigation.navigate(MainScreens.MyReservation); 
             } else {
             Alert.alert('알림!', '리뷰 작성에 실패했습니다.');
             }
