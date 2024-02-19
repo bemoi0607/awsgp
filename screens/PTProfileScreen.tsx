@@ -100,16 +100,18 @@ const PTProfileScreen = ({ navigation }: Props) => {
               <TouchableOpacity key={item.trainer_id} style={{flex:1,backgroundColor:'white',marginTop:24}} onPress={() => navigation.navigate(PTScreens.PayPT, { id: item.trainer_id })}>
                 <View style={{flexDirection:'row',flex:1,borderBottomColor:'#DEE2E6',borderBottomWidth:1,paddingBottom:24}}>
                   <View style={{flex:3}}>
-                    <Text style={styles.Body2}>'근성장 전문가'{item.trainer_name}</Text>
+                    <Text style={styles.Body2}>{item.trainer_name} 트레이너</Text>
                     <View style={{flexDirection:'row',marginTop:16,}}>
                       <AntDesign name="star" size={16} color="#F8D000" />
                       <Text style={styles.Caption1}>{averageRatings[item.trainer_id] || 'N/A'}</Text>
                     </View>
                     <Text  
-                      numberOfLines={1} 
-                      ellipsizeMode='tail'style={styles.Caption2}>
-                        안녕하세요 짐프라이빗 {item.trainer_name} 트레이너 입니다. 항상 회원님을 먼 생각하는 트레이가
-                    </Text>
+                    numberOfLines={1} 
+                    ellipsizeMode='tail'
+                    style={styles.Caption2}>
+                    {item.introduction.replace(/\n/g, ' ')}
+                  </Text>
+
                   </View>
                   <View style={{flex:1}}>
                    <Image source={{ uri: item.uri }} style={styles.trainerimage}/>
