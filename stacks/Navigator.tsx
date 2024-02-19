@@ -17,7 +17,7 @@ import Icon3 from 'react-native-vector-icons/FontAwesome';
 import MyReservationScreen from '../screens/MyReservationScreen';
 import MyInfoScreen from '../screens/MyInfoScreen';
 import LandingScreen from '../screens/LandingScreen';
-import YNMemberScreen from '../screens/YNMemberScreen';
+// import YNMemberScreen from '../screens/YNMemberScreen';
 import RoomSelectScreen from '../screens/RoomSelectScreen';
 import RoomADetailScreen from '../screens/RoomADetailScreen';
 import RoomBDetailScreen from '../screens/RoomBDetailScreen';
@@ -72,23 +72,23 @@ export enum MainScreens {
     NewPassword = 'NewPassword',
     LogInLoading = 'LogInLoading',
     Home = 'Home',
-    YNMember = 'YNMember',
+    // YNMember = 'YNMember',
     PT = 'PT',
     MyInfo = 'MyInfo',
     MyReservation = 'MyReservation',
     WishList = 'WishList',
     Cart = 'Cart',
     Main = 'Main',
-    // Book = 'Book',
-    BookingHistory = 'BookingHistory',
+    Book = 'Book',
+    // BookingHistory = 'BookingHistory',
     MineMembership = 'MineMembership',
     LogInfo = 'LogInfo',
     GymService = 'GymService',
-    Franchise = 'Franchise',
+    // Franchise = 'Franchise',
     Review = 'Review',
     Membership = 'Membership',
     MembershipPurchase1 = 'MembershipPurchase1',
-    LogOut = 'LogOut',
+    // LogOut = 'LogOut',
     MembershipBooking = "MembershipBooking",
     MembershipRoomSelect = "MembershipRoomSelect"
 };
@@ -109,21 +109,21 @@ export type MainStackParamList = {
     LogInLoading : undefined;
     Home: undefined;
     Event: undefined;
-    YNMember: undefined;  
+    // YNMember: undefined;  
     PT: undefined;
     MyInfo: undefined;
     MyReservation: undefined; 
     Main: undefined;// Booking 스크린은 BookingsParams 라는 지정 타입의 파라미터가 필요함 => BookingsScreen 에서 지정할 것임.
     Book : undefined;
-    BookingHistory: undefined;
+    // BookingHistory: undefined;
     MineMembership: undefined;
     LogInfo: undefined;
     GymService:undefined;
-    Franchise:undefined;
+    // Franchise:undefined;
     Review: undefined;
     Membership : undefined;
     MembershipPurchase1 : undefined;
-    LogOut: {data: string};
+    // LogOut: {data: string};
     } & BookingStackParamList & PTStackParamList;// 이런식으로 메인안에 서브 넣어서 다른 페이지에서 함께 export 가능.
 
 
@@ -292,7 +292,7 @@ function MainTabNavigator(): React.ReactElement {
     return (
         <MainTab.Navigator
             initialRouteName={MainScreens.Home}
-            barStyle={{ backgroundColor:'white',borderRadius:10,justifyContent:'center',alignItems:'center',height:screenHeight*0.05}}
+            barStyle={{ backgroundColor:'white',borderRadius:10,justifyContent:'center',alignItems:'center',height:screenHeight*0.055}}
             >
             <MainTab.Screen
                 name={MainScreens.Home}
@@ -301,7 +301,7 @@ function MainTabNavigator(): React.ReactElement {
                     title:'홈',
                     tabBarLabel: '홈',
                     tabBarIcon: ({ color }) => (
-                        <Icon name="home" size={24} color={color} />
+                        <Icon name="home" size={22} color={color} />
                     )
                 }}
             />
@@ -312,7 +312,7 @@ function MainTabNavigator(): React.ReactElement {
                     title:'내 예약',
                     tabBarLabel: '내 예약',
                     tabBarIcon: ({ color }) => (
-                        <Icon3 name="calendar" size={24} color={color} />
+                        <Icon3 name="calendar-o" size={22} color={color} />
                     )
                 }}
             />
@@ -325,7 +325,7 @@ function MainTabNavigator(): React.ReactElement {
                     title:'내 정보',
                     tabBarLabel: '내 정보',
                     tabBarIcon: ({ color }) => (
-                        <Icon2 name="user" size={24} color={color} />
+                        <Icon2 name="user" size={22} color={color} />
                     )
                 }}
             />
@@ -350,7 +350,7 @@ const MainStackNavigator: React.FunctionComponent = () => {
             <MainStack.Screen name="NewPassword" component={NewPasswordScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="LogInLoading" component={LogInLoading} options={{ headerShown: false }}/>
             <MainStack.Screen name ={MainScreens.Main} component={MainTabNavigator}/>
-            <MainStack.Screen name="YNMember" component={YNMemberScreen} options={{ headerShown: false }}/>
+            {/* <MainStack.Screen name="YNMember" component={YNMemberScreen} options={{ headerShown: false }}/> */}
             <MainStack.Screen name="Book" component={BookingStackNavigator} />
             <MainStack.Screen name={MainScreens.LogInfo} options={{headerShown:false}} component={LogInformationStackNavigator}/>
             <MainStack.Screen name="Membership" component={MembershipStackNavigator} />
@@ -366,15 +366,15 @@ const MainStackNavigator: React.FunctionComponent = () => {
 
 const BookingStackNavigator: React.FunctionComponent = () => {
     return (
-            <BookingStack.Navigator screenOptions={{ headerShown : true }}>
+            <BookingStack.Navigator screenOptions={{ headerShown: true, headerBackTitleVisible: false, headerTitle: '예약하기'  }}>
                 <BookingStack.Screen name="RoomSelect" component={RoomSelectScreen}/>
                 <BookingStack.Screen name="RoomADetail" component={RoomADetailScreen}/>
                 <BookingStack.Screen name="RoomBDetail" component={RoomBDetailScreen}/>
                 <BookingStack.Screen name="RoomCDetail" component={RoomCDetailScreen}/>
                 <BookingStack.Screen name="Booking" component={BookingScreen}/>
                 <BookingStack.Screen name="BookedInfo" component={BookedInfoScreen}/>
-                <BookingStack.Screen name="BookingPayment" component={BookingPayment}/> 
-                <BookingStack.Screen name={BookingScreens.BookingPaymentResult} component={BookingPaymentResult}/> 
+                <BookingStack.Screen name="BookingPayment" component={BookingPayment} options={{ headerShown : false }}/> 
+                <BookingStack.Screen name={BookingScreens.BookingPaymentResult} component={BookingPaymentResult} options={{ headerShown : false }}/> 
             </BookingStack.Navigator>
     );
 };
@@ -382,7 +382,7 @@ const BookingStackNavigator: React.FunctionComponent = () => {
 
 const MembershipStackNavigator: React.FunctionComponent = () => {
     return (
-            <MembershipStack.Navigator screenOptions={{ headerShown : true }}>
+            <MembershipStack.Navigator screenOptions={{ headerShown : true, headerBackTitleVisible: false, headerTitle: '예약하기' }}>
                 <MembershipStack.Screen name={MembershipScreens.MembershipRoomSelect} component={MembershipRoomSelectScreen}/>
                 <MembershipStack.Screen name={MembershipScreens.MembershipRoomADetail} component={MembershipRoomADetailScreen}/>
                 <MembershipStack.Screen name={MembershipScreens.MembershipRoomBDetail} component={MembershipRoomBDetailScreen}/>
@@ -395,7 +395,7 @@ const MembershipStackNavigator: React.FunctionComponent = () => {
 
 const MembershipPurchaseNavigator: React.FunctionComponent = () => {
     return (
-            <MembershipPurchase.Navigator screenOptions={{ headerShown : true }}>
+            <MembershipPurchase.Navigator screenOptions={{ headerShown : true, headerBackTitleVisible: false, headerTitle: '회원권 구매하기' }}>
                 <MembershipPurchase.Screen name={MembershipPurchaseScreens.MembershipPurchase} component={MembershipPurchaseScreen}/>
                 <MembershipPurchase.Screen name={MembershipPurchaseScreens.MembershipPayment} component={MembershipPayment}/>
                 <MembershipPurchase.Screen name={MembershipPurchaseScreens.MembershipPaymentResult} component={MembershipPaymentResult}/> 
@@ -405,7 +405,7 @@ const MembershipPurchaseNavigator: React.FunctionComponent = () => {
 
 const PTStackNavigator: React.FunctionComponent = () => {
     return (
-            <PTStack.Navigator screenOptions={{ headerShown : true }}>
+            <PTStack.Navigator screenOptions={{ headerShown : true, headerBackTitleVisible: false, headerTitle: 'PT 이용하기' }}>
                 <PTStack.Screen name={PTScreens.PTProfile} component={PTProfileScreen}/>
                 <PTStack.Screen name={PTScreens.PayPT} component={PayPTScreen} options={{ headerShown : false }}/>
                 <PTStack.Screen name={PTScreens.PaymentTest} component={PaymentTest}/>
@@ -426,7 +426,7 @@ const PTStackNavigator: React.FunctionComponent = () => {
 
 const MMStackNavigator: React.FunctionComponent = () => {
     return (
-            <MMStack.Navigator screenOptions={{ headerShown : true }}>
+            <MMStack.Navigator screenOptions={{ headerShown : true , headerBackTitleVisible: false, headerTitle: '내 이용권'}}>
                 <MMStack.Screen name={MMScreens.MyMembership} component={MyMembershipScreen}/>
                 <MMStack.Screen name={MMScreens.PTReview} component={PTReviewScreen}/> 
             </MMStack.Navigator>
@@ -435,7 +435,7 @@ const MMStackNavigator: React.FunctionComponent = () => {
 
 const LogInformationStackNavigator: React.FunctionComponent = () => {
     return (
-            <LogInformationStack.Navigator screenOptions={{ headerShown : true }}>
+            <LogInformationStack.Navigator screenOptions={{ headerShown : true, headerBackTitleVisible: false, headerTitle: '내 정보' }}>
                 <LogInformationStack.Screen name={LogInformationScreens.LogInformation} component={LogInformationScreen}/>
                 <LogInformationStack.Screen name={LogInformationScreens.UsingRule} component={UsingRuleScreen}/>
             </LogInformationStack.Navigator>

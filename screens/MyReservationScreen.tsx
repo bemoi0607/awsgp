@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Platform, Dimensions, ScrollView, Image,RefreshControl,StyleSheet} from 'react-native';
+import { View, Text, TouchableOpacity, Platform, Dimensions, ScrollView, Image,RefreshControl,StyleSheet, Alert} from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainStackParamList, MainScreens } from '../stacks/Navigator';
 import moment from 'moment';
 import config from '../config'
+import { useFocusEffect } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 
 
@@ -48,6 +49,19 @@ const MyReservationScreen: React.FunctionComponent<MyReservationScreenProps> = (
     const [CompleteReservations, setCompleteReservations] = useState([]);
     const [filter, setFilter] = useState('all'); 
     const [isLoading, setIsLoading] = useState(true);
+
+
+    useFocusEffect(
+        React.useCallback(() => {
+            setIsLoading(true); // 로딩 시작
+            fetchReservations() // 예약 데이터를 새로고침하는 함수 호출
+                .catch(console.error) // 에러 처리
+                .finally(() => setIsLoading(false)); // 로딩 종료
+
+            // 필요한 경우 여기에 정리(clean-up) 로직을 추가하세요.
+        }, [])
+    );
+
 
     const onRefresh = async () => {
         setRefreshing(true);
@@ -191,58 +205,57 @@ useEffect(() => {
     // })
 
 
-    const cancelPay = (reservation) => {
-        const cancelUrl = `${BASE_URL}/payments/cancel`; // Replace with the actual URL
-        const requestData = {
-        merchant_uid: reservation.merchant_uid,
-        cancel_request_amount: "", 
-        reason: "주문 오류", 
-        };
-    
-        console.log('Cancellation Request Data:', requestData);
-    
-        axios({
-        url: cancelUrl,
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        data: requestData,
-        })
-        .then((response) => {
-            // Handle success response
-            console.log("Cancellation request successful", response);
-            alert("예약이 취소되었습니다.");
-        })
-        .catch((error) => {
-            // Handle error response
-            console.error("Error cancelling payment", error);
-        });
-    };
-
 const cancelReservation = async (reservation) => {
     try {
         const merchant_uid = reservation.merchant_uid; 
-        console.log(merchant_uid)
+        console.log(merchant_uid);
         const apiUrl = `${BASE_URL}/delete_reservation/${merchant_uid}`;
         const response = await axios.post(apiUrl);
         console.log(response.data);
-        alert("예약이 취소되었습니다.");
-        navigation.navigate(MainScreens.MyReservation)
+
+        // 예약 취소 후 Alert 표시
+        Alert.alert("예약 취소", "예약이 취소되었습니다.", [
+            { text: "확인", onPress: () => fetchReservations() }
+        ]);
     } catch (error) {
         console.error("에러:", error);
+        Alert.alert("오류", "예약 취소 중 오류가 발생했습니다.");
     }
 };
 
+const cancelPay = async (reservation) => {
+    const cancelUrl = `${BASE_URL}/payments/cancel`;
+    const requestData = {
+        merchant_uid: reservation.merchant_uid,
+        cancel_request_amount: "", 
+        reason: "주문 오류", 
+    };
+
+    try {
+        const response = await axios.post(cancelUrl, requestData);
+        console.log("Cancellation request successful", response.data);
+
+        // 결제 취소 후 Alert 표시
+        Alert.alert("결제 취소", "예약이 취소되었습니다.", [
+            { text: "확인", onPress: () => fetchReservations() }
+        ]);
+    } catch (error) {
+        console.error("Error cancelling payment", error);
+        Alert.alert("오류", "결제 취소 중 오류가 발생했습니다.");
+    }
+};
+
+
 const handleCancellation = (reservation) => {
     if (reservation.amount === 0) {
-        // reservation.amount가 0이면 예약 취소 함수를 실행합니다.
+        // 예약 취소 함수 실행
         cancelReservation(reservation);
     } else {
-        // 그렇지 않으면 결제 취소 함수를 실행합니다.
+        // 결제 취소 함수 실행
         cancelPay(reservation);
     }
 };
+
 
 const roomImages = {
     1: require('../images/rooms1.jpg'),

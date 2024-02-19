@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import config from '../config'
 import LottieView from 'lottie-react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 const BASE_URL = config.SERVER_URL;
 const screenWidth = Dimensions.get('screen').width;
@@ -22,12 +23,12 @@ export const basicDimensions = {
 
 
 const calculateAdjustedRatio = (dimension, basicDimension) => {
-  const ratio = dimension / basicDimension;
-  if (ratio < 1) {
-    // 화면 크기가 기준치보다 작은 경우, 비율을 조정
-    return (1 / ratio).toFixed(2);
-  }
-  return ratio.toFixed(2);
+    const ratio = dimension / basicDimension;
+        if (ratio < 1) {
+            // 화면 크기가 기준치보다 작은 경우, 비율을 조정
+            return (1 / ratio).toFixed(2);
+        }
+    return ratio.toFixed(2);
 };
 
 export const height = calculateAdjustedRatio(screenHeight, basicDimensions.height);
@@ -62,6 +63,45 @@ const HomeScreen: React.FunctionComponent<HomeScreenProps> = ({navigation,route}
     //자동슬라이드 스크롤뷰 
     const [activeIndex, setActiveIndex] = useState(0);
     const scrollViewRef = useRef();
+
+
+
+useFocusEffect(
+    React.useCallback(() => {
+        async function fetchData() {
+            setIsLoading(true);
+            try {
+                let storedLogId = await AsyncStorage.getItem('logId');
+                if (storedLogId) {
+                    storedLogId = storedLogId.replace(/^['"](.*)['"]$/, '$1');
+                    console.log("데이터를 성공적으로 가져왔습니다.");
+
+                    const uidResponse = await fetch(`${BASE_URL}/user/${storedLogId}`);
+                    const uidData = await uidResponse.json();
+                    const uid = uidData.uid;
+
+                    const membershipResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
+                    const membershipData = await membershipResponse.json();
+                    setPState(membershipData[0].pstate);
+                    setTotalTime(membershipData[0].total_time);
+                    setUsedTime(membershipData[0].used_time);
+                    console.log(membershipData)
+                }
+            } catch (error) {
+                console.error("데이터를 가져오는 중 오류 발생: ", error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+
+        fetchData().catch(console.error);
+    }, [])
+);
+
+
+
+    
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -226,7 +266,7 @@ return (
         <Text style={styles.subtitle}>짐프라이빗 서비스</Text>
         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
             <TouchableOpacity style={styles.Box1}
-             onPress={()=>{navigation.navigate(MainScreens.YNMember)}}>
+                onPress={()=>{navigation.navigate(MainScreens.Book)}}>
             
                 <View style={{flex:1,paddingHorizontal:24,paddingVertical:24,justifyContent:'space-between'}}>
                     <Image source={require('../images/barbell.png')} style={styles.ImageIcon}/>
@@ -237,7 +277,7 @@ return (
                 </View>
             </TouchableOpacity>
             <TouchableOpacity style={styles.Box1}
-             onPress={()=>{navigation.navigate(MainScreens.PT)}}>
+                onPress={()=>{navigation.navigate(MainScreens.PT)}}>
                 <View style={{flex:1,paddingHorizontal:24,paddingVertical:24,justifyContent:'space-between'}}>
                     <Image source={require('../images/whistle.png')} style={styles.ImageIcon}/>
                     <View>
@@ -250,8 +290,8 @@ return (
         <TouchableOpacity style={styles.Box2}  onPress={handleMembershipPress}>
             <View style={{flex:1,paddingHorizontal:24,flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
                 <View>
-                    <Text style={styles.Caption2}>처음이신가요?</Text>
-                    <Text style={styles.Body2}>멤버쉽 구매하기</Text>
+                    <Text style={styles.Caption2}>조금 더 편하게!</Text>
+                    <Text style={styles.Body2}>멤버쉽 이용하기</Text>
                 </View>
                 <AntDesign name="right" size={24} color="#FFFFFF" />
             </View>
