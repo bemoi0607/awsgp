@@ -18,8 +18,8 @@ const screenHeight = Dimensions.get('screen').height;
 export const basicDimensions = {
     height: 852,
     width: 393,
-  };
-  
+};
+
 
 const calculateAdjustedRatio = (dimension, basicDimension) => {
   const ratio = dimension / basicDimension;
@@ -97,10 +97,34 @@ const HomeScreen: React.FunctionComponent<HomeScreenProps> = ({navigation,route}
         const [totalTime, setTotalTime] = useState(0);
         const [usedTime, setUsedTime] = useState(0);
 
-        const onRefresh = () => {
-            setRefreshing(true)
-            setRefreshing(false)
+const onRefresh = async () => {
+    setRefreshing(true); // 새로고침 시작
+
+    try {
+        // AsyncStorage에서 logId 가져오기
+        let storedLogId = await AsyncStorage.getItem('logId');
+        if (storedLogId) {
+            storedLogId = storedLogId.replace(/^['"](.*)['"]$/, '$1'); // Remove quotes from logId, if present
+
+            // logId를 사용하여 사용자 UID 가져오기
+            const uidResponse = await fetch(`${BASE_URL}/user/${storedLogId}`);
+            const uidData = await uidResponse.json();
+            const uid = uidData.uid;
+
+            // uid로 period_membership pstate 가져오기
+            const membershipResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
+            const membershipData = await membershipResponse.json();
+            setPState(membershipData[0].pstate);
+            setTotalTime(membershipData[0].total_time);
+            setUsedTime(membershipData[0].used_time);
         }
+    } catch (error) {
+        console.log('Error during refresh:', error);
+    } finally {
+        setRefreshing(false); // 새로고침 완료
+    }
+};
+
         
 
 //정기권 구매여부 확인
@@ -127,6 +151,7 @@ useEffect(() => {
                 setPState(membershipData[0].pstate);
                 setTotalTime(membershipData[0].total_time);
                 setUsedTime(membershipData[0].used_time);
+                console.log(pState)
             }
         } catch (error) {
             console.log('Error:', error);

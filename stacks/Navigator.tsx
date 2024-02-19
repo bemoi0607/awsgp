@@ -79,7 +79,7 @@ export enum MainScreens {
     WishList = 'WishList',
     Cart = 'Cart',
     Main = 'Main',
-    Book = 'Book',
+    // Book = 'Book',
     BookingHistory = 'BookingHistory',
     MineMembership = 'MineMembership',
     LogInfo = 'LogInfo',
@@ -200,15 +200,15 @@ export type MembershipStackParamList = {
 
 //
 
-export enum HistoryScreens {
-    History = 'History',
-    Review = 'Review',
-};
+// export enum HistoryScreens {
+//     History = 'History',
+//     Review = 'Review',
+// };
 
-export type HistoryStackParamList = {
-    History: undefined; 
-    Review: undefined;
-};
+// export type HistoryStackParamList = {
+//     History: undefined; 
+//     Review: undefined;
+// };
 
 //
 
@@ -282,7 +282,7 @@ const MainTab = createMaterialBottomTabNavigator<MainTabParamList>();
 const BookingStack = createNativeStackNavigator<BookingStackParamList>();
 const MembershipStack = createNativeStackNavigator<MembershipStackParamList>();
 const MembershipPurchase = createNativeStackNavigator<MembershipPurchaseParamList>();
-const HistoryStack = createNativeStackNavigator<HistoryStackParamList>();
+// const HistoryStack = createNativeStackNavigator<HistoryStackParamList>();
 const MMStack = createNativeStackNavigator<MMStackParamList>();
 const LogInformationStack = createNativeStackNavigator<LogInformationStackParamList>();
 const PTStack = createNativeStackNavigator<PTStackParamList>();
@@ -355,7 +355,8 @@ const MainStackNavigator: React.FunctionComponent = () => {
             <MainStack.Screen name={MainScreens.LogInfo} options={{headerShown:false}} component={LogInformationStackNavigator}/>
             <MainStack.Screen name="Membership" component={MembershipStackNavigator} />
             <MainStack.Screen name="MembershipPurchase1" component={MembershipPurchaseNavigator}/>
-            <MainStack.Screen name={MainScreens.BookingHistory} component={BookingHistoryStackNavigator}/>
+            <MainStack.Screen name={MainScreens.Review} component={ReviewScreen}/>
+            {/* <MainStack.Screen name={MainScreens.BookingHistory} component={BookingHistoryStackNavigator}/> */}
             <MainStack.Screen name={MainScreens.PT} component={PTStackNavigator} /> 
             <MainStack.Screen name={MainScreens.MineMembership} component={MMStackNavigator}/>
         </MainStack.Navigator>
@@ -414,14 +415,14 @@ const PTStackNavigator: React.FunctionComponent = () => {
     );
 };
 
-const BookingHistoryStackNavigator: React.FunctionComponent = () => {
-    return (
-            <HistoryStack.Navigator screenOptions={{ headerShown : true }}>
-                <HistoryStack.Screen name={HistoryScreens.History} component={BookingHistory}/>
-                <HistoryStack.Screen name={HistoryScreens.Review} component={ReviewScreen}/>
-            </HistoryStack.Navigator>
-    );
-}
+// const BookingHistoryStackNavigator: React.FunctionComponent = () => {
+//     return (
+//             <HistoryStack.Navigator screenOptions={{ headerShown : true }}>
+//                 <HistoryStack.Screen name={HistoryScreens.History} component={BookingHistory}/>
+//                 <HistoryStack.Screen name={HistoryScreens.Review} component={ReviewScreen}/>
+//             </HistoryStack.Navigator>
+//     );
+// }
 
 const MMStackNavigator: React.FunctionComponent = () => {
     return (

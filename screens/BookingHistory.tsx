@@ -150,7 +150,7 @@ const fetchReservations = async () => {
     }
 };
 
-    const cancelPay = (reservation) => {
+const cancelPay = (reservation) => {
         const cancelUrl = `${BASE_URL}/payments/cancel`; // Replace with the actual URL
         const requestData = {
         merchant_uid: reservation.merchant_uid,
@@ -177,7 +177,7 @@ const fetchReservations = async () => {
             // Handle error response
             console.error("Error cancelling payment", error);
         });
-    };
+};
 
 const cancelReservation = async (reservation) => {
   try {
