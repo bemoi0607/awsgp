@@ -111,7 +111,6 @@ const PTProfileScreen = ({ navigation }: Props) => {
                     style={styles.Caption2}>
                     {item.introduction.replace(/\n/g, ' ')}
                   </Text>
-
                   </View>
                   <View style={{flex:1}}>
                    <Image source={{ uri: item.uri }} style={styles.trainerimage}/>
