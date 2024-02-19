@@ -82,10 +82,19 @@ useFocusEffect(
 
                     const membershipResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
                     const membershipData = await membershipResponse.json();
-                    setPState(membershipData[0].pstate);
-                    setTotalTime(membershipData[0].total_time);
-                    setUsedTime(membershipData[0].used_time);
-                    console.log(membershipData)
+                    if (membershipData && membershipData.length > 0) {
+                        // 정기권 내역이 있을 경우
+                        setPState(membershipData[0].pstate);
+                        setTotalTime(membershipData[0].total_time);
+                        setUsedTime(membershipData[0].used_time);
+                        console.log(pState);
+                    } else {
+                        // 정기권 내역이 없을 경우
+                        setPState(0);
+                        setTotalTime(0);
+                        setUsedTime(0);
+                        console.log('정기권 내역이 없습니다.');
+                    }
                 }
             } catch (error) {
                 console.error("데이터를 가져오는 중 오류 발생: ", error);
@@ -154,9 +163,19 @@ const onRefresh = async () => {
             // uid로 period_membership pstate 가져오기
             const membershipResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
             const membershipData = await membershipResponse.json();
-            setPState(membershipData[0].pstate);
-            setTotalTime(membershipData[0].total_time);
-            setUsedTime(membershipData[0].used_time);
+            if (membershipData && membershipData.length > 0) {
+                // 정기권 내역이 있을 경우
+                setPState(membershipData[0].pstate);
+                setTotalTime(membershipData[0].total_time);
+                setUsedTime(membershipData[0].used_time);
+                console.log(pState);
+            } else {
+                // 정기권 내역이 없을 경우
+                setPState(0);
+                setTotalTime(0);
+                setUsedTime(0);
+                console.log('정기권 내역이 없습니다.');
+            }
         }
     } catch (error) {
         console.log('Error during refresh:', error);
@@ -188,10 +207,19 @@ useEffect(() => {
                 // uid 로 period_membership pstate 가져오기
                 const membershipResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
                 const membershipData = await membershipResponse.json();
-                setPState(membershipData[0].pstate);
-                setTotalTime(membershipData[0].total_time);
-                setUsedTime(membershipData[0].used_time);
-                console.log(pState)
+                if (membershipData && membershipData.length > 0) {
+                    // 정기권 내역이 있을 경우
+                    setPState(membershipData[0].pstate);
+                    setTotalTime(membershipData[0].total_time);
+                    setUsedTime(membershipData[0].used_time);
+                    console.log(pState);
+                } else {
+                    // 정기권 내역이 없을 경우
+                    setPState(0);
+                    setTotalTime(0);
+                    setUsedTime(0);
+                    console.log('정기권 내역이 없습니다.');
+                }
             }
         } catch (error) {
             console.log('Error:', error);

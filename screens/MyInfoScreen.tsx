@@ -235,8 +235,8 @@ const onRefresh = async () => {
                         source={require('../images/리뷰이벤트.png')}
                         style={{
                         width:screenWidth*0.9,
-                        height:screenHeight*0.2,
-                        borderRadius:20
+                        height:screenWidth*0.45,
+                        borderRadius:16
                         }}
                         />
             </View>
@@ -298,7 +298,7 @@ const onRefresh = async () => {
                     
                     
             </View>
-                    <View style={{flex:0.2,marginBottom:'1.7%',justifyContent:'center',backgroundColor:'white'}}>
+                    <View style={{flex:0.2,marginBottom:50,justifyContent:'center',backgroundColor:'white'}}>
                         <View style={{flex:0.7,flexDirection:'row',justifyContent:'center'}}>
                             <TouchableOpacity 
                             style={{width:screenWidth*0.15,height:40,justifyContent:'center',alignItems:'center'}}
@@ -318,10 +318,7 @@ const onRefresh = async () => {
                         </View>
                         
                     </View>
-
             </View>
-
-
         </View>
         </ScrollView>
 

@@ -7,6 +7,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { MainScreens, MainStackParamList, MMScreens, MMStackParamList } from '../stacks/Navigator';
 import axios from 'axios';
 import config from '../config'
+import { height } from './HomeScreen';
 
 const BASE_URL = config.SERVER_URL;
 const screenWidth = Dimensions.get('screen').width;
@@ -87,15 +88,24 @@ const MyMembershipScreen:React.FunctionComponent<MyMembershipScreenProps> = (pro
   return (
   <>
       <ScrollView style={{backgroundColor:'white'}}>
-        <View style={{flex:1,paddingHorizontal:24}}>
+        <View style={{flex:1,paddingHorizontal:24,backgroundColor:'white'}}>
           <Text style={{fontSize:22,fontWeight:'bold',marginTop:24}}>시설 회원권</Text>
         </View>
       {periodmembershipData.length === 0 ? (
-         <View style={{width:screenWidth,height:screenWidth*0.5}}>
-          <View style={{backgroundColor:'white',flex:2,justifyContent:'center',alignItems:'center'}}>
-            <Text style={{ fontSize: 18, fontWeight: 'medium', color:'#868E96',marginTop:24}}>보유회원권이 없습니다.</Text>
-          </View>
-       </View>
+         <View style={{width:screenWidth,height:screenWidth*0.5,justifyContent:'center',alignItems:'center',backgroundColor:'white'}}>
+         <View style={{backgroundColor:'white',flex:2,justifyContent:'center',alignItems:'center'}}>
+             <Text style={{ fontSize: 20, fontWeight: '600', color:'black',marginTop:36}}>보유회원권이 없습니다.</Text>
+             <Text style={{ fontSize: 14, fontWeight: '500', color:'#868E96',marginTop:16}}>끝없는 운동의 편안함,</Text>
+             <Text style={{ fontSize: 14, fontWeight: '500', color:'#868E96'}}>프라이빗 헬스를 경험해보세요!</Text>
+         </View>
+         <TouchableOpacity 
+          onPress={()=>{ navigation.navigate(MainScreens.MembershipPurchase1);}}
+         style={{width:screenWidth*0.6,height:50/height,backgroundColor: 'rgba(65, 105, 225, 0.5)',borderRadius:8}}>
+           <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+            <Text style={{fontSize:18,fontWeight:'700',color:'#3454B4'}}>운동 시작하기</Text> 
+           </View>
+           </TouchableOpacity>
+      </View>
        ) : (
         <View style={{ alignItems: 'center',backgroundColor:'white',height:'auto',flex:1,borderBottomColor:'#E5E5E5',borderBottomWidth:1 }}>
           {periodmembershipData.map((item) => {
@@ -144,15 +154,24 @@ const MyMembershipScreen:React.FunctionComponent<MyMembershipScreenProps> = (pro
         </View>
         )}
 
-       <View style={{flex:1,height:'auto',backgroundColor:'white'}}>
+       <View style={{flex:1,height:'auto',backgroundColor:'white',marginTop:24}}>
         <View style={{width: screenWidth, height: screenWidth * 0.16, backgroundColor: 'white', justifyContent: 'center'}}>
           <Text style={{fontSize: 22, fontWeight: 'bold', marginLeft: 24}}>PT 회원권</Text>
         </View>
         {trainerMembershipData.length === 0 ? (
-         <View style={{width:screenWidth,height:screenWidth*0.5}}>
+         <View style={{width:screenWidth,height:screenWidth*0.5,justifyContent:'center',alignItems:'center'}}>
           <View style={{backgroundColor:'white',flex:2,justifyContent:'center',alignItems:'center'}}>
-            <Text style={{ fontSize: 18, fontWeight: 'medium', color:'#868E96',marginTop:24}}>보유회원권이 없습니다.</Text>
+              <Text style={{ fontSize: 20, fontWeight: '600', color:'black',marginTop:36}}>보유회원권이 없습니다.</Text>
+              <Text style={{ fontSize: 14, fontWeight: '500', color:'#868E96',marginTop:16}}>끝없는 운동의 재미,</Text>
+              <Text style={{ fontSize: 14, fontWeight: '500', color:'#868E96'}}>짐프라이빗 PT를 경험해보세요!</Text>
           </View>
+          <TouchableOpacity 
+           onPress={()=>{navigation.navigate(MainScreens.PT)}}
+          style={{width:screenWidth*0.6,height:50/height,backgroundColor: 'rgba(65, 105, 225, 0.5)',borderRadius:8}}>
+            <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+             <Text style={{fontSize:18,fontWeight:'700',color:'#3454B4'}}>PT 시작하기</Text> 
+            </View>
+            </TouchableOpacity>
        </View>
        ) : (
         <View style={{alignItems:'center',justifyContent:'center'}}>  

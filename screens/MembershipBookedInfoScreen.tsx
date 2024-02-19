@@ -118,8 +118,15 @@ const handleSubmit = async () => {
         const uid = uidData.uid;
         
         const periodMembershipResponse = await fetch(`${BASE_URL}/Myperiodmembership?uid=${uid}&pstate=1`);
+        if (!periodMembershipResponse.ok) {
+            throw new Error('멤버쉽 정보를 가져오는 데 문제가 발생했습니다.');
+        }
         const periodMembershipData = await periodMembershipResponse.json();
-        console.log(periodMembershipData)
+        // 데이터가 로드되지 않은 경우 예외 처리: membership status가 0이되었는데 추가로 예약 잡아서 들어온 경우
+        if (!periodMembershipData || periodMembershipData.length === 0) {
+            Alert.alert('잔여시간이 부족합니다.');
+            navigation.navigate(MainScreens.MyReservation)
+        }
 
     
         const { total_time, used_time } = periodMembershipData[0];
@@ -127,7 +134,7 @@ const handleSubmit = async () => {
         const bookingTimeInHours = minutes / 60; // 분을 시간으로 변환
     
         if (used_time + bookingTimeInHours > total_time) {
-            Alert.alert('잔여 시간이 부족합니다.');
+            Alert.alert('잔여 시간이 부족합니다.', `잔여시간: ${total_time - used_time}시간`);
             return;
         }
 
@@ -148,7 +155,18 @@ const handleSubmit = async () => {
             '예약이 완료되었습니다! 추가로 예약하시겠습니까?',
             [
                 { text: '아니오', onPress: () => navigation.navigate(MainScreens.MyReservation) },
-                { text: '예', onPress: () => navigation.navigate(MembershipScreens.MembershipRoomSelect) }
+                { 
+                    text: '예', 
+                    onPress: () => {
+                        if (used_time + bookingTimeInHours <= total_time) {
+                            Alert.alert('잔여시간이 부족합니다.');
+                            navigation.navigate(MainScreens.MyReservation);
+                        } else {
+                            navigation.navigate(MembershipScreens.MembershipRoomSelect);
+                        }
+                    }
+                }
+                
             ],
             { cancelable: false }
         );
