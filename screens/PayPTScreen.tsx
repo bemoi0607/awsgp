@@ -306,8 +306,7 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
                   </View> 
 
                     <Text style={{alignSelf:'center',color:'#797676',fontSize:16}}>
-                    안녕하세요, 짐프라이빗 {data.name} 트레이너입니다.
-                    항상 회원님을 먼저 생각하는 트레이너가 되도록 하겠습니다
+                    {data.introduction}
                     </Text>
                 </View>
               </View>
@@ -331,8 +330,7 @@ const PayPtScreen:React.FunctionComponent<PayPTScreenProps> = ({ route, navigati
                  style={styles.MemberShipContainer}
                  onPress={() => handlePayment(product.name, product.amount, product.duration)} onPress={() => {
                  navigation.push('PaymentTest', {
-                  // amount:item.session*item.price ,
-                  amount:100,
+                  amount:item.session*item.price ,                 
                   trainerId: item.trainer_id,
                   name: item.trainer_name,
                   session:item.session,
