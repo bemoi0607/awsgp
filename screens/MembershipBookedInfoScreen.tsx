@@ -162,25 +162,25 @@ return (
     <>     
         <View style={{flex:1}}>
         <View style={{paddingHorizontal:24,backgroundColor:'white',paddingBottom:24}}>
-          <Text style={styles.subtitle}>예약정보</Text>
-          <View style={{flexDirection:'row',marginTop:24}}>
-            <Image
-                style={styles.image}
-                source={roomImages[selectedRoomNumber]}
-            />
-            <View style={{marginLeft:24}}>
-              <Text style={styles.caption1gray}>방 번호 : {selectedRoomNumber}</Text> 
-              <Text style={styles.caption1gray}>사용날짜 :  {selectedDate}</Text>
-              <Text style={styles.caption1gray}>
-                사용시간 : {' '}
-                {isMorning 
-                ? `${selectedDayTimeSlot} - ${selectedEndTime}`
-                : isEvening 
-                ? `${selectedNightTimeSlot} - ${selectedEndTime}`
-                : null}
-              </Text>
-          </View>
-          </View>
+            <Text style={styles.subtitle}>예약정보</Text>
+            <View style={{flexDirection:'row',marginTop:24}}>
+                <Image
+                    style={styles.image}
+                    source={roomImages[selectedRoomNumber]}
+                />
+                <View style={{marginLeft:24}}>
+                <Text style={styles.caption1gray}>방 번호 : {selectedRoomNumber}</Text> 
+                <Text style={styles.caption1gray}>사용날짜 :  {selectedDate}</Text>
+                <Text style={styles.caption1gray}>
+                    사용시간 : {' '}
+                    {isMorning 
+                    ? `${selectedDayTimeSlot} - ${selectedEndTime}`
+                    : isEvening 
+                    ? `${selectedNightTimeSlot} - ${selectedEndTime}`
+                    : null}
+                </Text>
+            </View>
+            </View>
         </View>
         </View>
         <View style={{backgroundColor:'transparent'}}>
@@ -217,20 +217,20 @@ export default MembershipBookedInfoScreen;
 const styles = StyleSheet.create({
     
     subtitle:{
-      fontSize:24,
-      color:'black',
-      fontWeight:'bold',
-      marginTop:36
+        fontSize:24,
+        color:'black',
+        fontWeight:'bold',
+        marginTop:36
     },
     image:{
-      width: 120/height,
-      height: 112/height,
-      borderRadius:8,
+        width: 120/height,
+        height: 112/height,
+        borderRadius:8,
     },
     caption1gray:{
-      fontSize:18,
-      fontWeight:'600',
-      color:'#868E96',
-      marginTop:8/height
+        fontSize:18,
+        fontWeight:'600',
+        color:'#868E96',
+        marginTop:8/height
     }
   });

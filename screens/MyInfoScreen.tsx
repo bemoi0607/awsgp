@@ -7,6 +7,8 @@ import { MainScreens, MainStackParamList } from '../stacks/Navigator';
 import { AntDesign } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import config from '../config'
+import LottieView from 'lottie-react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 const BASE_URL = config.SERVER_URL;
 
@@ -44,9 +46,45 @@ const MyInfoScreen:React.FunctionComponent<MyInfoScreenProps> = (props) => {
     const [refreshing, setRefreshing] = useState(false);
     const [userData, setUserData] = useState(null);
     const [logId, setLogId] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    
+useFocusEffect(
+    React.useCallback(() => {
+        async function fetchData() {
+            setIsLoading(true);
+            try {
+             // AsyncStorage에서 logId 가져오기
+            let logId = await AsyncStorage.getItem('logId');
+            if (logId) {
+            // Remove quotes from logId, if present
+            logId = logId.replace(/^['"](.*)['"]$/, '$1');
+            console.log(logId);
+
+            // logId를 사용하여 사용자 데이터 가져오기
+            const response = await axios.get(`${BASE_URL}/user/${logId}`);
+            if (response.status === 200) {
+            setUserData(response.data);
+            console.log('Fetched User Data:', response.data);
+            }
+            }
+            } catch (error) {
+            console.log('Error:', error);
+            }
+            finally {
+                setIsLoading(false);
+            }
+        }
+
+
+        fetchData().catch(console.error);
+    }, [])
+);
+
 
     useEffect(() => {
     const fetchData = async () => {
+        setIsLoading(true)
         try {
         // AsyncStorage에서 logId 가져오기
         let logId = await AsyncStorage.getItem('logId');
@@ -65,7 +103,11 @@ const MyInfoScreen:React.FunctionComponent<MyInfoScreenProps> = (props) => {
         } catch (error) {
         console.log('Error:', error);
         }
+        finally {
+            setIsLoading(false);
+        }
     };
+    
 
     fetchData();
     }, []); // 빈 의존성 배열로, 컴포넌트 마운트 시에만 실행
@@ -107,6 +149,20 @@ const MyInfoScreen:React.FunctionComponent<MyInfoScreenProps> = (props) => {
 //   fetchUserData();
 
 // },[logId]); 
+
+if (isLoading) {
+    // 로딩 중이라면 로티 애니메이션 표시
+    return (
+        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+            <LottieView
+                source={require('../src/lottie/loading.json')}
+                style={{width:100,height:100}}
+                autoPlay
+                loop
+            />
+        </View>
+    );
+}
 
 
 const onRefresh = async () => {
