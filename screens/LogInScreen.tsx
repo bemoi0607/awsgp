@@ -101,7 +101,7 @@ const LogIn: React.FunctionComponent<LogInScreenProps> = ({navigation}) => {
 
 
     const handleSignUp = async () => {
-        navigation.navigate(MainScreens.Name);
+        navigation.navigate(MainScreens.JoinMembership);
     };
 
 
