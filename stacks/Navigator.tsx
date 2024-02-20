@@ -50,6 +50,7 @@ import LogInLoading from '../screens/LogInLoading'
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import NewPasswordScreen from '../screens/NewPasswordScreen';
 import { Dimensions } from 'react-native';
+import JoinMembershipScreen from '../screens/JoinMembershipScreen';
 
 
 const screenWidth = Dimensions.get('screen').width;
@@ -61,6 +62,7 @@ const screenHeight = Dimensions.get('screen').height;
 export enum MainScreens {
     Landing = 'Landing',
     LogIn = 'LogIn',
+    JoinMembership = 'JoinMembership',
     Name = 'Name',
     PassWord = 'PassWord',
     Gender = 'Gender',
@@ -97,6 +99,7 @@ export enum MainScreens {
 export type MainStackParamList = {
     Landing: undefined;
     LogIn: undefined;
+    JoinMembership : undefined;
     Name: undefined;
     PassWord : undefined;
     Gender:undefined;
@@ -339,6 +342,7 @@ const MainStackNavigator: React.FunctionComponent = () => {
         <MainStack.Navigator initialRouteName="Landing" screenOptions={{headerShown: false}}>
             <MainStack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="LogIn" component={LogInScreen} options={{ headerShown: false }}/>
+            <MainStack.Screen name="JoinMembership" component={JoinMembershipScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="Name" component={NameScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="PassWord" component={PassWordScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="Gender" component={GenderScreen} options={{ headerShown: false }}/>
