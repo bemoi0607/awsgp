@@ -82,10 +82,19 @@ useFocusEffect(
 
                     const membershipResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
                     const membershipData = await membershipResponse.json();
-                    setPState(membershipData[0].pstate);
-                    setTotalTime(membershipData[0].total_time);
-                    setUsedTime(membershipData[0].used_time);
-                    console.log(membershipData)
+                    if (membershipData && membershipData.length > 0) {
+                        // 정기권 내역이 있을 경우
+                        setPState(membershipData[0].pstate);
+                        setTotalTime(membershipData[0].total_time);
+                        setUsedTime(membershipData[0].used_time);
+                        console.log(pState);
+                    } else {
+                        // 정기권 내역이 없을 경우
+                        setPState(0);
+                        setTotalTime(0);
+                        setUsedTime(0);
+                        console.log('정기권 내역이 없습니다.');
+                    }
                 }
             } catch (error) {
                 console.error("데이터를 가져오는 중 오류 발생: ", error);
@@ -100,14 +109,16 @@ useFocusEffect(
 );
 
 
-
     
 
     useEffect(() => {
         const interval = setInterval(() => {
             setActiveIndex(prevIndex => {
                 const nextIndex = prevIndex === images.length - 1 ? 0 : prevIndex + 1;
-                scrollViewRef.current.scrollTo({ x: screenWidth * nextIndex, animated: true });
+                if (scrollViewRef.current) {
+                    scrollViewRef.current.scrollTo({ x: screenWidth * nextIndex, animated: true });
+                }
+                
                 return nextIndex;
             });
         }, 3000);
@@ -154,9 +165,19 @@ const onRefresh = async () => {
             // uid로 period_membership pstate 가져오기
             const membershipResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
             const membershipData = await membershipResponse.json();
-            setPState(membershipData[0].pstate);
-            setTotalTime(membershipData[0].total_time);
-            setUsedTime(membershipData[0].used_time);
+            if (membershipData && membershipData.length > 0) {
+                // 정기권 내역이 있을 경우
+                setPState(membershipData[0].pstate);
+                setTotalTime(membershipData[0].total_time);
+                setUsedTime(membershipData[0].used_time);
+                console.log(pState);
+            } else {
+                // 정기권 내역이 없을 경우
+                setPState(0);
+                setTotalTime(0);
+                setUsedTime(0);
+                console.log('정기권 내역이 없습니다.');
+            }
         }
     } catch (error) {
         console.log('Error during refresh:', error);
@@ -188,10 +209,19 @@ useEffect(() => {
                 // uid 로 period_membership pstate 가져오기
                 const membershipResponse = await fetch(`${BASE_URL}/membership?uid=${uid}`);
                 const membershipData = await membershipResponse.json();
-                setPState(membershipData[0].pstate);
-                setTotalTime(membershipData[0].total_time);
-                setUsedTime(membershipData[0].used_time);
-                console.log(pState)
+                if (membershipData && membershipData.length > 0) {
+                    // 정기권 내역이 있을 경우
+                    setPState(membershipData[0].pstate);
+                    setTotalTime(membershipData[0].total_time);
+                    setUsedTime(membershipData[0].used_time);
+                    console.log(pState);
+                } else {
+                    // 정기권 내역이 없을 경우
+                    setPState(0);
+                    setTotalTime(0);
+                    setUsedTime(0);
+                    console.log('정기권 내역이 없습니다.');
+                }
             }
         } catch (error) {
             console.log('Error:', error);
@@ -262,8 +292,9 @@ return (
             {renderIndicator()}
         </View> 
     </View>
-    <View style={{paddingHorizontal:24}}>
-        <Text style={styles.subtitle}>짐프라이빗 서비스</Text>
+    <View style={{paddingHorizontal:24,paddingBottom:40}}>
+        <Text style={styles.subtitle}>공간 이용 서비스</Text>
+        <Text style={styles.Caption3Black}>온전히 나만의 운동공간을 경험 해보세요.</Text>
         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
             <TouchableOpacity style={styles.Box1}
                 onPress={()=>{navigation.navigate(MainScreens.Book)}}>
@@ -271,31 +302,35 @@ return (
                 <View style={{flex:1,paddingHorizontal:24,paddingVertical:24,justifyContent:'space-between'}}>
                     <Image source={require('../images/barbell.png')} style={styles.ImageIcon}/>
                     <View>
-                        <Text style={styles.Body2Black}>공간</Text>
-                        <Text style={styles.Body2Black}>예약하기</Text>
+                        <Text style={styles.Body2Black}>일일</Text>
+                        <Text style={styles.Body2Black}>이용하기</Text>
                     </View>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity style={styles.Box1}
-                onPress={()=>{navigation.navigate(MainScreens.PT)}}>
+                onPress={handleMembershipPress}>
                 <View style={{flex:1,paddingHorizontal:24,paddingVertical:24,justifyContent:'space-between'}}>
-                    <Image source={require('../images/whistle.png')} style={styles.ImageIcon}/>
+                    <Image source={require('../images/정기이용2.png')} style={styles.ImageIcon}/>
                     <View>
-                        <Text style={styles.Body2Black}>PT</Text>
-                        <Text style={styles.Body2Black}>시작하기</Text>
+                        <Text style={styles.Body2Black}>정기</Text>
+                        <Text style={styles.Body2Black}>이용하기</Text>
                     </View>
                 </View>
             </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.Box2}  onPress={handleMembershipPress}>
+        <View>
+            <Text style={styles.subtitle}>PT 이용 서비스</Text>
+            <Text style={styles.Caption3Black}>검증된 전문가에게 안심하고 배우세요.</Text>
+            <TouchableOpacity style={styles.Box2}  onPress={handleMembershipPress}>
             <View style={{flex:1,paddingHorizontal:24,flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
                 <View>
-                    <Text style={styles.Caption2}>조금 더 편하게!</Text>
-                    <Text style={styles.Body2}>멤버쉽 이용하기</Text>
+                    <Text style={styles.Caption2}>운동이 처음이라면!</Text>
+                    <Text style={styles.Body2}>PT 이용하기</Text>
                 </View>
                 <AntDesign name="right" size={24} color="#FFFFFF" />
             </View>
         </TouchableOpacity>
+        </View>
         <TouchableOpacity 
         style={styles.Box3}
         onPress={() => {
@@ -354,6 +389,11 @@ Caption2:{
     fontSize:12,
     color:'#FFFFFF'
 },
+Caption3Black:{
+    fontSize:14,
+    color:'black',
+    marginTop:8
+},
 Body1Black:{
     fontSize:18,
     fontWeight:'bold',
@@ -363,6 +403,11 @@ Body2Black:{
     fontSize:18,
     fontWeight:'bold',
     color:'#333333'
+},
+Body2Primary:{
+    fontSize:18,
+    fontWeight:'bold',
+    color:'#4169E1'
 },
 Caption2Black:{
     fontSize:12,
