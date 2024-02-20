@@ -98,8 +98,7 @@ const MembershipPurchaseScreen: React.FunctionComponent<MembershipPurchaseScreen
         display: undefined,
         merchant_uid: merchantUid,
         name: productName, // Set the value directly
-        // amount: productAmount,
-        amount:100,
+        amount: productAmount,
         app_scheme: 'exampleformanagedexpo',
         tax_free: undefined,
         buyer_name: buyerName,
